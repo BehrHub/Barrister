@@ -1,0 +1,11 @@
+event_number,date,month,client,location,state,status,category,notes
+1,2026-04-01,April 2026,Macy's,Fairfax VA,Virginia,Completed,Retail,Placeholder until authoritative workbook import
+2,2026-04-01,April 2026,Bloomingdale's,Tysons VA,Virginia,Completed,Retail,Placeholder until authoritative workbook import
+3,2026-04-01,April 2026,Hampton Inn & Suites,Washington DC,Washington DC,Completed,Hospitality,Placeholder until authoritative workbook import
+4,2026-04-01,April 2026,Davis Polk & Wardwell,Washington DC,Washington DC,Completed,Enterprise,Placeholder until authoritative workbook import
+5,2026-05-01,May 2026,USDA,Washington DC,Washington DC,Completed,Government,Placeholder until authoritative workbook import
+6,2026-05-01,May 2026,Joint Base Andrews,Camp Springs MD,Maryland,Completed,Government,Placeholder until authoritative workbook import
+7,2026-05-01,May 2026,Verizon,Maryland,Maryland,Completed,Telecom,Placeholder until authoritative workbook import
+8,2026-06-01,June 2026,TJ Maxx,Rockville MD,Maryland,Completed,Retail,Placeholder until authoritative workbook import
+9,2026-06-01,June 2026,HomeGoods,Maryland,Maryland,Completed,Retail,Placeholder until authoritative workbook import
+10,2026-06-01,June 2026,Dunkin',Maryland,Maryland,Scheduled / Active,Retail,Placeholder until authoritative workbook import

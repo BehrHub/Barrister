@@ -1,61 +1,82 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from pathlib import Path
 
 st.set_page_config(page_title="Barrister Cloud", page_icon="🚆", layout="wide")
 
-st.title("Barrister Cloud Dashboard")
-st.caption("Cloud fallback — timeline shell first, finances second")
+ROOT = Path(__file__).parent
+TIMELINE_PATH = ROOT / "data" / "barrister_timeline.csv"
 
-timeline = pd.DataFrame([
-    ["2026-04", 1, "Macy's", "Fairfax, VA", "Completed", "Retail start"],
-    ["2026-04", 2, "Bloomingdale's", "Tysons, VA", "Completed", "Retail / enterprise stop"],
-    ["2026-04", 3, "Hampton Inn & Suites", "Washington, DC", "Completed", "Hospitality stop"],
-    ["2026-04", 4, "Davis Polk & Wardwell", "Washington, DC", "Completed", "Enterprise / legal client"],
-    ["2026-05", 5, "USDA", "Washington, DC", "Completed", "Federal cluster"],
-    ["2026-05", 6, "Joint Base Andrews", "Camp Springs, MD", "Completed", "Multi-ticket Dynabook cluster"],
-    ["2026-05", 7, "Verizon", "Maryland", "Completed", "Repeat client"],
-    ["2026-06", 8, "TJ Maxx", "Rockville, MD", "Completed", "TJX route"],
-    ["2026-06", 9, "HomeGoods", "Maryland", "Completed", "TJX route"],
-    ["2026-06", 10, "Dunkin'", "Maryland", "Scheduled / Active", "Kiosk / PED upgrade route"],
-], columns=["Month", "Event #", "Client", "Location", "Status", "Notes"])
+st.title("Barrister Cloud Dashboard")
+st.caption("Cloud fallback — timeline-first version")
+
+@st.cache_data
+def load_timeline():
+    df = pd.read_csv(TIMELINE_PATH)
+    df["date"] = pd.to_datetime(df["date"], errors="coerce")
+    df = df.sort_values("event_number")
+    return df
+
+timeline = load_timeline()
 
 st.header("Event Timeline")
-st.warning("Timeline shell only — replace with authoritative workbook timeline when available.")
+st.warning("Current CSV is a cloud placeholder. Replace data/barrister_timeline.csv with the authoritative workbook export when available.")
 
-c1, c2, c3 = st.columns(3)
-with c1:
-    month_filter = st.multiselect("Month", sorted(timeline["Month"].unique()), default=sorted(timeline["Month"].unique()))
-with c2:
-    status_filter = st.multiselect("Status", sorted(timeline["Status"].unique()), default=sorted(timeline["Status"].unique()))
-with c3:
-    client_search = st.text_input("Client search", "")
+c1, c2, c3, c4 = st.columns(4)
+c1.metric("Events Loaded", len(timeline))
+c2.metric("Unique Clients", timeline["client"].nunique())
+c3.metric("States / Jurisdictions", timeline["state"].nunique())
+c4.metric("Completed", int((timeline["status"] == "Completed").sum()))
+
+with st.expander("Filters", expanded=True):
+    f1, f2, f3 = st.columns(3)
+    months = f1.multiselect("Month", sorted(timeline["month"].dropna().unique()), default=sorted(timeline["month"].dropna().unique()))
+    states = f2.multiselect("State", sorted(timeline["state"].dropna().unique()), default=sorted(timeline["state"].dropna().unique()))
+    search = f3.text_input("Client search", "")
 
 filtered = timeline[
-    timeline["Month"].isin(month_filter)
-    & timeline["Status"].isin(status_filter)
+    timeline["month"].isin(months)
+    & timeline["state"].isin(states)
 ]
 
-if client_search:
-    filtered = filtered[filtered["Client"].str.contains(client_search, case=False, na=False)]
+if search:
+    filtered = filtered[filtered["client"].str.contains(search, case=False, na=False)]
 
-k1, k2, k3, k4 = st.columns(4)
-k1.metric("Timeline Events Shown", len(filtered))
-k2.metric("Unique Clients", filtered["Client"].nunique())
-k3.metric("Months", filtered["Month"].nunique())
-k4.metric("Completed", int((filtered["Status"] == "Completed").sum()))
+display = filtered.rename(columns={
+    "event_number": "Event #",
+    "date": "Date",
+    "month": "Month",
+    "client": "Client",
+    "location": "Location",
+    "state": "State",
+    "status": "Status",
+    "category": "Category",
+    "notes": "Notes",
+})
 
-st.dataframe(filtered, use_container_width=True, hide_index=True)
+st.dataframe(
+    display[["Event #", "Date", "Month", "Client", "Location", "State", "Status", "Category", "Notes"]],
+    use_container_width=True,
+    hide_index=True,
+)
 
-st.subheader("Timeline by Month")
-fig = px.histogram(filtered, x="Month", color="Status", title="Events by Month")
-st.plotly_chart(fig, use_container_width=True)
+st.subheader("Timeline Volume")
+m1, m2 = st.columns(2)
+
+with m1:
+    by_month = filtered.groupby("month", as_index=False).size().rename(columns={"size": "Events"})
+    st.plotly_chart(px.bar(by_month, x="month", y="Events", text="Events", title="Events by Month"), use_container_width=True)
+
+with m2:
+    by_state = filtered.groupby("state", as_index=False).size().rename(columns={"size": "Events"})
+    st.plotly_chart(px.bar(by_state, x="state", y="Events", text="Events", title="Events by State"), use_container_width=True)
 
 st.subheader("Client Frequency")
-client_counts = filtered["Client"].value_counts().reset_index()
+client_counts = filtered["client"].value_counts().reset_index()
 client_counts.columns = ["Client", "Events"]
 st.dataframe(client_counts, use_container_width=True, hide_index=True)
 
 st.divider()
-st.header("Financial Analytics — Holding Area")
-st.caption("We will move the 1E / 2E / 3E financial sections back in after the authoritative timeline is stabilized.")
+st.header("Financial Analytics")
+st.caption("Next pass: reconnect 1E State Efficiency, 2E Monthly Efficiency, and 3E Career Efficiency after timeline import is stabilized.")

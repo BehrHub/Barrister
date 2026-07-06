@@ -5,40 +5,57 @@ import plotly.express as px
 st.set_page_config(page_title="Barrister Cloud", page_icon="🚆", layout="wide")
 
 st.title("Barrister Cloud Dashboard")
-st.caption("Emergency cloud version — financial analytics baseline")
+st.caption("Cloud fallback — timeline shell first, finances second")
 
-state = pd.DataFrame([
-    ["Maryland", 30, 93.42, 42.98],
-    ["Washington, DC", 9, 176.34, 40.51],
-    ["Virginia", 6, 178.42, 43.69],
-    ["Pennsylvania", 3, 136.67, 48.24],
-], columns=["State", "Events", "Avg Net / Trip", "Net Hourly Rate"])
+timeline = pd.DataFrame([
+    ["2026-04", 1, "Macy's", "Fairfax, VA", "Completed", "Retail start"],
+    ["2026-04", 2, "Bloomingdale's", "Tysons, VA", "Completed", "Retail / enterprise stop"],
+    ["2026-04", 3, "Hampton Inn & Suites", "Washington, DC", "Completed", "Hospitality stop"],
+    ["2026-04", 4, "Davis Polk & Wardwell", "Washington, DC", "Completed", "Enterprise / legal client"],
+    ["2026-05", 5, "USDA", "Washington, DC", "Completed", "Federal cluster"],
+    ["2026-05", 6, "Joint Base Andrews", "Camp Springs, MD", "Completed", "Multi-ticket Dynabook cluster"],
+    ["2026-05", 7, "Verizon", "Maryland", "Completed", "Repeat client"],
+    ["2026-06", 8, "TJ Maxx", "Rockville, MD", "Completed", "TJX route"],
+    ["2026-06", 9, "HomeGoods", "Maryland", "Completed", "TJX route"],
+    ["2026-06", 10, "Dunkin'", "Maryland", "Scheduled / Active", "Kiosk / PED upgrade route"],
+], columns=["Month", "Event #", "Client", "Location", "Status", "Notes"])
 
-month = pd.DataFrame([
-    ["April 2026", 8, 1283.00, 1832.86, 160.38, 229.11],
-    ["May 2026", 15, 1890.41, 2700.59, 126.03, 180.04],
-    ["June 2026", 25, 2696.68, 3852.40, 107.87, 154.10],
-], columns=["Month", "Events", "Net Earned", "Gross Equivalent", "Net / Event", "Gross / Event"])
+st.header("Event Timeline")
+st.warning("Timeline shell only — replace with authoritative workbook timeline when available.")
 
-c1, c2, c3, c4 = st.columns(4)
-c1.metric("Career Events", "48")
-c2.metric("Avg Net / Event", "$122.29")
-c3.metric("Avg Net / Hour", "$42.73")
-c4.metric("Gross Salary Pace", "$126,967")
+c1, c2, c3 = st.columns(3)
+with c1:
+    month_filter = st.multiselect("Month", sorted(timeline["Month"].unique()), default=sorted(timeline["Month"].unique()))
+with c2:
+    status_filter = st.multiselect("Status", sorted(timeline["Status"].unique()), default=sorted(timeline["Status"].unique()))
+with c3:
+    client_search = st.text_input("Client search", "")
 
-st.header("1E — State Efficiency")
-st.dataframe(state, use_container_width=True, hide_index=True)
-st.plotly_chart(px.bar(state, x="State", y="Avg Net / Trip", text="Avg Net / Trip"), use_container_width=True)
+filtered = timeline[
+    timeline["Month"].isin(month_filter)
+    & timeline["Status"].isin(status_filter)
+]
 
-st.header("2E — Monthly Efficiency")
-st.dataframe(month, use_container_width=True, hide_index=True)
-st.plotly_chart(px.line(month, x="Month", y=["Net Earned", "Gross Equivalent"], markers=True), use_container_width=True)
+if client_search:
+    filtered = filtered[filtered["Client"].str.contains(client_search, case=False, na=False)]
 
-st.header("3E — Career Efficiency")
-st.markdown("""
-- **48 events**
-- **$122.29 net per event**
-- **$174.70 gross equivalent per event**
-- **$42.73 net per hour**
-- **$126,967 gross salary pace**
-""")
+k1, k2, k3, k4 = st.columns(4)
+k1.metric("Timeline Events Shown", len(filtered))
+k2.metric("Unique Clients", filtered["Client"].nunique())
+k3.metric("Months", filtered["Month"].nunique())
+k4.metric("Completed", int((filtered["Status"] == "Completed").sum()))
+
+st.dataframe(filtered, use_container_width=True, hide_index=True)
+
+st.subheader("Timeline by Month")
+fig = px.histogram(filtered, x="Month", color="Status", title="Events by Month")
+st.plotly_chart(fig, use_container_width=True)
+
+st.subheader("Client Frequency")
+client_counts = filtered["Client"].value_counts().reset_index()
+client_counts.columns = ["Client", "Events"]
+st.dataframe(client_counts, use_container_width=True, hide_index=True)
+
+st.divider()
+st.header("Financial Analytics — Holding Area")
+st.caption("We will move the 1E / 2E / 3E financial sections back in after the authoritative timeline is stabilized.")

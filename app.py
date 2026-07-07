@@ -168,6 +168,63 @@ st.markdown("""
     color: #8EA3BA;
     font-size: .82rem;
 }
+
+.route-wrap {
+    position: relative;
+    margin-top: 12px;
+    padding-left: 24px;
+}
+.route-line {
+    position: absolute;
+    left: 8px;
+    top: 4px;
+    bottom: 4px;
+    width: 4px;
+    border-radius: 999px;
+    background: linear-gradient(#EF4444 0 32%, #38BDF8 32% 68%, #22C55E 68% 100%);
+    box-shadow: 0 0 20px rgba(56,189,248,.24);
+}
+.month-label {
+    margin: 18px 0 10px 0;
+    color: #FACC15;
+    font-size: .72rem;
+    letter-spacing: .18em;
+    font-weight: 900;
+}
+.route-stop {
+    position: relative;
+    display: grid;
+    grid-template-columns: 22px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 16px;
+    background: rgba(2,8,20,.42);
+    border: 1px solid rgba(148,163,184,.10);
+}
+.route-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 99px;
+    box-shadow: 0 0 16px currentColor;
+}
+.route-dot.april { background:#EF4444; color:#EF4444; }
+.route-dot.may { background:#38BDF8; color:#38BDF8; }
+.route-dot.june { background:#22C55E; color:#22C55E; }
+.route-client {
+    font-weight: 900;
+    font-size: 1.03rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.route-num {
+    color: #FACC15;
+    font-weight: 900;
+    font-size: .82rem;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -267,21 +324,31 @@ with tab_home:
 
 with tab_journey:
     st.markdown('<div class="section-title">Journey</div>', unsafe_allow_html=True)
-    st.caption("Placeholder route until authoritative workbook import.")
-    for _, row in timeline.iterrows():
-        klass = row["month"].lower()
-        st.markdown(
-            f"""
-            <div class="timeline-stop">
-              <div class="dot {klass}"></div>
-              <div>
-                <div class="stop-title">#{row['event']} · {row['client']}</div>
-                <div class="stop-meta">{row['month']} · {row['state']} · {row['status']}</div>
-              </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+    st.caption("Cloud route shell — compact, month-based, ready for authoritative import.")
+
+    st.markdown('<div class="route-wrap"><div class="route-line"></div>', unsafe_allow_html=True)
+
+    for month_name in ["April", "May", "June"]:
+        month_df = timeline[timeline["month"] == month_name]
+        if month_df.empty:
+            continue
+
+        st.markdown(f'<div class="month-label">{month_name.upper()}</div>', unsafe_allow_html=True)
+
+        for _, row in month_df.iterrows():
+            klass = row["month"].lower()
+            st.markdown(
+                f"""
+                <div class="route-stop">
+                  <div class="route-dot {klass}"></div>
+                  <div class="route-client">{row['client']}</div>
+                  <div class="route-num">#{int(row['event'])}</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 with tab_clients:
     st.markdown('<div class="section-title">Top Clients</div>', unsafe_allow_html=True)

@@ -1,11 +1,56 @@
-event_number,date,month,client,location,state,status,category,notes
-1,2026-04-01,April 2026,Macy's,Fairfax VA,Virginia,Completed,Retail,Placeholder until authoritative workbook import
-2,2026-04-01,April 2026,Bloomingdale's,Tysons VA,Virginia,Completed,Retail,Placeholder until authoritative workbook import
-3,2026-04-01,April 2026,Hampton Inn & Suites,Washington DC,Washington DC,Completed,Hospitality,Placeholder until authoritative workbook import
-4,2026-04-01,April 2026,Davis Polk & Wardwell,Washington DC,Washington DC,Completed,Enterprise,Placeholder until authoritative workbook import
-5,2026-05-01,May 2026,USDA,Washington DC,Washington DC,Completed,Government,Placeholder until authoritative workbook import
-6,2026-05-01,May 2026,Joint Base Andrews,Camp Springs MD,Maryland,Completed,Government,Placeholder until authoritative workbook import
-7,2026-05-01,May 2026,Verizon,Maryland,Maryland,Completed,Telecom,Placeholder until authoritative workbook import
-8,2026-06-01,June 2026,TJ Maxx,Rockville MD,Maryland,Completed,Retail,Placeholder until authoritative workbook import
-9,2026-06-01,June 2026,HomeGoods,Maryland,Maryland,Completed,Retail,Placeholder until authoritative workbook import
-10,2026-06-01,June 2026,Dunkin',Maryland,Maryland,Scheduled / Active,Retail,Placeholder until authoritative workbook import
+event_number,wo_number,client,client_raw,amount,verified,city,region_code,state_region,status,notes,is_financial_amount_known
+1,5847113,Macy's,Macy's,90,⚠,Fairfax,VA,Virginia,Completed,VA model from prior approved calculation.,True
+2,5860365,Bloomingdale's,Bloomingdale's,344,☑,Tysons,VA,Virginia,Completed,8-hour assist tech; effective $43/hr.,True
+3,5860393,Bloomingdale's,Bloomingdale's,344,☑,Tysons,VA,Virginia,Completed,8-hour assist tech; effective $43/hr.,True
+4,5874484,Macy's,Macy's,180,☑,Frederick,MD,Maryland,Completed,Maryland revenue included; hours inferred at $45/hr.,True
+5,5876589,Hampton Inn & Suites,Hampton Inn & Suites,50,☑,Washington,DC,"Washington, DC",Completed,DC flat/equivalent event.,True
+6,5874982,Macy's,Macy's,180,☑,Frederick,MD,Maryland,Completed,Maryland revenue included; hours inferred at $45/hr.,True
+7,5876638,Davis Polk & Wardwell,Davis Polk & Wardwell,50,☑,Washington,DC,"Washington, DC",Completed,DC flat/equivalent event.,True
+8,5878985,Hebrew Home of Greater Washington,Hebrew Home of Greater Washington,45,☑,North Bethesda,MD,Maryland,Completed,Maryland revenue included.,True
+9,TBD,7-Eleven,7-Eleven,,☑,Baltimore,MD,Maryland,Completed,User instructed to ignore #9 for this calculation.,False
+10,5882097,Giant Food Stores,Giant Food Stores,212.5,☑,Hanover,PA,Pennsylvania,Completed,Corrected: Hanover PA WO 5882097.,True
+11,5884987,Food Lion,Food Lion,157.5,⚠,Leesburg,VA,Virginia,Completed,VA model uses payment breakdown amount.,True
+12,5884369,Weis Markets,Weis Markets,85,☑,Chambersburg,PA,Pennsylvania,Completed,User approved 2-hour $42.50/hr equivalent.,True
+13,5885429,Office of MD Senator Chris Van Hollen,Office of MD Senator Chris Van Hollen,50,☑,Rockville,MD,Maryland,Completed,Maryland revenue included; Senate model estimated at $40/hr.,True
+14,TBD,"Residential – Annapolis Neck, MD",Residential,TBD,☑,Annapolis Neck,MD,Maryland,Completed,User instructed to ignore #14 for this calculation.,False
+15,5886658,Verizon,Verizon,75,☑,College Park,MD,Maryland,Completed,Maryland revenue included; hours inferred.,True
+16,5887090,Atrium Village,Atrium Village,45,☑,Owings Mills,MD,Maryland,Completed,Maryland revenue included.,True
+17,5887094,Maryland Baptist Age Home,Maryland Baptist Age Home,50,☑,Baltimore,MD,Maryland,Completed,Maryland revenue included.,True
+18,5889356,Under Armour,Under Armour Day 1,106.67,☑,Hanover,MD,Maryland,Completed,Under Armour Day 1 split; total UA rounded to $260 with Day 2.,True
+19,5889356-D2,Under Armour,Under Armour Day 2,153.33,☑,Hanover,MD,Maryland,Completed,Under Armour Day 2 split; total UA rounded to $260 with Day 1.,True
+20,5890220,Giant Food Stores,Giant / Martin's,112.5,☑,Red Lion,PA,Pennsylvania,Completed,Corrected: Red Lion PA WO 5890220.,True
+21,5892123,Food Lion,Food Lion,97.91,☑,Middle River,MD,Maryland,Completed,Maryland revenue included; hours inferred.,True
+22,5889718,HomeGoods,HomeGoods,50,☑,Gaithersburg,MD,Maryland,Completed,Maryland revenue included; hours inferred.,True
+23,TBD,Joint Base Andrews,Joint Base Andrews,TBD,☑,Andrews AFB,MD,Maryland,Completed,User instructed to ignore #23 for this calculation.,False
+24,USDA Special,USDA,USDA Day 1,200,☑,Washington,DC,"Washington, DC",Completed,USDA corrected day allocation: $200 / 5 hrs @ $40/hr.,True
+25,TBD,PepsiCo,PepsiCo,,☑,Cheverly,MD,Maryland,Completed,User instructed to ignore #25 for this calculation.,False
+26,USDA Special,USDA,USDA Day 2,175,☑,Washington,DC,"Washington, DC",Completed,USDA corrected day allocation: $175 / 4.375 hrs @ $40/hr.,True
+27,USDA Special,USDA,USDA Day 3,320,☑,Washington,DC,"Washington, DC",Completed,USDA corrected day allocation: $320 / 8 hrs @ $40/hr.,True
+28,USDA Special,USDA,USDA Day 4,320,☑,Washington,DC,"Washington, DC",Completed,USDA corrected day allocation: $320 / 8 hrs @ $40/hr.,True
+29,USDA Special,USDA,USDA Day 5,200,☑,Washington,DC,"Washington, DC",Completed,USDA corrected day allocation: $200 / 5 hrs @ $40/hr.,True
+30,5896733,TJ Maxx,TJ Maxx,96.66,☑,Rockville,MD,Maryland,Completed,Event #30 TJ Maxx Rockville verified at $96.66.,True
+31,USDA Special,USDA,USDA Day 6,140,☑,Washington,DC,"Washington, DC",Completed,USDA corrected day allocation: $140 / 3.5 hrs @ $40/hr.,True
+32,5898007,Hilton Garden Inn,Hilton Garden Inn,25,☑,Fairfax,VA,Virginia,Completed,VA Hilton Garden Inn historical row.,True
+33,5896039,Hebrew Home of Greater Washington,Hebrew Home of Greater Washington,50,☑,North Bethesda,MD,Maryland,Completed,Maryland revenue included.,True
+34,5898904,TJ Maxx,TJ Maxx,70,☑,Annapolis,MD,Maryland,Completed,Maryland revenue included.,True
+35,5899056,Marshalls,Marshalls,70,☑,Dunkirk,MD,Maryland,Completed,Payment breakdown reissued/verified; no financial change.,True
+36,5899295,Hampton Inn & Suites,Hampton Inn & Suites,65,☑,Edgewood,MD,Maryland,Completed,Maryland revenue included.,True
+37,5899715,HomeGoods,HomeGoods,90,☑,Sterling,VA,Virginia,Completed,VA revenue included.,True
+38,5900102,7-Eleven,7-Eleven,240,⚠,Lanham,MD,Maryland,Completed,7-Eleven dispute cleared at $240.,True
+39,5900492,TJ Maxx,TJ Maxx,90,☑,Annapolis,MD,Maryland,Completed,Payment breakdown reissued/verified; no financial change.,True
+40,5877236,"Residential – Annapolis Neck, MD",Residential,60,☑,Annapolis Neck,MD,Maryland,Completed,Dynabook repair completed.,True
+41,5887374,Baskin Robbins,Baskin Robbins,45,☑,Falls Church,VA,Virginia,Completed,Corrected: WO 5887374 = Baskin Robbins. Breakdown and ACH confirmed at $45.,True
+42,5901061,Verizon,Verizon,50,⚠,Ellicott City,MD,Maryland,Completed,Payment breakdown found; ACH B5901061T1 confirmed.,True
+43,5902689,Verizon,Verizon,50,☑,Lanham,MD,Maryland,Completed,Verizon Lanham amount locked at $50.,True
+44,5902930,Marshalls,Marshalls,123.75,☑,Frederick,MD,Maryland,Completed,ACH confirmed B5902930T2 at $123.75.,True
+45,5900963,Montpelier Liquors,Montpelier Liquors,128,☑,Laurel,MD,Maryland,Completed,Montpelier Liquors WO 5900963; ACH confirmed July 1 at $128.,True
+46,5904843,Marshalls,Marshalls,90,☑,Laurel,MD,Maryland,Completed,Marshalls Laurel WO 5904843; payment breakdown $90 and ACH confirmed July 1.,True
+47,5898644,Office of MD Senator Angela Alsobrooks,Office of MD Senator Angela Alsobrooks,130,☑,Bowie,MD,Maryland,Completed,Office of MD Senator Angela Alsobrooks Bowie WO 5898644; breakdown $130 and ACH confirmed July 2.,True
+48,5905576 / 5905579,Hebrew Home of Greater Washington,Hebrew Home of Greater Washington,70,⚠,North Bethesda,MD,Maryland,Completed,Companion WO issue 5905576 / 5905579 remains under ACH mapping review; $35 ACH for 5905579 may relate to companion split or later no-show row.,True
+49,5899546,Weis Markets,Weis Markets,90,☑,Callaway,MD,Maryland,Completed,Weis Markets Callaway WO 5899546; breakdown $90 and ACH confirmed July 2.,True
+50,5903036,Giant Food Stores,Giant Food Stores,50,☑,Washington,DC,"Washington, DC",Completed,Giant Food Stores DC/Wisconsin Ave WO 5903036; breakdown $50 and ACH confirmed July 2. Corrected from prior TBD/missing state.,True
+51,5905579,Hebrew Home of Greater Washington,Hebrew Home of Greater Washington,60,⚠,North Bethesda,MD,Maryland,Completed,WO 5905579 breakdown $60; July 2 ACH B5905579T1 received at $35. $25 variance / duplicate-WO mapping review remains open.,True
+52,5906380,Food Lion,Food Lion,116.24,☐,Upper Marlboro,MD,Maryland,Completed,Food Lion payment breakdown confirmed.,True
+53,5907571,Hilton Garden Inn,Hilton Garden Inn DC,132.03,☐,Washington,DC,"Washington, DC",Completed,Hilton Garden Inn DC payment breakdown confirmed.,True
+54,5910094,7-Eleven,7-Eleven,120,☐,Owings Mills,MD,Maryland,Completed,"7-Eleven Owings Mills WO 5910094; payment breakdown $120 confirmed, ACH pending.",True
+55,5898645,Office of MD Senator Angela Alsobrooks,Office of MD Senator Angela Alsobrooks,TBD,☐,Largo,MD,Maryland,Completed,Completed deployment at Largo office; followed POC Javon and onsite coordinator Joe; AOR not required/provided; financial delta pending.,False

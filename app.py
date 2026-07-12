@@ -753,7 +753,7 @@ def render_header() -> None:
 
 def render_splash_screen() -> None:
     if not SPLASH_IMAGE_PATH.exists():
-        st.session_state["splash_entered"] = True
+        st.query_params["page"] = "executive-summary"
         st.rerun()
 
     enter_url = "?page=executive-summary"

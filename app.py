@@ -142,8 +142,8 @@ LOCATIONS_PATH = Path(__file__).parent / "data" / "locations.csv"
 LOGOS_DIR = Path(__file__).parent / "assets" / "logos"
 BRAND_FACTORY_APPROVED_DIR = Path(__file__).parent / "assets" / "brand_factory" / "approved"
 BACKUPS_DIR = Path(__file__).parent / "data" / "backups"
-SPLASH_IMAGE_PATH = Path(__file__).parent / "static" / "splash" / "barrister_splash.jpg"
-SPLASH_IMAGE_URL = "app/static/splash/barrister_splash.jpg"
+SPLASH_IMAGE_PATH = Path(__file__).parent / "static" / "splash" / "barrister_splash.png"
+SPLASH_IMAGE_URL = "app/static/splash/barrister_splash.png"
 SPLASH_IMAGE_WIDTH = 853
 SPLASH_IMAGE_HEIGHT = 1280
 PIN_ICON_URLS = {
@@ -705,6 +705,157 @@ def configure_page() -> None:
     font-weight: 850;
 }
 
+/* === REDESIGN PASS: Executive Summary KPIs + Journey polish (additive, CSS-only where possible) === */
+@keyframes dashFadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.metric-card {
+    position: relative;
+    opacity: 0;
+    animation: dashFadeUp .5s ease forwards;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.metric-card:nth-child(1) { animation-delay: .02s; }
+.metric-card:nth-child(2) { animation-delay: .08s; }
+.metric-card:nth-child(3) { animation-delay: .14s; }
+.metric-card:nth-child(4) { animation-delay: .20s; }
+.metric-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 14%;
+    right: 14%;
+    height: 3px;
+    border-radius: 0 0 6px 6px;
+    background: linear-gradient(90deg, transparent, var(--metric-accent, #2dd4bf), transparent);
+    opacity: .85;
+}
+.metric-card:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--metric-accent, #2dd4bf) 46%, rgba(148,163,184,.28));
+    box-shadow: 0 18px 34px rgba(0,0,0,.26), 0 0 22px color-mix(in srgb, var(--metric-accent, #2dd4bf) 20%, transparent), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.metric-icon {
+    font-size: .92rem;
+    line-height: 1;
+    opacity: .82;
+    margin-bottom: .05rem;
+}
+.metric-detail {
+    margin-top: .3rem;
+    color: #8fa1bb;
+    font-size: .56rem;
+    font-weight: 680;
+    letter-spacing: .03em;
+    line-height: 1.15;
+    text-align: center;
+}
+@media (max-width: 700px) {
+    .metric-icon, .metric-detail { display: none; }
+}
+.live-pulse-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: .42rem;
+    border-radius: 999px;
+    background: #34d399;
+    vertical-align: middle;
+    animation: livePulse 2.1s ease-in-out infinite;
+}
+@keyframes livePulse {
+    0% { box-shadow: 0 0 0 0 rgba(52,211,153,.55); }
+    70% { box-shadow: 0 0 0 7px rgba(52,211,153,0); }
+    100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); }
+}
+.upcoming-list li {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .18rem .22rem;
+    border-radius: 8px;
+    opacity: 0;
+    animation: dashFadeUp .4s ease forwards;
+    transition: background .15s ease;
+}
+.upcoming-list li:hover { background: rgba(255,255,255,.035); }
+.upcoming-dot {
+    flex: 0 0 auto;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: #38bdf8;
+    box-shadow: 0 0 8px rgba(56,189,248,.55);
+}
+.upcoming-main { flex: 1; min-width: 0; }
+.upcoming-date {
+    flex: 0 0 auto;
+    color: #8fa1bb;
+    font-size: .64rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.premium-donut-card {
+    opacity: 0;
+    animation: dashFadeUp .6s ease forwards;
+}
+.donut-legend-row {
+    opacity: 0;
+    animation: dashFadeUp .5s ease forwards;
+    transition: border-color .15s ease;
+}
+.donut-legend-summary:hover .legend-name { color: #eaf6ff; }
+.journey-fuel-button {
+    animation: fuelIdlePulse 2.6s ease-in-out infinite;
+}
+@keyframes fuelIdlePulse {
+    0%, 100% { box-shadow: 0 8px 18px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.05), 0 0 0 0 rgba(45,212,191,0); }
+    50% { box-shadow: 0 8px 18px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.05), 0 0 14px 2px rgba(45,212,191,.3); }
+}
+.journey-track:not(.replay-active)::before {
+    animation: journeyTrackShimmer 3.2s linear infinite;
+}
+@keyframes journeyTrackShimmer {
+    from { background-position: 0 0; }
+    to { background-position: 0 44px; }
+}
+.journey-start::after {
+    content: "";
+    position: absolute;
+    left: .1rem;
+    right: .1rem;
+    bottom: -6px;
+    height: 4px;
+    border-radius: 2px;
+    background: repeating-linear-gradient(90deg, #f8fafc 0 8px, #07101c 8px 16px);
+    opacity: .55;
+}
+.journey-finish-line.is-visible {
+    animation: finishGlowPulse 1.6s ease-in-out 2;
+}
+@keyframes finishGlowPulse {
+    0%, 100% { box-shadow: none; }
+    50% { box-shadow: 0 0 22px rgba(248,250,252,.35); }
+}
+.journey-stop {
+    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.journey-stop:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--stop-accent, #2dd4bf) 42%, rgba(148,163,184,.26));
+    box-shadow: 0 12px 26px rgba(0,0,0,.2), 0 0 16px color-mix(in srgb, var(--stop-accent, #2dd4bf) 16%, transparent);
+}
+.journey-stop::before {
+    background: var(--stop-accent, #2dd4bf) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--stop-accent, #2dd4bf) 30%, transparent) !important;
+}
+.journey-checkpoint, .journey-milestone {
+    opacity: 0;
+    animation: dashFadeUp .45s ease forwards;
+}
+/* === END REDESIGN PASS === */
+
 <style>
 .mini-tile-icon {
     width: 58px !important;
@@ -753,7 +904,7 @@ def render_header() -> None:
 
 def render_splash_screen() -> None:
     if not SPLASH_IMAGE_PATH.exists():
-        st.query_params["page"] = "executive-summary"
+        st.session_state["splash_entered"] = True
         st.rerun()
 
     enter_url = "?page=executive-summary"
@@ -889,13 +1040,17 @@ def render_splash_screen() -> None:
         unsafe_allow_html=True,
     )
 
-def metric_card(label: str, value: object, detail: str = "") -> str:
+def metric_card(label: str, value: object, detail: str = "", icon: str = "", accent: str = "") -> str:
     if isinstance(value, float) and value.is_integer():
         value = int(value)
     display = f"{value:,}" if isinstance(value, int) else str(value if value not in (None, "") else "N/A")
+    icon_markup = f'<div class="metric-icon">{escape(icon)}</div>' if icon else ""
+    detail_markup = f'<div class="metric-detail">{escape(detail)}</div>' if detail else ""
+    accent_style = f' style="--metric-accent: {escape(accent, quote=True)}"' if accent else ""
     return (
-        f'<div class="metric-card"><div class="metric-label">{escape(label)}</div>'
-        f'<div class="metric-value">{escape(display)}</div></div>'
+        f'<div class="metric-card"{accent_style}>{icon_markup}'
+        f'<div class="metric-label">{escape(label)}</div>'
+        f'<div class="metric-value">{escape(display)}</div>{detail_markup}</div>'
     )
 
 
@@ -1322,15 +1477,21 @@ def known_location_options(data: WorkbookData) -> list[str]:
 def render_upcoming_assignments(data: WorkbookData) -> None:
     upcoming = upcoming_assignments(data)
     items = []
-    for row in upcoming.to_dict("records"):
+    for index, row in enumerate(upcoming.to_dict("records")):
         location = ", ".join(value for value in [str(row.get("city", "")).strip(), str(row.get("state", "")).strip()] if value)
+        date_label = scheduled_date_label(row.get("event_date", ""))
+        date_markup = f'<span class="upcoming-date">{escape(date_label)}</span>' if date_label not in ("", "No Date") else ""
+        delay = min(index * 0.045, 0.4)
         items.append(
-            f'<li><strong>{escape(str(row.get("client", "")))}</strong>'
+            f'<li style="animation-delay:{delay:.3f}s"><span class="upcoming-dot"></span>'
+            '<div class="upcoming-main"><strong>'
+            f'{escape(str(row.get("client", "")))}</strong>'
             + (f' — {escape(location)}' if location else "")
-            + '</li>'
+            + f'</div>{date_markup}</li>'
         )
     st.markdown(
-        f'<div class="upcoming-assignments"><div class="upcoming-title">Upcoming Assignments ({len(upcoming)})</div>'
+        '<div class="upcoming-assignments"><div class="upcoming-title">'
+        f'<span class="live-pulse-dot"></span>Upcoming Assignments ({len(upcoming)})</div>'
         f'<ul class="upcoming-list">{"".join(items) if items else "<li>None scheduled</li>"}</ul></div>',
         unsafe_allow_html=True,
     )
@@ -1360,7 +1521,7 @@ def render_premium_jurisdiction_donut(activity: pd.DataFrame) -> None:
     legend_rows = []
     largest = activity.iloc[0]
 
-    for row in activity.to_dict("records"):
+    for legend_index, row in enumerate(activity.to_dict("records")):
         name = str(row["state_region"])
         events = int(row["events"])
         percentage = float(row["percentage"])
@@ -1390,8 +1551,9 @@ def render_premium_jurisdiction_donut(activity: pd.DataFrame) -> None:
             f'<div class="donut-label" style="left:{label_left:.1f}%; top:{label_top:.1f}%;">'
             f'<span>{style["icon"]}</span><span>{percentage:.1f}%</span></div>'
         )
+        legend_delay = min(legend_index * 0.06, 0.3)
         legend_rows.append(
-            f'<details class="donut-legend-row" style="border-left:4px solid {style["color"]};">'
+            f'<details class="donut-legend-row" style="border-left:4px solid {style["color"]}; animation-delay:{legend_delay:.3f}s;">'
             f'<summary class="donut-legend-summary">'
             f'<div class="legend-icon">{style["icon"]}</div>'
             f'<div class="legend-name">{escape(name)}</div>'
@@ -1448,20 +1610,35 @@ def render_summary(data: WorkbookData, filtered_timeline: pd.DataFrame) -> None:
             "Service Events",
             scorecard_metric(data.scorecard, "Completed Service Events", fallback=len(completed)),
             "Scorecard completed events",
+            "🏁",
+            "#2dd4bf",
         ),
         (
             "Unique Clients",
             unique_fallback,
             "Completed client authority",
+            "🤝",
+            "#38bdf8",
         ),
-        ("Repeat Clients", repeat_client_count(data), "Client List completed visits > 1"),
+        (
+            "Repeat Clients",
+            repeat_client_count(data),
+            "Client List completed visits > 1",
+            "🔁",
+            "#a78bfa",
+        ),
         (
             "Jurisdictions",
             scorecard_metric(data.scorecard, "Jurisdictions Covered", "States Worked", fallback=regions_fallback),
             "Verified coverage",
+            "🗺️",
+            "#f59e0b",
         ),
     ]
-    metric_markup = "".join(metric_card(label, value, detail) for label, value, detail in metrics)
+    metric_markup = "".join(
+        metric_card(label, value, detail, icon=icon, accent=accent)
+        for label, value, detail, icon, accent in metrics
+    )
     st.markdown(f'<div class="executive-metrics">{metric_markup}</div>', unsafe_allow_html=True)
     render_client_portfolio_wall(data)
 
@@ -1578,8 +1755,10 @@ def render_barrister_journey(data: WorkbookData, timeline: pd.DataFrame) -> None
         event_date = row.get("event_date")
         date_label = pd.Timestamp(event_date).strftime("%b %d, %Y") if pd.notna(event_date) else ""
         date_markup = f'<div class="journey-date">{escape(date_label)}</div>' if date_label else ""
+        stop_accent = JURISDICTION_COLORS.get(state_key, JURISDICTION_COLORS["Pennsylvania / Other"])
         pieces.append(
             '<div class="journey-stop" '
+            f'style="--stop-accent:{escape(stop_accent, quote=True)}" '
             f'data-visit="{escape(str(number))}" data-client="{escape(client, quote=True)}" '
             f'data-location="{escape(location or "Location not provided", quote=True)}" '
             f'data-new-client="{"1" if is_new_client else "0"}">'

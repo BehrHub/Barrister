@@ -63,12 +63,14 @@ JURISDICTION_COLORS = {
     "Maryland": "#2dd4bf",
     "Virginia": "#5c8ee8",
     "Washington, D.C.": "#f97316",
+    "West Virginia": "#a78bfa",
     "Pennsylvania / Other": "#f5c542",
 }
 JURISDICTION_DONUT_STYLES = {
     "Maryland": {"color": "#d85a62", "depth": "#742932", "icon": "🦀"},
     "Washington, D.C.": {"color": "#d7a63d", "depth": "#74531d", "icon": "🏛️"},
     "Virginia": {"color": "#5c8ee8", "depth": "#274f99", "icon": "❤️"},
+    "West Virginia": {"color": "#a78bfa", "depth": "#4c3f78", "icon": "🏔️"},
     "Pennsylvania": {"color": "#5dbb82", "depth": "#276942", "icon": "🔔"},
     "Pennsylvania / Other": {"color": "#5dbb82", "depth": "#276942", "icon": "🔔"},
 }
@@ -150,6 +152,7 @@ PIN_ICON_URLS = {
     "Maryland": "app/static/map/pin_maryland.svg",
     "Virginia": "app/static/map/pin_virginia.svg",
     "Washington, D.C.": "app/static/map/pin_dc.svg",
+    "West Virginia": "app/static/map/pin_pennsylvania.svg",  # TODO: swap once a dedicated pin_west_virginia.svg (purple, #a78bfa) is added
     "Pennsylvania / Other": "app/static/map/pin_pennsylvania.svg",
 }
 PLOTLY_CONFIG = {
@@ -854,7 +857,145 @@ def configure_page() -> None:
     opacity: 0;
     animation: dashFadeUp .45s ease forwards;
 }
+.client-marquee-viewport {
+    position: relative;
+    overflow: hidden;
+    border-radius: 14px;
+    padding: .85rem 0;
+    background: linear-gradient(180deg, rgba(3,10,20,.55), rgba(3,10,20,.82));
+    mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+}
+.client-marquee-viewport::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 6px;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, rgba(248,250,252,.32) 0 14px, transparent 14px 28px);
+}
+.client-marquee-track {
+    display: flex;
+    width: max-content;
+    gap: .65rem;
+    animation: clientMarqueeScroll 38s linear infinite;
+}
+.client-marquee:hover .client-marquee-track {
+    animation-play-state: paused;
+}
+@keyframes clientMarqueeScroll {
+    from { transform: translateX(-50%); }
+    to { transform: translateX(0%); }
+}
+.client-marquee-item {
+    flex: 0 0 auto;
+    width: 88px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .32rem;
+}
+.marquee-logo-badge {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+}
+.marquee-client-name {
+    width: 100%;
+    color: #c2cddd;
+    font-size: .58rem;
+    font-weight: 700;
+    line-height: 1.15;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+@media (max-width: 700px) {
+    .client-marquee-item { width: 68px; }
+    .marquee-logo-badge { width: 50px; height: 50px; border-radius: 12px; }
+    .marquee-client-name { font-size: .52rem; }
+}
 /* === END REDESIGN PASS === */
+
+/* === CLIENT ANALYTICS REDESIGN PASS === */
+.champ-logo-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+}
+.champ-step {
+    opacity: 0;
+    animation: dashFadeUp .5s ease forwards;
+    transition: transform .16s ease;
+}
+.champ-step:nth-child(1) { animation-delay: .06s; }
+.champ-step:nth-child(2) { animation-delay: 0s; }
+.champ-step:nth-child(3) { animation-delay: .12s; }
+.champ-step:hover { transform: translateY(-3px); }
+.record-card {
+    position: relative;
+    opacity: 0;
+    animation: dashFadeUp .5s ease forwards;
+    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.record-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 14%;
+    right: 14%;
+    height: 3px;
+    border-radius: 0 0 6px 6px;
+    background: linear-gradient(90deg, transparent, var(--record-accent, #2dd4bf), transparent);
+    opacity: .85;
+}
+.record-card:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--record-accent, #2dd4bf) 42%, rgba(148,163,184,.26));
+    box-shadow: 0 16px 30px rgba(0,0,0,.22), 0 0 18px color-mix(in srgb, var(--record-accent, #2dd4bf) 16%, transparent);
+}
+.record-card:nth-child(1) { animation-delay: .02s; }
+.record-card:nth-child(2) { animation-delay: .08s; }
+.record-card:nth-child(3) { animation-delay: .14s; }
+.record-card:nth-child(4) { animation-delay: .2s; }
+.standing-row {
+    opacity: 0;
+    animation: dashFadeUp .45s ease forwards;
+    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.standing-row:hover {
+    transform: translateY(-2px);
+    border-color: rgba(45,212,191,.4);
+    box-shadow: 0 14px 28px rgba(0,0,0,.2), 0 0 16px rgba(45,212,191,.14);
+}
+.directory-card {
+    position: relative;
+    opacity: 0;
+    animation: dashFadeUp .45s ease forwards;
+    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.directory-card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: var(--activity-pct, 20%);
+    border-radius: 0 4px 4px 12px;
+    background: linear-gradient(90deg, #2dd4bf, #38bdf8);
+    box-shadow: 0 0 10px rgba(45,212,191,.3);
+}
+.directory-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(56,189,248,.4);
+    box-shadow: 0 14px 26px rgba(0,0,0,.18), 0 0 14px rgba(56,189,248,.12);
+}
+/* === END CLIENT ANALYTICS REDESIGN PASS === */
+.client-champ-podium {
+    margin: .1rem 0 1.1rem;
+}
 
 <style>
 .mini-tile-icon {
@@ -1153,136 +1294,32 @@ def completed_client_portfolio(data: WorkbookData) -> pd.DataFrame:
     return portfolio
 
 
-def render_client_portfolio_wall(data: WorkbookData) -> None:
-    """Render Executive logo wall and splash as one unified showcase."""
-    import base64
-    import streamlit.components.v1 as components
+def render_client_logo_marquee(data: WorkbookData) -> None:
+    """F1-style scrolling sponsor board of every client served — pure CSS, pauses on hover."""
+    portfolio = completed_client_portfolio(data)
+    if portfolio.empty:
+        return
+    logo_files, _ = discover_logos(LOGOS_DIR)
+    clients = portfolio["Client"].tolist()
 
-    tile_dir = BRAND_FACTORY_APPROVED_DIR / "_client_portfolio_tiles"
-    splash = BRAND_FACTORY_APPROVED_DIR / "_clients_visited_served_splash.jpeg"
+    def tile(client: str) -> str:
+        return (
+            '<div class="client-marquee-item">'
+            f'{client_logo_markup(client, logo_files, "client-logo-badge marquee-logo-badge")}'
+            f'<div class="marquee-client-name">{escape(client_card_display_name(client))}</div>'
+            '</div>'
+        )
 
-    rows = [
-        ["usda", "hilton", "hamptoninn", "bloomingdales", "verizon", "davispolk"],
-        ["macys", "tjmaxx", "marshalls", "homegoods", "homesense", "underarmour"],
-        ["dunkin", "baskinrobbins", "711", "pepsi", "montpelier", "residential"],
-        ["foodlion", "giant", "weis", "atriumvillage", "marylandbaptistagehome", "hebrewhomegw"],
-        ["vanhollen", "jointbaseandrews", "alsobrooks"],
-    ]
-
-    def img_b64(path: Path) -> str:
-        return base64.b64encode(path.read_bytes()).decode("utf-8") if path.exists() else ""
-
-    def tile_img(name: str) -> str:
-        path = tile_dir / f"{name}.png"
-        if not path.exists():
-            return f'<div class="tile missing">{name}</div>'
-        return f'<img class="tile" src="data:image/png;base64,{img_b64(path)}" alt="{name}">'
-
-    row_html = []
-    for row in rows:
-        if len(row) == 6:
-            row_html.append('<div class="wall-row">' + ''.join(tile_img(name) for name in row) + '</div>')
-        else:
-            row_html.append('<div class="wall-row centered">' + ''.join(tile_img(name) for name in row) + '</div>')
-
-    splash_html = ""
-    if splash.exists():
-        splash_html = f'<img class="splash" src="data:image/jpeg;base64,{img_b64(splash)}" alt="Clients Visited Clients Served">'
-
-    html = """
-    <html>
-    <head>
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            background: transparent;
-            overflow: hidden;
-        }
-
-        .showcase {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 4px;
-            border-radius: 22px;
-            border: 1px solid rgba(148,163,184,.18);
-            background:
-                radial-gradient(circle at 18% 0%, rgba(148,163,184,.10), transparent 34%),
-                linear-gradient(180deg, rgba(8,17,31,.94), rgba(4,10,20,.98));
-            box-shadow:
-                0 18px 38px rgba(0,0,0,.24),
-                inset 0 1px 0 rgba(255,255,255,.045);
-            overflow: hidden;
-        }
-
-        .logo-wall {
-            padding: 0;
-            border-radius: 18px 18px 10px 10px;
-            background: linear-gradient(180deg, rgba(3,10,20,.72), rgba(3,10,20,.90));
-            overflow: hidden;
-        }
-
-        .wall-row {
-            display: grid;
-            grid-template-columns: repeat(6, minmax(0, 1fr));
-            gap: 3px;
-            margin-bottom: 3px;
-        }
-
-        .wall-row:last-child {
-            margin-bottom: 0;
-        }
-
-        .wall-row.centered {
-            display: flex;
-            justify-content: center;
-            gap: 3px;
-        }
-
-        .tile {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 12px;
-        }
-
-        .wall-row.centered .tile {
-            width: calc((100% - 15px) / 6);
-        }
-
-        .splash {
-            display: block;
-            width: 100%;
-            height: auto;
-            margin-top: 5px;
-            border-radius: 14px;
-            box-shadow: 0 8px 18px rgba(0,0,0,.20);
-        }
-
-        .missing {
-            aspect-ratio: 230 / 192;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fca5a5;
-            font: 10px system-ui;
-            border: 1px dashed rgba(248,113,113,.55);
-            background: rgba(127,29,29,.2);
-        }
-    </style>
-    </head>
-    <body>
-        <div class="showcase">
-            <div class="logo-wall">
-                """ + ''.join(row_html) + """
-            </div>
-            """ + splash_html + """
-        </div>
-    </body>
-    </html>
-    """
-
-    components.html(html, height=410, scrolling=False)
+    tiles = "".join(tile(client) for client in clients)
+    st.markdown(
+        '<div class="client-portfolio client-marquee">'
+        f'<div class="portfolio-heading">CLIENTS SERVED · {len(clients)}</div>'
+        '<div class="client-marquee-viewport">'
+        f'<div class="client-marquee-track">{tiles}{tiles}</div>'
+        '</div>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
 
 def style_figure(figure: go.Figure, height: int = 390) -> go.Figure:
     figure.update_layout(
@@ -1640,7 +1677,7 @@ def render_summary(data: WorkbookData, filtered_timeline: pd.DataFrame) -> None:
         for label, value, detail, icon, accent in metrics
     )
     st.markdown(f'<div class="executive-metrics">{metric_markup}</div>', unsafe_allow_html=True)
-    render_client_portfolio_wall(data)
+    render_client_logo_marquee(data)
 
     completed_activity = filtered_timeline
     if "status" in completed_activity:
@@ -2386,16 +2423,58 @@ def career_record_cards(data: WorkbookData, directory: pd.DataFrame) -> list[dic
     return records
 
 
+def render_client_podium(directory: pd.DataFrame) -> None:
+    standings = directory[directory["# of Visits"].gt(0)].sort_values(
+        ["# of Visits", "1st Visit", "Client"], ascending=[False, True, True]
+    ).reset_index(drop=True)
+    if standings.empty:
+        return
+    logo_files, _ = discover_logos(LOGOS_DIR)
+    medals = ["🥇", "🥈", "🥉"]
+    order = [1, 0, 2]
+    top = standings.head(3).to_dict("records")
+    if len(top) < 3:
+        order = list(range(len(top)))
+    blocks = []
+    for position in order:
+        row = top[position]
+        client = str(row["Client"])
+        visits = int(row["# of Visits"])
+        height = 78 + (3 - position) * 30
+        blocks.append(
+            '<div class="champ-step">'
+            f'<div class="champ-medal">{medals[position]}</div>'
+            f'{client_logo_markup(client, logo_files, "client-logo-badge champ-logo-badge")}'
+            f'<div class="champ-name" title="{escape(client, quote=True)}">{escape(client_card_display_name(client))}</div>'
+            f'<div class="champ-value">{escape(pluralize(visits, "Visit"))}</div>'
+            f'<div class="champ-block" style="height:{height}px"></div>'
+            '</div>'
+        )
+    st.markdown(
+        '<div class="section-kicker">TOP OF THE LEADERBOARD</div>'
+        '<div class="section-title">PODIUM</div>'
+        f'<div class="champ-podium client-champ-podium">{"".join(blocks)}</div>',
+        unsafe_allow_html=True,
+    )
+
+
 def render_career_records(data: WorkbookData, directory: pd.DataFrame) -> None:
     records = career_record_cards(data, directory)
     if not records:
         return
+    logo_files, _ = discover_logos(LOGOS_DIR)
+    accents = ["#2dd4bf", "#f5c542", "#fb7185", "#5c8ee8"]
     cards = []
-    for record in records:
+    for index, record in enumerate(records):
+        accent = accents[index % len(accents)]
+        icon_markup = client_logo_markup(record["client"], logo_files, "client-logo-badge mini-tile-icon")
         cards.append(
-            '<div class="record-card">'
+            f'<div class="record-card" style="--record-accent:{accent}">'
             f'<div class="record-label">{escape(record["label"])}</div>'
-            f'<div class="record-client">{escape(record["client"])}</div>'
+            '<div class="record-icon-line">'
+            f'{icon_markup}'
+            f'<div class="record-client-text">{escape(record["client"])}</div>'
+            '</div>'
             f'<div class="record-value">{escape(record["value"])}</div>'
             '</div>'
         )
@@ -3300,6 +3379,7 @@ def render_client_directory_cards(directory: pd.DataFrame) -> None:
     display_directory = display_directory[display_directory["Client"].fillna("").astype(str).str.strip().ne("")].copy()
     display_directory["display_name"] = display_directory["Client"].astype(str).map(client_card_display_name)
     display_directory = display_directory.sort_values("display_name", key=lambda values: values.str.casefold()).reset_index(drop=True)
+    max_visits = max(int(display_directory["# of Visits"].max()), 1) if not display_directory.empty else 1
     split_at = math.ceil(len(display_directory) / 2)
     first_column = display_directory.iloc[:split_at].to_dict("records")
     second_column = display_directory.iloc[split_at:].to_dict("records")
@@ -3318,8 +3398,10 @@ def render_client_directory_cards(directory: pd.DataFrame) -> None:
         locations = int(row["# of Locations"])
         first_visit = int(row["1st Visit"])
         first_visit_display = f"#{first_visit}" if first_visit else "N/A"
+        activity_pct = max(6, round(visits / max_visits * 100, 1))
         cards.append(
-            f'<a class="client-link directory-card" href="{client_profile_url("client-analytics", client)}" target="_self">'
+            f'<a class="client-link directory-card" style="--activity-pct:{activity_pct}%" '
+            f'href="{client_profile_url("client-analytics", client)}" target="_self">'
             f'{visual}'
             '<div>'
             f'<div class="directory-name" title="{escape(client, quote=True)}">{escape(display_client)}</div>'
@@ -3350,6 +3432,7 @@ def render_client_analytics(data: WorkbookData) -> None:
         return
 
     directory = client_directory_frame(data)
+    render_client_podium(directory)
     render_career_records(data, directory)
     render_client_standings(directory)
     render_client_directory_cards(directory)
@@ -3377,6 +3460,8 @@ def jurisdiction_group(state: object) -> str:
         return "Virginia"
     if normalized in {"dc", "washingtondc", "districtofcolumbia"}:
         return "Washington, D.C."
+    if normalized in {"wv", "westvirginia"}:
+        return "West Virginia"
     return "Pennsylvania / Other"
 
 

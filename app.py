@@ -4955,7 +4955,7 @@ def main() -> None:
     render_navigation(section)
 
     if data is None:
-        st.warning("No Barrister Source of Truth workbook is available. Place an .xlsx workbook in the data folder.")
+        st.warning("No Barrister_Master.xlsx workbook in the data folder.")
         return
 
     missing = data.validation["missing_required_tabs"] or data.validation["missing_required_columns"]

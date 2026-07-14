@@ -1,0 +1,354 @@
+[
+  {
+    "source": "711.png",
+    "bbox": [
+      416,
+      389,
+      605,
+      633
+    ],
+    "output": "711.png",
+    "final_logo_size": "658x850"
+  },
+  {
+    "source": "alsobrooks.png",
+    "bbox": [
+      358,
+      371,
+      646,
+      647
+    ],
+    "output": "alsobrooks.png",
+    "final_logo_size": "850x814"
+  },
+  {
+    "source": "atriumvillage.png",
+    "bbox": [
+      393,
+      396,
+      629,
+      623
+    ],
+    "output": "atriumvillage.png",
+    "final_logo_size": "850x817"
+  },
+  {
+    "source": "baskinrobbins.png",
+    "bbox": [
+      392,
+      438,
+      633,
+      584
+    ],
+    "output": "baskinrobbins.png",
+    "final_logo_size": "850x514"
+  },
+  {
+    "source": "bloomingdales.png",
+    "bbox": [
+      369,
+      482,
+      655,
+      540
+    ],
+    "output": "bloomingdales.png",
+    "final_logo_size": "850x172"
+  },
+  {
+    "source": "catalina.png",
+    "bbox": [
+      372,
+      479,
+      649,
+      542
+    ],
+    "output": "catalina.png",
+    "final_logo_size": "850x193"
+  },
+  {
+    "source": "davispolk.png",
+    "bbox": [
+      360,
+      455,
+      635,
+      545
+    ],
+    "output": "davispolk.png",
+    "final_logo_size": "850x278"
+  },
+  {
+    "source": "dunkin.png",
+    "bbox": [
+      358,
+      482,
+      649,
+      550
+    ],
+    "output": "dunkin.png",
+    "final_logo_size": "850x198"
+  },
+  {
+    "source": "foodlion.png",
+    "bbox": [
+      393,
+      405,
+      629,
+      611
+    ],
+    "output": "foodlion.png",
+    "final_logo_size": "850x741"
+  },
+  {
+    "source": "giant.png",
+    "bbox": [
+      410,
+      392,
+      617,
+      629
+    ],
+    "output": "giant.png",
+    "final_logo_size": "742x850"
+  },
+  {
+    "source": "hamptoninn.png",
+    "bbox": [
+      375,
+      410,
+      649,
+      608
+    ],
+    "output": "hamptoninn.png",
+    "final_logo_size": "850x614"
+  },
+  {
+    "source": "hebrewhomegw.png",
+    "bbox": [
+      372,
+      408,
+      648,
+      609
+    ],
+    "output": "hebrewhomegw.png",
+    "final_logo_size": "850x619"
+  },
+  {
+    "source": "hilton.png",
+    "bbox": [
+      379,
+      405,
+      646,
+      612
+    ],
+    "output": "hilton.png",
+    "final_logo_size": "849x658"
+  },
+  {
+    "source": "homegoods.png",
+    "bbox": [
+      358,
+      466,
+      648,
+      562
+    ],
+    "output": "homegoods.png",
+    "final_logo_size": "850x281"
+  },
+  {
+    "source": "homesense.png",
+    "bbox": [
+      431,
+      400,
+      624,
+      622
+    ],
+    "output": "homesense.png",
+    "final_logo_size": "738x850"
+  },
+  {
+    "source": "jointbaseandrews.png",
+    "bbox": [
+      373,
+      376,
+      646,
+      647
+    ],
+    "output": "jointbaseandrews.png",
+    "final_logo_size": "850x843"
+  },
+  {
+    "source": "macys.png",
+    "bbox": [
+      367,
+      462,
+      659,
+      561
+    ],
+    "output": "macys.png",
+    "final_logo_size": "850x288"
+  },
+  {
+    "source": "marshalls.png",
+    "bbox": [
+      364,
+      476,
+      660,
+      548
+    ],
+    "output": "marshalls.png",
+    "final_logo_size": "850x206"
+  },
+  {
+    "source": "marylandbaptistagehome.png",
+    "bbox": [
+      406,
+      384,
+      615,
+      640
+    ],
+    "output": "marylandbaptistagehome.png",
+    "final_logo_size": "693x850"
+  },
+  {
+    "source": "montpelierliquors.png",
+    "bbox": [
+      369,
+      408,
+      655,
+      612
+    ],
+    "output": "montpelierliquors.png",
+    "final_logo_size": "850x606"
+  },
+  {
+    "source": "ncr.png",
+    "bbox": [
+      374,
+      465,
+      649,
+      556
+    ],
+    "output": "ncr.png",
+    "final_logo_size": "850x281"
+  },
+  {
+    "source": "pepsi.png",
+    "bbox": [
+      365,
+      455,
+      661,
+      569
+    ],
+    "output": "pepsi.png",
+    "final_logo_size": "850x327"
+  },
+  {
+    "source": "rainforestgroup.png",
+    "bbox": [
+      364,
+      453,
+      656,
+      564
+    ],
+    "output": "rainforestgroup.png",
+    "final_logo_size": "850x323"
+  },
+  {
+    "source": "residential.png",
+    "bbox": [
+      373,
+      412,
+      582,
+      626
+    ],
+    "output": "residential.png",
+    "final_logo_size": "830x850"
+  },
+  {
+    "source": "senate.png",
+    "bbox": [
+      405,
+      388,
+      619,
+      635
+    ],
+    "output": "senate.png",
+    "final_logo_size": "736x850"
+  },
+  {
+    "source": "tjmaxx.png",
+    "bbox": [
+      365,
+      467,
+      659,
+      551
+    ],
+    "output": "tjmaxx.png",
+    "final_logo_size": "850x242"
+  },
+  {
+    "source": "underarmour.png",
+    "bbox": [
+      368,
+      422,
+      655,
+      600
+    ],
+    "output": "underarmour.png",
+    "final_logo_size": "850x527"
+  },
+  {
+    "source": "usda.png",
+    "bbox": [
+      379,
+      420,
+      642,
+      608
+    ],
+    "output": "usda.png",
+    "final_logo_size": "850x607"
+  },
+  {
+    "source": "vanhollen.png",
+    "bbox": [
+      362,
+      377,
+      636,
+      649
+    ],
+    "output": "vanhollen.png",
+    "final_logo_size": "850x843"
+  },
+  {
+    "source": "verifone.png",
+    "bbox": [
+      363,
+      463,
+      638,
+      544
+    ],
+    "output": "verifone.png",
+    "final_logo_size": "850x250"
+  },
+  {
+    "source": "verizon.png",
+    "bbox": [
+      359,
+      459,
+      640,
+      534
+    ],
+    "output": "verizon.png",
+    "final_logo_size": "850x226"
+  },
+  {
+    "source": "weis.png",
+    "bbox": [
+      358,
+      444,
+      635,
+      560
+    ],
+    "output": "weis.png",
+    "final_logo_size": "850x355"
+  }
+]

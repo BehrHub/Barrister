@@ -1,0 +1,822 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brand Factory Scoreboard</title>
+<style>
+body {
+  margin:0;
+  padding:24px;
+  background:linear-gradient(180deg,#07111f,#020617);
+  color:#f8fafc;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif;
+}
+h1 { margin:0; font-size:clamp(32px,7vw,58px); }
+.sub { color:#94a3b8; margin:8px 0 22px; }
+.summary {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-bottom:22px;
+}
+.tile {
+  border:1px solid rgba(125,211,252,.22);
+  border-radius:18px;
+  background:#0b1728;
+  padding:16px;
+  text-align:center;
+}
+.tile strong { display:block; font-size:32px; }
+.tile span { color:#94a3b8; text-transform:uppercase; font-size:11px; letter-spacing:.08em; }
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+  gap:16px;
+}
+.card {
+  border:1px solid rgba(125,211,252,.22);
+  border-radius:20px;
+  background:#0b1728;
+  padding:14px;
+  box-shadow:0 0 24px rgba(56,189,248,.08);
+}
+.top {
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+}
+h2 { margin:0; font-size:18px; }
+p { margin:4px 0 0; color:#94a3b8; font-size:12px; }
+.score {
+  border-radius:14px;
+  padding:8px 10px;
+  text-align:center;
+  min-width:58px;
+}
+.score strong { display:block; font-size:20px; }
+.score span { display:block; font-size:11px; font-weight:800; }
+.good { background:#14532d; color:#86efac; }
+.warn { background:#713f12; color:#fde68a; }
+.bad { background:#7f1d1d; color:#fecaca; }
+.logo {
+  height:150px;
+  margin:14px 0;
+  border-radius:16px;
+  background:#eef2f7;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.logo img {
+  max-width:92%;
+  max-height:92%;
+  object-fit:contain;
+}
+.metrics {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+.metrics div {
+  background:rgba(15,32,54,.9);
+  border-radius:12px;
+  padding:8px;
+  text-align:center;
+}
+.metrics strong { display:block; font-size:14px; }
+.metrics span { display:block; font-size:10px; color:#94a3b8; text-transform:uppercase; }
+ul {
+  margin:12px 0 0;
+  padding-left:18px;
+  color:#cbd5e1;
+  font-size:13px;
+}
+@media(max-width:700px) {
+  body { padding:16px; }
+  .summary { grid-template-columns:repeat(3,1fr); }
+  .grid { grid-template-columns:repeat(2,1fr); gap:12px; }
+  .logo { height:120px; }
+}
+</style>
+</head>
+<body>
+<h1>Brand Factory Scoreboard</h1>
+<div class="sub">Objective QA for approved dashboard assets.</div>
+
+<section class="summary">
+  <div class="tile"><strong>32</strong><span>Assets</span></div>
+  <div class="tile"><strong>99</strong><span>Avg Score</span></div>
+  <div class="tile"><strong>0</strong><span>Review</span></div>
+</section>
+
+<main class="grid">
+
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>711</h2>
+              <p>711.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="711.png"></div>
+          <div class="metrics">
+            <div><strong>80%</strong><span>Fill</span></div>
+            <div><strong>0.1%</strong><span>Offset</span></div>
+            <div><strong>727x820</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 80%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Alsobrooks</h2>
+              <p>alsobrooks.png</p>
+            </div>
+            <div class="score good">
+              <strong>96</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="alsobrooks.png"></div>
+          <div class="metrics">
+            <div><strong>92%</strong><span>Fill</span></div>
+            <div><strong>0.1%</strong><span>Offset</span></div>
+            <div><strong>947x767</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Logo large: fill 92%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Atriumvillage</h2>
+              <p>atriumvillage.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="atriumvillage.png"></div>
+          <div class="metrics">
+            <div><strong>80%</strong><span>Fill</span></div>
+            <div><strong>0.8%</strong><span>Offset</span></div>
+            <div><strong>820x800</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 80%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Baskinrobbins</h2>
+              <p>baskinrobbins.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="baskinrobbins.png"></div>
+          <div class="metrics">
+            <div><strong>81%</strong><span>Fill</span></div>
+            <div><strong>0.2%</strong><span>Offset</span></div>
+            <div><strong>828x485</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 81%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Bloomingdales</h2>
+              <p>bloomingdales.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="bloomingdales.png"></div>
+          <div class="metrics">
+            <div><strong>85%</strong><span>Fill</span></div>
+            <div><strong>0.2%</strong><span>Offset</span></div>
+            <div><strong>866x148</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 85%</li><li>Centered</li><li>Wide wordmark</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Catalina</h2>
+              <p>catalina.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="catalina.png"></div>
+          <div class="metrics">
+            <div><strong>81%</strong><span>Fill</span></div>
+            <div><strong>0.6%</strong><span>Offset</span></div>
+            <div><strong>831x180</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 81%</li><li>Centered</li><li>Wide wordmark</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Davispolk</h2>
+              <p>davispolk.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="davispolk.png"></div>
+          <div class="metrics">
+            <div><strong>81%</strong><span>Fill</span></div>
+            <div><strong>0.6%</strong><span>Offset</span></div>
+            <div><strong>825x265</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 81%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Dunkin</h2>
+              <p>dunkin.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="dunkin.png"></div>
+          <div class="metrics">
+            <div><strong>80%</strong><span>Fill</span></div>
+            <div><strong>0.6%</strong><span>Offset</span></div>
+            <div><strong>823x187</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 80%</li><li>Centered</li><li>Wide wordmark</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Foodlion</h2>
+              <p>foodlion.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="foodlion.png"></div>
+          <div class="metrics">
+            <div><strong>80%</strong><span>Fill</span></div>
+            <div><strong>1.0%</strong><span>Offset</span></div>
+            <div><strong>824x721</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 80%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Giant</h2>
+              <p>giant.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="giant.png"></div>
+          <div class="metrics">
+            <div><strong>72%</strong><span>Fill</span></div>
+            <div><strong>0.6%</strong><span>Offset</span></div>
+            <div><strong>647x735</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 72%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Hamptoninn</h2>
+              <p>hamptoninn.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="hamptoninn.png"></div>
+          <div class="metrics">
+            <div><strong>81%</strong><span>Fill</span></div>
+            <div><strong>0.8%</strong><span>Offset</span></div>
+            <div><strong>834x597</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 81%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Hebrewhomegw</h2>
+              <p>hebrewhomegw.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="hebrewhomegw.png"></div>
+          <div class="metrics">
+            <div><strong>82%</strong><span>Fill</span></div>
+            <div><strong>0.9%</strong><span>Offset</span></div>
+            <div><strong>842x602</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 82%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Hilton</h2>
+              <p>hilton.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="hilton.png"></div>
+          <div class="metrics">
+            <div><strong>73%</strong><span>Fill</span></div>
+            <div><strong>0.7%</strong><span>Offset</span></div>
+            <div><strong>743x579</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 73%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Homegoods</h2>
+              <p>homegoods.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="homegoods.png"></div>
+          <div class="metrics">
+            <div><strong>85%</strong><span>Fill</span></div>
+            <div><strong>0.8%</strong><span>Offset</span></div>
+            <div><strong>868x281</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 85%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Homesense</h2>
+              <p>homesense.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="homesense.png"></div>
+          <div class="metrics">
+            <div><strong>80%</strong><span>Fill</span></div>
+            <div><strong>0.0%</strong><span>Offset</span></div>
+            <div><strong>584x820</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 80%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Jointbaseandrews</h2>
+              <p>jointbaseandrews.png</p>
+            </div>
+            <div class="score warn">
+              <strong>88</strong>
+              <span>B</span>
+            </div>
+          </div>
+          <div class="logo"><img src="jointbaseandrews.png"></div>
+          <div class="metrics">
+            <div><strong>100%</strong><span>Fill</span></div>
+            <div><strong>0.9%</strong><span>Offset</span></div>
+            <div><strong>1023x1005</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Logo large: fill 100%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Macys</h2>
+              <p>macys.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="macys.png"></div>
+          <div class="metrics">
+            <div><strong>81%</strong><span>Fill</span></div>
+            <div><strong>0.4%</strong><span>Offset</span></div>
+            <div><strong>832x262</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 81%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Marshalls</h2>
+              <p>marshalls.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="marshalls.png"></div>
+          <div class="metrics">
+            <div><strong>80%</strong><span>Fill</span></div>
+            <div><strong>0.0%</strong><span>Offset</span></div>
+            <div><strong>824x180</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 80%</li><li>Centered</li><li>Wide wordmark</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Marylandbaptistagehome</h2>
+              <p>marylandbaptistagehome.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="marylandbaptistagehome.png"></div>
+          <div class="metrics">
+            <div><strong>81%</strong><span>Fill</span></div>
+            <div><strong>0.2%</strong><span>Offset</span></div>
+            <div><strong>669x826</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 81%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Montpelierliquors</h2>
+              <p>montpelierliquors.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="montpelierliquors.png"></div>
+          <div class="metrics">
+            <div><strong>81%</strong><span>Fill</span></div>
+            <div><strong>0.4%</strong><span>Offset</span></div>
+            <div><strong>828x581</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 81%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Ncr</h2>
+              <p>ncr.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="ncr.png"></div>
+          <div class="metrics">
+            <div><strong>81%</strong><span>Fill</span></div>
+            <div><strong>0.4%</strong><span>Offset</span></div>
+            <div><strong>825x256</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 81%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Pepsi</h2>
+              <p>pepsi.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="pepsi.png"></div>
+          <div class="metrics">
+            <div><strong>81%</strong><span>Fill</span></div>
+            <div><strong>0.4%</strong><span>Offset</span></div>
+            <div><strong>832x307</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 81%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Rainforestgroup</h2>
+              <p>rainforestgroup.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="rainforestgroup.png"></div>
+          <div class="metrics">
+            <div><strong>81%</strong><span>Fill</span></div>
+            <div><strong>0.8%</strong><span>Offset</span></div>
+            <div><strong>829x310</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 81%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Residential</h2>
+              <p>residential.png</p>
+            </div>
+            <div class="score good">
+              <strong>91</strong>
+              <span>A</span>
+            </div>
+          </div>
+          <div class="logo"><img src="residential.png"></div>
+          <div class="metrics">
+            <div><strong>61%</strong><span>Fill</span></div>
+            <div><strong>0.9%</strong><span>Offset</span></div>
+            <div><strong>596x621</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Logo small: fill 61%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Senate</h2>
+              <p>senate.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="senate.png"></div>
+          <div class="metrics">
+            <div><strong>80%</strong><span>Fill</span></div>
+            <div><strong>0.1%</strong><span>Offset</span></div>
+            <div><strong>820x811</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 80%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Tjmaxx</h2>
+              <p>tjmaxx.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="tjmaxx.png"></div>
+          <div class="metrics">
+            <div><strong>81%</strong><span>Fill</span></div>
+            <div><strong>0.4%</strong><span>Offset</span></div>
+            <div><strong>832x231</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 81%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Underarmour</h2>
+              <p>underarmour.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="underarmour.png"></div>
+          <div class="metrics">
+            <div><strong>81%</strong><span>Fill</span></div>
+            <div><strong>0.1%</strong><span>Offset</span></div>
+            <div><strong>828x496</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 81%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Usda</h2>
+              <p>usda.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="usda.png"></div>
+          <div class="metrics">
+            <div><strong>82%</strong><span>Fill</span></div>
+            <div><strong>0.7%</strong><span>Offset</span></div>
+            <div><strong>842x593</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 82%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Vanhollen</h2>
+              <p>vanhollen.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="vanhollen.png"></div>
+          <div class="metrics">
+            <div><strong>84%</strong><span>Fill</span></div>
+            <div><strong>0.5%</strong><span>Offset</span></div>
+            <div><strong>860x850</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 84%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Verifone</h2>
+              <p>verifone.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="verifone.png"></div>
+          <div class="metrics">
+            <div><strong>81%</strong><span>Fill</span></div>
+            <div><strong>0.3%</strong><span>Offset</span></div>
+            <div><strong>828x219</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 81%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Verizon</h2>
+              <p>verizon.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="verizon.png"></div>
+          <div class="metrics">
+            <div><strong>81%</strong><span>Fill</span></div>
+            <div><strong>0.7%</strong><span>Offset</span></div>
+            <div><strong>834x204</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 81%</li><li>Centered</li><li>Wide wordmark</li>
+          </ul>
+        </section>
+        
+        <section class="card">
+          <div class="top">
+            <div>
+              <h2>Weis</h2>
+              <p>weis.png</p>
+            </div>
+            <div class="score good">
+              <strong>100</strong>
+              <span>A+</span>
+            </div>
+          </div>
+          <div class="logo"><img src="weis.png"></div>
+          <div class="metrics">
+            <div><strong>81%</strong><span>Fill</span></div>
+            <div><strong>0.4%</strong><span>Offset</span></div>
+            <div><strong>825x333</strong><span>Artwork</span></div>
+          </div>
+          <ul>
+            <li>Fill good: 81%</li><li>Centered</li>
+          </ul>
+        </section>
+        
+</main>
+</body>
+</html>

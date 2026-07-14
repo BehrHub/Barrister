@@ -1,0 +1,423 @@
+[
+  {
+    "file": "711.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.801,
+    "center_offset": 0.0005,
+    "artwork_size": "727x820",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 80%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "alsobrooks.png",
+    "score": 96,
+    "grade": "A+",
+    "fill": 0.925,
+    "center_offset": 0.0007,
+    "artwork_size": "947x767",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Logo large: fill 92%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "atriumvillage.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.801,
+    "center_offset": 0.0081,
+    "artwork_size": "820x800",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 80%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "baskinrobbins.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.809,
+    "center_offset": 0.0024,
+    "artwork_size": "828x485",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 81%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "bloomingdales.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.846,
+    "center_offset": 0.0022,
+    "artwork_size": "866x148",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 85%",
+      "Centered",
+      "Wide wordmark"
+    ]
+  },
+  {
+    "file": "catalina.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.812,
+    "center_offset": 0.0059,
+    "artwork_size": "831x180",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 81%",
+      "Centered",
+      "Wide wordmark"
+    ]
+  },
+  {
+    "file": "davispolk.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.806,
+    "center_offset": 0.0062,
+    "artwork_size": "825x265",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 81%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "dunkin.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.804,
+    "center_offset": 0.0059,
+    "artwork_size": "823x187",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 80%",
+      "Centered",
+      "Wide wordmark"
+    ]
+  },
+  {
+    "file": "foodlion.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.805,
+    "center_offset": 0.0101,
+    "artwork_size": "824x721",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 80%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "giant.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.718,
+    "center_offset": 0.0059,
+    "artwork_size": "647x735",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 72%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "hamptoninn.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.814,
+    "center_offset": 0.0083,
+    "artwork_size": "834x597",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 81%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "hebrewhomegw.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.822,
+    "center_offset": 0.0087,
+    "artwork_size": "842x602",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 82%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "hilton.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.726,
+    "center_offset": 0.0072,
+    "artwork_size": "743x579",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 73%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "homegoods.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.848,
+    "center_offset": 0.0075,
+    "artwork_size": "868x281",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 85%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "homesense.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.801,
+    "center_offset": 0.0,
+    "artwork_size": "584x820",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 80%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "jointbaseandrews.png",
+    "score": 88,
+    "grade": "B",
+    "fill": 0.999,
+    "center_offset": 0.0093,
+    "artwork_size": "1023x1005",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Logo large: fill 100%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "macys.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.812,
+    "center_offset": 0.0039,
+    "artwork_size": "832x262",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 81%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "marshalls.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.805,
+    "center_offset": 0.0,
+    "artwork_size": "824x180",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 80%",
+      "Centered",
+      "Wide wordmark"
+    ]
+  },
+  {
+    "file": "marylandbaptistagehome.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.807,
+    "center_offset": 0.0024,
+    "artwork_size": "669x826",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 81%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "montpelierliquors.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.809,
+    "center_offset": 0.0044,
+    "artwork_size": "828x581",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 81%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "ncr.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.806,
+    "center_offset": 0.0042,
+    "artwork_size": "825x256",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 81%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "pepsi.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.812,
+    "center_offset": 0.0039,
+    "artwork_size": "832x307",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 81%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "rainforestgroup.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.81,
+    "center_offset": 0.0079,
+    "artwork_size": "829x310",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 81%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "residential.png",
+    "score": 91,
+    "grade": "A",
+    "fill": 0.606,
+    "center_offset": 0.0088,
+    "artwork_size": "596x621",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Logo small: fill 61%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "senate.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.801,
+    "center_offset": 0.0005,
+    "artwork_size": "820x811",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 80%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "tjmaxx.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.812,
+    "center_offset": 0.0045,
+    "artwork_size": "832x231",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 81%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "underarmour.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.809,
+    "center_offset": 0.001,
+    "artwork_size": "828x496",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 81%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "usda.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.822,
+    "center_offset": 0.0066,
+    "artwork_size": "842x593",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 82%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "vanhollen.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.84,
+    "center_offset": 0.0049,
+    "artwork_size": "860x850",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 84%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "verifone.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.809,
+    "center_offset": 0.0033,
+    "artwork_size": "828x219",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 81%",
+      "Centered"
+    ]
+  },
+  {
+    "file": "verizon.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.814,
+    "center_offset": 0.0066,
+    "artwork_size": "834x204",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 81%",
+      "Centered",
+      "Wide wordmark"
+    ]
+  },
+  {
+    "file": "weis.png",
+    "score": 100,
+    "grade": "A+",
+    "fill": 0.806,
+    "center_offset": 0.0044,
+    "artwork_size": "825x333",
+    "canvas_size": "1024x1024",
+    "comments": [
+      "Fill good: 81%",
+      "Centered"
+    ]
+  }
+]

@@ -98,7 +98,6 @@ DASHBOARD_PAGES = {
     "Maps": "maps",
     "Logo Factory": "logo-factory",
     "Laboratory": "laboratory",
-    "Barrister Output": "barrister-output",
 }
 NAV_DISPLAY = {
     "Executive Summary": {"label": "Executive", "icon": "🏁", "accent": "#f472b6"},
@@ -111,7 +110,6 @@ NAV_DISPLAY = {
     "Maps": {"label": "Maps", "icon": "🗺️", "accent": "#2563eb"},
     "Logo Factory": {"label": "Logo Store", "icon": "🏭", "accent": "#a78bfa"},
     "Laboratory": {"label": "Laboratory", "icon": "🧪", "accent": "#f8fafc"},
-    "Barrister Output": {"label": "Engine Output", "icon": "📟", "accent": "#22c55e"},
 }
 HIDDEN_PAGES = {
     "Coordinate Match Report": "coordinate-match-report",
@@ -124,7 +122,7 @@ HIDDEN_PAGES = {
     "barrister-journey": "Journey",
     "ledger": "Ledger",
     "engine-log": "Engine Log",
-    "barrister-output": "Barrister Output",
+    "barrister-output": "Engine Log",
 }
 PAGE_ROUTE_ALIASES = {
     "barrister-journey": "Barrister Journey",
@@ -138,7 +136,6 @@ PAGE_ROUTE_ALIASES = {
     "chart-lab": "Laboratory",
     "executive-summary": "Executive Summary",
     "add-service-event": "Add Service Event",
-    "barrister-output": "Barrister Output",
 }
 LOCATIONS_PATH = Path(__file__).parent / "data" / "locations.csv"
 LOGOS_DIR = Path(__file__).parent / "assets" / "logos"
@@ -705,7 +702,10 @@ def configure_page() -> None:
     gap: .55rem;
 }
 .record-icon-line .record-client-text {
+    color: #f8fafc;
+    font-size: .95rem;
     font-weight: 850;
+    line-height: 1.14;
 }
 
 /* === REDESIGN PASS: Executive Summary KPIs + Journey polish (additive, CSS-only where possible) === */
@@ -991,6 +991,35 @@ def configure_page() -> None:
     transform: translateY(-2px);
     border-color: rgba(56,189,248,.4);
     box-shadow: 0 14px 26px rgba(0,0,0,.18), 0 0 14px rgba(56,189,248,.12);
+}
+.record-icon-badge {
+    width: 54px !important;
+    height: 54px !important;
+    min-width: 54px !important;
+    border-radius: 13px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.55rem;
+    line-height: 1;
+}
+.financial-rank-chip {
+    flex: 0 0 auto;
+    min-width: 20px;
+    color: #f6d892;
+    font-size: .72rem;
+    font-weight: 850;
+}
+.financial-card-value-link {
+    color: #70ddd1 !important;
+    font-size: .8rem;
+    font-weight: 850;
+    text-align: right;
+    white-space: nowrap;
+    text-decoration: none !important;
+}
+.financial-card-value-link:hover {
+    color: #9ff0e6 !important;
 }
 /* === END CLIENT ANALYTICS REDESIGN PASS === */
 .client-champ-podium {
@@ -2725,21 +2754,32 @@ def render_financial_records(financial: pd.DataFrame, rollup: pd.DataFrame, data
     road_client, road_value = road_warrior_record(data)
 
     records = [
-        {"label": "💰 Total Career Revenue", "client": format_currency(total_revenue), "value": "Known revenue only"},
-        {"label": "👑 Revenue King", "client": highest_client, "value": highest_client_value},
-        {"label": "⚡ Highest Avg / Visit", "client": highest_average_client, "value": highest_average_value},
-        {"label": "🎯 Best State Efficiency", "client": best_state, "value": best_state_value},
-        {"label": "📅 Highest Revenue Month", "client": highest_month, "value": highest_month_value},
-        {"label": "✅ Revenue Completion", "client": format_percent(completion), "value": f"{events_with_revenue} of {completed_events} completed visits"},
-        {"label": "🔁 Most Valuable Repeat Client", "client": repeat_client, "value": repeat_value},
-        {"label": "🛣️ Road Warrior", "client": road_client, "value": road_value},
+        {"icon": "💰", "label": "Total Career Revenue", "client": format_currency(total_revenue), "value": "Known revenue only", "use_logo": False},
+        {"icon": "👑", "label": "Revenue King", "client": highest_client, "value": highest_client_value, "use_logo": True},
+        {"icon": "⚡", "label": "Highest Avg / Visit", "client": highest_average_client, "value": highest_average_value, "use_logo": True},
+        {"icon": "🎯", "label": "Best State Efficiency", "client": best_state, "value": best_state_value, "use_logo": False},
+        {"icon": "📅", "label": "Highest Revenue Month", "client": highest_month, "value": highest_month_value, "use_logo": False},
+        {"icon": "✅", "label": "Revenue Completion", "client": format_percent(completion), "value": f"{events_with_revenue} of {completed_events} completed visits", "use_logo": False},
+        {"icon": "🔁", "label": "Most Valuable Repeat Client", "client": repeat_client, "value": repeat_value, "use_logo": True},
+        {"icon": "🛣️", "label": "Road Warrior", "client": road_client, "value": road_value, "use_logo": True},
     ]
+    empty_state_values = {"No revenue data", "No repeat revenue", "Future metric"}
+    logo_files, _ = discover_logos(LOGOS_DIR)
+    accents = ["#2dd4bf", "#f5c542", "#fb7185", "#5c8ee8", "#a78bfa", "#f97316", "#34d399", "#38bdf8"]
     cards = []
-    for record in records:
+    for index, record in enumerate(records):
+        accent = accents[index % len(accents)]
+        if record["use_logo"] and record["client"] not in empty_state_values:
+            icon_markup = client_logo_markup(record["client"], logo_files, "client-logo-badge mini-tile-icon")
+        else:
+            icon_markup = f'<div class="client-logo-badge record-icon-badge">{escape(record["icon"])}</div>'
         cards.append(
-            '<div class="record-card">'
-            f'<div class="record-label">{escape(record["label"])}</div>'
-            f'<div class="record-client">{escape(record["client"])}</div>'
+            f'<div class="record-card" style="--record-accent:{accent}">'
+            f'<div class="record-label">{escape(record["icon"])} {escape(record["label"])}</div>'
+            '<div class="record-icon-line">'
+            f'{icon_markup}'
+            f'<div class="record-client-text">{escape(record["client"])}</div>'
+            '</div>'
             f'<div class="record-value">{escape(record["value"])}</div>'
             '</div>'
         )
@@ -2765,33 +2805,47 @@ def render_financial_standings(data: WorkbookData) -> None:
     rollup = financial_client_rollup(financial)
     render_financial_records(financial, rollup, data)
 
+    logo_files, _ = discover_logos(LOGOS_DIR)
+    top_by_total = rollup.sort_values(["total_revenue", "client"], ascending=[False, True]).head(10)
+    max_total = float(top_by_total["total_revenue"].max()) if not top_by_total.empty else 0.0
     total_rows = []
-    for rank, row in enumerate(
-        rollup.sort_values(["total_revenue", "client"], ascending=[False, True]).head(10).to_dict("records"),
-        start=1,
-    ):
+    for rank, row in enumerate(top_by_total.to_dict("records"), start=1):
+        client = str(row["client"])
+        pct = max(4, min(float(row["total_revenue"]) / max_total * 100, 100)) if max_total else 4
         total_rows.append(
-            '<div class="financial-row">'
-            f'<div class="financial-rank">#{rank}</div>'
-            f'<a class="client-link financial-client" href="{client_profile_url("financial-analytics", str(row["client"]))}" target="_self">{escape(str(row["client"]))}</a>'
-            f'<div class="financial-meta">{int(row["visits"])} visits</div>'
-            f'<div class="financial-money">{escape(format_currency(row["total_revenue"]))}</div>'
-            '<div class="financial-meta">Total</div>'
+            '<div class="financial-card-row">'
+            '<div class="financial-card-top">'
+            '<div class="standing-client-line">'
+            f'<div class="financial-rank-chip">#{rank}</div>'
+            f'{client_logo_markup(client, logo_files, "client-logo-badge mini-tile-icon")}'
+            f'<div class="standing-client">{escape(client)}</div>'
+            '</div>'
+            f'<a class="financial-card-value-link" href="{client_profile_url("financial-analytics", client)}" target="_self">{escape(format_currency(row["total_revenue"]))}</a>'
+            '</div>'
+            f'<div class="financial-card-track"><div class="financial-card-fill" style="width:{pct:.1f}%"></div></div>'
+            f'<div class="financial-card-meta"><span>{int(row["visits"])} visits</span><span>Total revenue</span></div>'
             '</div>'
         )
     render_financial_ranking("TOP REVENUE CLIENTS", total_rows, "No revenue-bearing completed visits are available yet.")
 
+    top_by_avg = rollup.sort_values(["avg_revenue", "client"], ascending=[False, True]).head(10)
+    max_avg = float(top_by_avg["avg_revenue"].max()) if not top_by_avg.empty else 0.0
     average_rows = []
-    for rank, row in enumerate(
-        rollup.sort_values(["avg_revenue", "client"], ascending=[False, True]).head(10).to_dict("records"),
-        start=1,
-    ):
+    for rank, row in enumerate(top_by_avg.to_dict("records"), start=1):
+        client = str(row["client"])
+        pct = max(4, min(float(row["avg_revenue"]) / max_avg * 100, 100)) if max_avg else 4
         average_rows.append(
-            '<div class="financial-row avg-row">'
-            f'<div class="financial-rank">#{rank}</div>'
-            f'<a class="client-link financial-client" href="{client_profile_url("financial-analytics", str(row["client"]))}" target="_self">{escape(str(row["client"]))}</a>'
-            f'<div class="financial-meta">{int(row["visits"])} visits</div>'
-            f'<div class="financial-money">{escape(format_currency_precise(row["avg_revenue"]))}</div>'
+            '<div class="financial-card-row">'
+            '<div class="financial-card-top">'
+            '<div class="standing-client-line">'
+            f'<div class="financial-rank-chip">#{rank}</div>'
+            f'{client_logo_markup(client, logo_files, "client-logo-badge mini-tile-icon")}'
+            f'<div class="standing-client">{escape(client)}</div>'
+            '</div>'
+            f'<a class="financial-card-value-link" href="{client_profile_url("financial-analytics", client)}" target="_self">{escape(format_currency_precise(row["avg_revenue"]))}</a>'
+            '</div>'
+            f'<div class="financial-card-track"><div class="financial-card-fill" style="width:{pct:.1f}%"></div></div>'
+            f'<div class="financial-card-meta"><span>{int(row["visits"])} visits</span><span>Per visit</span></div>'
             '</div>'
         )
     render_financial_ranking("TOP AVERAGE REVENUE / VISIT", average_rows, "No average revenue ranking is available yet.")
@@ -4609,211 +4663,6 @@ def render_add_service_event(data: WorkbookData) -> None:
 
 
 
-
-def render_barrister_output_console() -> None:
-    st.header("Barrister Output")
-
-    engine_root = Path(
-        "/Users/caspiancowboy/Documents/BarristerEngine/BarristerEngine"
-    )
-
-    json_path = engine_root / "logs" / "latest_barrister_output.json"
-    text_path = engine_root / "logs" / "latest_barrister_output.txt"
-
-    if json_path.exists():
-        try:
-            payload = json.loads(json_path.read_text(errors="ignore"))
-        except Exception:
-            payload = {}
-    else:
-        payload = {}
-
-    raw_text = (
-        text_path.read_text(errors="ignore")
-        if text_path.exists()
-        else "No Barrister output found yet."
-    )
-
-    summary = payload.get("decision_summary") or {}
-    months = payload.get("months") or []
-
-    st.markdown(
-        """
-        <style>
-        .bo-strip {
-            display:grid;
-            grid-template-columns:repeat(5,minmax(0,1fr));
-            gap:7px;
-            margin:8px 0 16px;
-        }
-
-        .bo-metric {
-            padding:11px 8px;
-            border-radius:15px;
-            background:rgba(15,23,42,.78);
-            border:1px solid rgba(148,163,184,.14);
-            text-align:center;
-        }
-
-        .bo-metric b {
-            display:block;
-            color:#f8fafc;
-            font-size:1.35rem;
-        }
-
-        .bo-metric span {
-            display:block;
-            margin-top:4px;
-            color:#9fb3c8;
-            font-size:.50rem;
-            letter-spacing:.08em;
-            text-transform:uppercase;
-        }
-
-        .bo-month-grid {
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-            gap:9px;
-        }
-
-        .bo-month {
-            padding:14px;
-            border-radius:18px;
-            background:rgba(15,23,42,.72);
-            border:1px solid rgba(148,163,184,.14);
-        }
-
-        .bo-month h4 {
-            color:#facc15;
-            font-size:.79rem;
-            margin:0 0 8px;
-        }
-
-        .bo-line {
-            display:flex;
-            justify-content:space-between;
-            gap:12px;
-            padding:5px 0;
-            border-bottom:1px solid rgba(148,163,184,.08);
-            font-size:.76rem;
-        }
-
-        .bo-line span { color:#9fb3c8; }
-        .bo-line b { color:#f8fafc; }
-
-        @media(max-width:760px) {
-            .bo-strip { gap:4px; }
-            .bo-metric { padding:9px 4px; }
-            .bo-metric b { font-size:1.05rem; }
-            .bo-metric span { font-size:.40rem; }
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    st.markdown(
-        f"""
-        <div class="bo-strip">
-          <div class="bo-metric">
-            <b>{summary.get("CLEAN_MATCH", 0)}</b>
-            <span>Clean</span>
-          </div>
-          <div class="bo-metric">
-            <b>{summary.get("ACH_MISMATCH", 0)}</b>
-            <span>Mismatch</span>
-          </div>
-          <div class="bo-metric">
-            <b>{summary.get("HOLD_MAPPING", 0)}</b>
-            <span>Map Hold</span>
-          </div>
-          <div class="bo-metric">
-            <b>{summary.get("APPLIED_Y", 0)}</b>
-            <span>Applied</span>
-          </div>
-          <div class="bo-metric">
-            <b>{summary.get("APPLIED_N", 0)}</b>
-            <span>Held</span>
-          </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    def currency(value: object) -> str:
-        try:
-            return f"${float(value):,.2f}"
-        except (TypeError, ValueError):
-            return "—"
-
-    if months:
-        cards = ['<div class="bo-month-grid">']
-
-        for row in months:
-            cards.append(
-                f"""
-                <div class="bo-month">
-                  <h4>{escape(str(row.get("label", "Period")))}</h4>
-
-                  <div class="bo-line">
-                    <span>Events</span>
-                    <b>{int(row.get("events", 0) or 0)}</b>
-                  </div>
-
-                  <div class="bo-line">
-                    <span>Net earned</span>
-                    <b>{currency(row.get("earned"))}</b>
-                  </div>
-
-                  <div class="bo-line">
-                    <span>ACH received</span>
-                    <b>{currency(row.get("received"))}</b>
-                  </div>
-
-                  <div class="bo-line">
-                    <span>Outstanding</span>
-                    <b>{currency(row.get("outstanding"))}</b>
-                  </div>
-
-                  <div class="bo-line">
-                    <span>ACH progress</span>
-                    <b>{float(row.get("ach_pct", 0) or 0):.1f}%</b>
-                  </div>
-
-                  <div class="bo-line">
-                    <span>Net / event</span>
-                    <b>{currency(row.get("net_event"))}</b>
-                  </div>
-
-                  <div class="bo-line">
-                    <span>Annual pace</span>
-                    <b>{currency(row.get("salary_pace"))}</b>
-                  </div>
-                </div>
-                """
-            )
-
-        cards.append("</div>")
-        st.markdown("".join(cards), unsafe_allow_html=True)
-    else:
-        st.info(
-            "Structured Barrister output has not been generated yet. "
-            "Run BarristerEngine once."
-        )
-
-    with st.expander("Raw BarristerEngine Output", expanded=False):
-        st.code(
-            payload.get("report_text", raw_text),
-            language="text",
-        )
-
-    st.caption(
-        f'Generated: {payload.get("generated_at", "legacy source")} · '
-        f'Batch: {payload.get("batch", "Unavailable")} · '
-        f'Workbook: {payload.get("workbook", "Unavailable")}'
-    )
-
-
 def _engine_log_event_first_text(raw: str) -> str:
     """Return an event-first display: Events first, batch/output metadata last."""
     if not raw:
@@ -4955,7 +4804,7 @@ def main() -> None:
     render_navigation(section)
 
     if data is None:
-        st.warning("No Barrister_Master.xlsx workbook in the data folder.")
+        st.warning("No Barrister Source of Truth workbook is available. Place an .xlsx workbook in the data folder.")
         return
 
     missing = data.validation["missing_required_tabs"] or data.validation["missing_required_columns"]
@@ -4990,8 +4839,6 @@ def main() -> None:
         render_ledger_editor(data)
     elif section == "Laboratory":
         render_chart_lab(data)
-    elif section == "Barrister Output":
-        render_barrister_output_console()
 
 
 if __name__ == "__main__":

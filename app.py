@@ -4713,7 +4713,14 @@ def _engine_log_event_first_text(raw: str) -> str:
 def render_engine_log_page() -> None:
     st.header("EVENTS")
 
-    engine_root = Path("/Users/caspiancowboy/Documents/BarristerEngine/BarristerEngine")
+    local_engine_root = Path.home() / "Documents" / "BarristerEngine" / "BarristerEngine"
+    cloud_engine_root = Path(__file__).parent / "BarristerEngine"
+
+    engine_root = (
+        local_engine_root
+        if local_engine_root.exists()
+        else cloud_engine_root
+    )
     report_path = engine_root / "logs" / "latest_barrister_output.txt"
     log_dir = engine_root / "logs"
 

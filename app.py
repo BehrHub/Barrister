@@ -141,7 +141,7 @@ LOCATIONS_PATH = Path(__file__).parent / "data" / "locations.csv"
 LOGOS_DIR = Path(__file__).parent / "assets" / "logos"
 BRAND_FACTORY_APPROVED_DIR = Path(__file__).parent / "assets" / "brand_factory" / "approved"
 BACKUPS_DIR = Path(__file__).parent / "data" / "backups"
-SPLASH_IMAGE_PATH = Path(__file__).parent / "static" / "splash" / "barrister_splash.png"
+SPLASH_IMAGE_PATH = Path(__file__).parent / "static" / "splash" / "barrister_splash.jpg"
 SPLASH_IMAGE_URL = "app/static/splash/barrister_splash.png"
 SPLASH_IMAGE_WIDTH = 853
 SPLASH_IMAGE_HEIGHT = 1280
@@ -1077,6 +1077,12 @@ def render_splash_screen() -> None:
         st.session_state["splash_entered"] = True
         st.rerun()
 
+    import base64 as _base64
+    splash_image_url = (
+        "data:image/jpeg;base64,"
+        + _base64.b64encode(SPLASH_IMAGE_PATH.read_bytes()).decode("ascii")
+    )
+
     enter_url = "?page=executive-summary"
     st.markdown(
         f"""
@@ -1202,7 +1208,7 @@ def render_splash_screen() -> None:
         <div class="splash-gateway" aria-label="Barrister Dashboard splash screen">
             <a class="splash-enter-link" href="{enter_url}" target="_self" aria-label="Enter dashboard" onclick="event.preventDefault(); const gate=this.closest('.splash-gateway'); if(gate){{gate.classList.add('curtain-close');}} setTimeout(()=>{{window.location.href=this.href;}},620);">
                 <div class="splash-image-frame">
-                    <img class="splash-poster splash-poster-official" src="{SPLASH_IMAGE_URL}" alt="" aria-hidden="true" width="{SPLASH_IMAGE_WIDTH}" height="{SPLASH_IMAGE_HEIGHT}" loading="eager" decoding="async" fetchpriority="high">
+                    <img class="splash-poster splash-poster-official" src="{splash_image_url}" alt="" aria-hidden="true" width="{SPLASH_IMAGE_WIDTH}" height="{SPLASH_IMAGE_HEIGHT}" loading="eager" decoding="async" fetchpriority="high">
                 </div>
             </a>
         </div>

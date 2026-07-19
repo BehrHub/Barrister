@@ -1879,6 +1879,39 @@ def render_journey_replay_script() -> None:
                 const summary = doc.getElementById("journeyReplaySummary");
                 const finishLine = doc.getElementById("journeyFinishLine");
 
+                function bindDirectNavigation(selector, destination) {
+                    const element = doc.querySelector(selector);
+                    if (!element) {
+                        return;
+                    }
+                    if (element.dataset.directNavigationBound === "1") {
+                        return;
+                    }
+                    element.dataset.directNavigationBound = "1";
+                    element.addEventListener("click", function(event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        try {
+                            window.top.location.assign(destination);
+                        } catch (error) {
+                            win.location.assign(destination);
+                        }
+                    }, true);
+                }
+
+                bindDirectNavigation(
+                    '[aria-label="Open Bronx Bombers Daily"]',
+                    "http://100.70.235.51:8000/"
+                );
+                bindDirectNavigation(
+                    '[aria-label="Open Heroes and Muses"]',
+                    "http://100.70.235.51:8011"
+                );
+                bindDirectNavigation(
+                    '[aria-label="Open Showcase"]',
+                    "http://100.70.235.51:9000"
+                );
+
                 const journeyTopButton = doc.getElementById("journeyTopButton");
                 if (journeyTopButton) {
                     journeyTopButton.addEventListener("click", function(event) {
@@ -4498,8 +4531,8 @@ def render_logo_factory_page() -> None:
     with logo_factory_link:
         st.markdown(
             """
-            <a href="http://100.70.235.51:8090"
-               target="_blank"
+            <a onclick="window.top.location.assign('http://100.70.235.51:8090'); return false;" href="http://100.70.235.51:8090"
+               target="_self"
                style="
                    display:flex;
                    align-items:center;

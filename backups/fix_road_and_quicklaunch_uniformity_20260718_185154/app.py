@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import base64
-
 import json
 from datetime import date, datetime
 from html import escape
@@ -143,8 +141,8 @@ LOCATIONS_PATH = Path(__file__).parent / "data" / "locations.csv"
 LOGOS_DIR = Path(__file__).parent / "assets" / "logos"
 BRAND_FACTORY_APPROVED_DIR = Path(__file__).parent / "assets" / "brand_factory" / "approved"
 BACKUPS_DIR = Path(__file__).parent / "data" / "backups"
-SPLASH_IMAGE_PATH = Path(__file__).resolve().parent / "static" / "splash" / "barrister_splash.jpg"
-SPLASH_IMAGE_URL = "data:image/jpeg;base64," + base64.b64encode(SPLASH_IMAGE_PATH.read_bytes()).decode("ascii") if SPLASH_IMAGE_PATH.exists() else ""
+SPLASH_IMAGE_PATH = Path(__file__).parent / "static" / "splash" / "barrister_splash.png"
+SPLASH_IMAGE_URL = "app/static/splash/barrister_splash.png"
 SPLASH_IMAGE_WIDTH = 853
 SPLASH_IMAGE_HEIGHT = 1280
 PIN_ICON_URLS = {
@@ -825,7 +823,17 @@ def configure_page() -> None:
     from { background-position: 0 0; }
     to { background-position: 0 44px; }
 }
-
+.journey-start::after {
+    content: "";
+    position: absolute;
+    left: .1rem;
+    right: .1rem;
+    bottom: -6px;
+    height: 4px;
+    border-radius: 2px;
+    background: repeating-linear-gradient(90deg, #f8fafc 0 8px, #07101c 8px 16px);
+    opacity: .55;
+}
 .journey-finish-line.is-visible {
     animation: finishGlowPulse 1.6s ease-in-out 2;
 }
@@ -1059,7 +1067,11 @@ def configure_page() -> None:
             text-decoration: none !important;
             color: inherit !important;
             line-height: 1 !important;
-            flex: 0 0 auto;}
+            flex: 0 0 auto;
+        
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;}
         .journey-two-space-gap {
             display: inline-block;
             width: 3px;
@@ -1810,7 +1822,7 @@ def render_barrister_journey(data: WorkbookData, timeline: pd.DataFrame) -> None
         f'data-known-revenue="{escape(format_currency(known_revenue))}">'
         '<button id="journeyReplayCar" class="journey-replay-car" type="button" aria-label="Pause or resume career replay"><span class="journey-car-icon">🏎️</span><span id="journeyAchievementBadge" class="journey-achievement-badge">+CLIENT</span></button>'
         '<div id="journeyReplaySummary" class="journey-replay-summary" aria-live="polite"></div>'
-        '<div class="journey-start"><span>START 🏁</span><div class="journey-start-actions"><a href="http://100.70.235.51:8000/" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Bronx Bombers Daily">⚾️</a><span class="journey-two-space-gap"></span><a href="http://100.70.235.51:8011" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Heroes and Muses">📚</a><span class="journey-two-space-gap"></span><a href="http://100.70.235.51:9000" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Showcase">🧸</a><span class="journey-two-space-gap"></span><button id="journeyFuelButton" class="journey-fuel-button" type="button" aria-label="Start or restart career replay" title="Start or restart career replay">⛽</button></div></div>' 
+        '<div class="journey-start"><span>START 🏁</span><div class="journey-start-actions"><a href="http://100.70.235.51:8020/" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Bronx Bombers Daily">⚾️</a><span class="journey-two-space-gap"></span><a href="http://100.70.235.51:8011" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Heroes and Muses">📚</a><span class="journey-two-space-gap"></span><a href="http://100.70.235.51:9000" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Showcase">🧸</a><span class="journey-two-space-gap"></span><button id="journeyFuelButton" class="journey-fuel-button" type="button" aria-label="Start or restart career replay" title="Start or restart career replay">⛽</button></div></div>' 
     ]
     for row in chronological.to_dict("records"):
         state_key = jurisdiction_group(row.get("state_region", row.get("region_code", "")))

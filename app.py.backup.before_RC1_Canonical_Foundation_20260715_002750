@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import base64
-
 import json
 from datetime import date, datetime
 from html import escape
@@ -143,8 +141,8 @@ LOCATIONS_PATH = Path(__file__).parent / "data" / "locations.csv"
 LOGOS_DIR = Path(__file__).parent / "assets" / "logos"
 BRAND_FACTORY_APPROVED_DIR = Path(__file__).parent / "assets" / "brand_factory" / "approved"
 BACKUPS_DIR = Path(__file__).parent / "data" / "backups"
-SPLASH_IMAGE_PATH = Path(__file__).resolve().parent / "static" / "splash" / "barrister_splash.jpg"
-SPLASH_IMAGE_URL = "data:image/jpeg;base64," + base64.b64encode(SPLASH_IMAGE_PATH.read_bytes()).decode("ascii") if SPLASH_IMAGE_PATH.exists() else ""
+SPLASH_IMAGE_PATH = Path(__file__).parent / "static" / "splash" / "barrister_splash.png"
+SPLASH_IMAGE_URL = "app/static/splash/barrister_splash.png"
 SPLASH_IMAGE_WIDTH = 853
 SPLASH_IMAGE_HEIGHT = 1280
 PIN_ICON_URLS = {
@@ -825,7 +823,17 @@ def configure_page() -> None:
     from { background-position: 0 0; }
     to { background-position: 0 44px; }
 }
-
+.journey-start::after {
+    content: "";
+    position: absolute;
+    left: .1rem;
+    right: .1rem;
+    bottom: -6px;
+    height: 4px;
+    border-radius: 2px;
+    background: repeating-linear-gradient(90deg, #f8fafc 0 8px, #07101c 8px 16px);
+    opacity: .55;
+}
 .journey-finish-line.is-visible {
     animation: finishGlowPulse 1.6s ease-in-out 2;
 }
@@ -1047,26 +1055,6 @@ def configure_page() -> None:
 .transition-icons-clean {
     filter: grayscale(1) brightness(1.25) contrast(.9) drop-shadow(0 0 6px rgba(226,232,240,.22)) !important;
 }
-        .journey-start-actions {
-            display: inline-flex;
-            align-items: center;
-            justify-content: flex-end;
-        }
-        .journey-teddy-button {
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            text-decoration: none !important;
-            color: inherit !important;
-            line-height: 1 !important;
-            flex: 0 0 auto;}
-        .journey-two-space-gap {
-            display: inline-block;
-            width: 3px;
-            min-width: 3px;
-            flex: 0 0 3px;
-        }
-
 </style>
 
 </style>
@@ -1199,7 +1187,7 @@ def render_splash_screen() -> None:
                 padding-bottom: 0;
             }}
             .splash-image-frame {{
-                margin-top: -92px;
+                margin-top: -102px;
             }}
             .splash-poster-official {{
                 width: min(107vw, 68vh) !important;
@@ -1810,7 +1798,7 @@ def render_barrister_journey(data: WorkbookData, timeline: pd.DataFrame) -> None
         f'data-known-revenue="{escape(format_currency(known_revenue))}">'
         '<button id="journeyReplayCar" class="journey-replay-car" type="button" aria-label="Pause or resume career replay"><span class="journey-car-icon">🏎️</span><span id="journeyAchievementBadge" class="journey-achievement-badge">+CLIENT</span></button>'
         '<div id="journeyReplaySummary" class="journey-replay-summary" aria-live="polite"></div>'
-        '<div class="journey-start"><span>START 🏁</span><div class="journey-start-actions"><a href="http://100.70.235.51:8000/" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Bronx Bombers Daily">⚾️</a><span class="journey-two-space-gap"></span><a href="http://100.70.235.51:8011" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Heroes and Muses">📚</a><span class="journey-two-space-gap"></span><a href="http://100.70.235.51:9000" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Showcase">🧸</a><span class="journey-two-space-gap"></span><button id="journeyFuelButton" class="journey-fuel-button" type="button" aria-label="Start or restart career replay" title="Start or restart career replay">⛽</button></div></div>' 
+        '<div class="journey-start"><span>START 🏁</span><button id="journeyFuelButton" class="journey-fuel-button" type="button" aria-label="Start or restart career replay" title="Start or restart career replay">⛽</button></div>'
     ]
     for row in chronological.to_dict("records"):
         state_key = jurisdiction_group(row.get("state_region", row.get("region_code", "")))
@@ -4449,38 +4437,7 @@ def render_logo_factory_page() -> None:
     tile_builder = Path(__file__).parent / "tools" / "build_client_portfolio_tiles.py"
     sheet_builder = Path(__file__).parent / "tools" / "build_client_portfolio_sheet.py"
 
-    logo_store_title, logo_factory_link = st.columns([4, 1])
-
-    with logo_store_title:
-        st.markdown(
-            '<div class="section-title">LOGO STORE</div>',
-            unsafe_allow_html=True,
-        )
-
-    with logo_factory_link:
-        st.markdown(
-            """
-            <a href="http://100.70.235.51:8090"
-               target="_blank"
-               style="
-                   display:flex;
-                   align-items:center;
-                   justify-content:center;
-                   width:100%;
-                   min-height:48px;
-                   margin-top:4px;
-                   padding:10px 14px;
-                   border:1px solid rgba(168,85,247,.65);
-                   border-radius:14px;
-                   background:rgba(30,20,50,.88);
-                   color:#ffffff;
-                   font-weight:800;
-                   text-decoration:none;
-                   white-space:nowrap;
-               ">🎨 Logo Factory</a>
-            """,
-            unsafe_allow_html=True,
-        )
+    st.markdown('<div class="section-title">LOGO FACTORY</div>', unsafe_allow_html=True)
 
     if not profile_file.exists():
         st.error("Missing logo profile file: assets/brand_factory/logo_profiles.json")
@@ -4756,14 +4713,7 @@ def _engine_log_event_first_text(raw: str) -> str:
 def render_engine_log_page() -> None:
     st.header("EVENTS")
 
-    local_engine_root = Path.home() / "Documents" / "BarristerEngine" / "BarristerEngine"
-    cloud_engine_root = Path(__file__).parent / "BarristerEngine"
-
-    engine_root = (
-        local_engine_root
-        if local_engine_root.exists()
-        else cloud_engine_root
-    )
+    engine_root = Path("/Users/caspiancowboy/Documents/BarristerEngine/BarristerEngine")
     report_path = engine_root / "logs" / "latest_barrister_output.txt"
     log_dir = engine_root / "logs"
 

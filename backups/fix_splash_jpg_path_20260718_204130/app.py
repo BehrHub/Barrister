@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import base64
-
 import json
 from datetime import date, datetime
 from html import escape
@@ -143,8 +141,8 @@ LOCATIONS_PATH = Path(__file__).parent / "data" / "locations.csv"
 LOGOS_DIR = Path(__file__).parent / "assets" / "logos"
 BRAND_FACTORY_APPROVED_DIR = Path(__file__).parent / "assets" / "brand_factory" / "approved"
 BACKUPS_DIR = Path(__file__).parent / "data" / "backups"
-SPLASH_IMAGE_PATH = Path(__file__).resolve().parent / "static" / "splash" / "barrister_splash.jpg"
-SPLASH_IMAGE_URL = "data:image/jpeg;base64," + base64.b64encode(SPLASH_IMAGE_PATH.read_bytes()).decode("ascii") if SPLASH_IMAGE_PATH.exists() else ""
+SPLASH_IMAGE_PATH = Path(__file__).parent / "static" / "splash" / "barrister_splash.png"
+SPLASH_IMAGE_URL = "app/static/splash/barrister_splash.png"
 SPLASH_IMAGE_WIDTH = 853
 SPLASH_IMAGE_HEIGHT = 1280
 PIN_ICON_URLS = {

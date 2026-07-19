@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import base64
-
 import json
 from datetime import date, datetime
 from html import escape
@@ -143,8 +141,8 @@ LOCATIONS_PATH = Path(__file__).parent / "data" / "locations.csv"
 LOGOS_DIR = Path(__file__).parent / "assets" / "logos"
 BRAND_FACTORY_APPROVED_DIR = Path(__file__).parent / "assets" / "brand_factory" / "approved"
 BACKUPS_DIR = Path(__file__).parent / "data" / "backups"
-SPLASH_IMAGE_PATH = Path(__file__).resolve().parent / "static" / "splash" / "barrister_splash.jpg"
-SPLASH_IMAGE_URL = "data:image/jpeg;base64," + base64.b64encode(SPLASH_IMAGE_PATH.read_bytes()).decode("ascii") if SPLASH_IMAGE_PATH.exists() else ""
+SPLASH_IMAGE_PATH = Path(__file__).parent / "static" / "splash" / "barrister_splash.png"
+SPLASH_IMAGE_URL = "app/static/splash/barrister_splash.png"
 SPLASH_IMAGE_WIDTH = 853
 SPLASH_IMAGE_HEIGHT = 1280
 PIN_ICON_URLS = {
@@ -825,7 +823,17 @@ def configure_page() -> None:
     from { background-position: 0 0; }
     to { background-position: 0 44px; }
 }
-
+.journey-start::after {
+    content: "";
+    position: absolute;
+    left: .1rem;
+    right: .1rem;
+    bottom: -6px;
+    height: 4px;
+    border-radius: 2px;
+    background: repeating-linear-gradient(90deg, #f8fafc 0 8px, #07101c 8px 16px);
+    opacity: .55;
+}
 .journey-finish-line.is-visible {
     animation: finishGlowPulse 1.6s ease-in-out 2;
 }
@@ -1047,26 +1055,6 @@ def configure_page() -> None:
 .transition-icons-clean {
     filter: grayscale(1) brightness(1.25) contrast(.9) drop-shadow(0 0 6px rgba(226,232,240,.22)) !important;
 }
-        .journey-start-actions {
-            display: inline-flex;
-            align-items: center;
-            justify-content: flex-end;
-        }
-        .journey-teddy-button {
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            text-decoration: none !important;
-            color: inherit !important;
-            line-height: 1 !important;
-            flex: 0 0 auto;}
-        .journey-two-space-gap {
-            display: inline-block;
-            width: 3px;
-            min-width: 3px;
-            flex: 0 0 3px;
-        }
-
 </style>
 
 </style>
@@ -1199,7 +1187,7 @@ def render_splash_screen() -> None:
                 padding-bottom: 0;
             }}
             .splash-image-frame {{
-                margin-top: -92px;
+                margin-top: -102px;
             }}
             .splash-poster-official {{
                 width: min(107vw, 68vh) !important;
@@ -1810,7 +1798,7 @@ def render_barrister_journey(data: WorkbookData, timeline: pd.DataFrame) -> None
         f'data-known-revenue="{escape(format_currency(known_revenue))}">'
         '<button id="journeyReplayCar" class="journey-replay-car" type="button" aria-label="Pause or resume career replay"><span class="journey-car-icon">🏎️</span><span id="journeyAchievementBadge" class="journey-achievement-badge">+CLIENT</span></button>'
         '<div id="journeyReplaySummary" class="journey-replay-summary" aria-live="polite"></div>'
-        '<div class="journey-start"><span>START 🏁</span><div class="journey-start-actions"><a href="http://100.70.235.51:8000/" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Bronx Bombers Daily">⚾️</a><span class="journey-two-space-gap"></span><a href="http://100.70.235.51:8011" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Heroes and Muses">📚</a><span class="journey-two-space-gap"></span><a href="http://100.70.235.51:9000" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Showcase">🧸</a><span class="journey-two-space-gap"></span><button id="journeyFuelButton" class="journey-fuel-button" type="button" aria-label="Start or restart career replay" title="Start or restart career replay">⛽</button></div></div>' 
+        '<div class="journey-start"><span>START 🏁</span><a href="http://100.70.235.51:8020/" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Bronx Bombers Daily">⚾️</a><span class="journey-two-space-gap"></span><a href="http://100.70.235.51:8011" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Heroes and Muses">📚</a><span class="journey-two-space-gap"></span><a id="journeyShowcaseButton" href="http://100.70.235.51:9000" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Showcase">🧸</a><span class="journey-two-space-gap"></span><button id="journeyFuelButton" class="journey-fuel-button" type="button" aria-label="Start or restart career replay" title="Start or restart career replay">⛽</button></div>'
     ]
     for row in chronological.to_dict("records"):
         state_key = jurisdiction_group(row.get("state_region", row.get("region_code", "")))
@@ -1879,7 +1867,48 @@ def render_journey_replay_script() -> None:
                 const summary = doc.getElementById("journeyReplaySummary");
                 const finishLine = doc.getElementById("journeyFinishLine");
 
-                const journeyTopButton = doc.getElementById("journeyTopButton");
+                
+                // QUICKLAUNCH_PICKET_START
+                const showcaseButton = doc.getElementById("journeyShowcaseButton") || doc.querySelector('a[href*=":9000"]');
+                if (showcaseButton && !showcaseButton.dataset.picketBound) {
+                    showcaseButton.dataset.picketBound = "1";
+                    showcaseButton.addEventListener("click", function(event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        const destination = showcaseButton.href;
+
+                        const style = doc.createElement("style");
+                        style.id = "journeyShowcasePicketStyle";
+                        style.textContent = `
+#journeyShowcasePicketTransition{position:fixed;inset:0;z-index:2147483647;overflow:hidden;background:linear-gradient(#a8cde3 0 47%,#71945a 47% 100%);transform-origin:50% 52%;animation:jspCameraMove 4s cubic-bezier(.22,.61,.36,1) forwards}
+#journeyShowcasePicketTransition .jsp-road{position:absolute;left:37%;right:37%;top:47%;bottom:-12%;clip-path:polygon(44% 0,56% 0,100% 100%,0 100%);background:linear-gradient(90deg,#5b4b3d,#8d765f 48%,#5b4b3d)}
+#journeyShowcasePicketTransition .jsp-fence{position:absolute;top:48%;bottom:-15%;width:62%;background:linear-gradient(#f3ead8,#d6c6aa) 0 34%/100% 11px no-repeat,linear-gradient(#f3ead8,#d6c6aa) 0 67%/100% 11px no-repeat,repeating-linear-gradient(90deg,transparent 0 19px,#f8efe0 19px 45px,transparent 45px 64px)}
+#journeyShowcasePicketTransition .jsp-left{left:-34%;transform:perspective(750px) rotateY(56deg)}
+#journeyShowcasePicketTransition .jsp-right{right:-34%;transform:perspective(750px) rotateY(-56deg)}
+#journeyShowcasePicketTransition .jsp-sign{position:absolute;left:50%;top:22%;transform:translateX(-50%);padding:12px 24px;border:5px solid #674e32;background:#a27c4c;color:#fff0d2;font:700 clamp(18px,3vw,34px) Georgia,serif}
+#journeyShowcasePicketTransition .jsp-icons{position:absolute;left:50%;top:37%;transform:translateX(-50%);font-size:clamp(48px,8vw,88px);filter:drop-shadow(0 0 8px rgba(255,220,130,.95)) drop-shadow(0 0 24px rgba(255,185,65,.60))}
+#journeyShowcasePicketTransition .jsp-tunnel{position:absolute;left:43%;right:43%;top:47%;height:18vh;border-radius:50% 50% 7px 7px;background:radial-gradient(ellipse,#ffe5a5 0,#bc8231 24%,#392719 50%,#090705 82%)}
+@keyframes jspCameraMove{0%{transform:scale(1)}35%{transform:scale(1.28)}72%{transform:scale(2.15)}100%{transform:scale(5.6)}}
+                        `;
+
+                        const overlay = doc.createElement("div");
+                        overlay.id = "journeyShowcasePicketTransition";
+                        overlay.innerHTML = '<div class="jsp-road"></div><div class="jsp-fence jsp-left"></div><div class="jsp-fence jsp-right"></div><div class="jsp-sign">FAMILY SHOWCASE</div><div class="jsp-icons">⛽️🧸</div><div class="jsp-tunnel"></div>';
+
+                        const oldStyle = doc.getElementById("journeyShowcasePicketStyle");
+                        if (oldStyle) oldStyle.remove();
+                        const oldOverlay = doc.getElementById("journeyShowcasePicketTransition");
+                        if (oldOverlay) oldOverlay.remove();
+
+                        doc.head.appendChild(style);
+                        doc.body.appendChild(overlay);
+
+                        win.setTimeout(function() { win.location.href = destination; }, 4000);
+                    }, true);
+                }
+                // QUICKLAUNCH_PICKET_END
+
+const journeyTopButton = doc.getElementById("journeyTopButton");
                 if (journeyTopButton) {
                     journeyTopButton.addEventListener("click", function(event) {
                         event.preventDefault();
@@ -4449,38 +4478,7 @@ def render_logo_factory_page() -> None:
     tile_builder = Path(__file__).parent / "tools" / "build_client_portfolio_tiles.py"
     sheet_builder = Path(__file__).parent / "tools" / "build_client_portfolio_sheet.py"
 
-    logo_store_title, logo_factory_link = st.columns([4, 1])
-
-    with logo_store_title:
-        st.markdown(
-            '<div class="section-title">LOGO STORE</div>',
-            unsafe_allow_html=True,
-        )
-
-    with logo_factory_link:
-        st.markdown(
-            """
-            <a href="http://100.70.235.51:8090"
-               target="_blank"
-               style="
-                   display:flex;
-                   align-items:center;
-                   justify-content:center;
-                   width:100%;
-                   min-height:48px;
-                   margin-top:4px;
-                   padding:10px 14px;
-                   border:1px solid rgba(168,85,247,.65);
-                   border-radius:14px;
-                   background:rgba(30,20,50,.88);
-                   color:#ffffff;
-                   font-weight:800;
-                   text-decoration:none;
-                   white-space:nowrap;
-               ">🎨 Logo Factory</a>
-            """,
-            unsafe_allow_html=True,
-        )
+    st.markdown('<div class="section-title">LOGO FACTORY</div>', unsafe_allow_html=True)
 
     if not profile_file.exists():
         st.error("Missing logo profile file: assets/brand_factory/logo_profiles.json")

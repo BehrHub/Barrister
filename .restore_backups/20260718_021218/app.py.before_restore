@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import base64
-
-import json
 from datetime import date, datetime
 from html import escape
 import math
@@ -65,14 +62,12 @@ JURISDICTION_COLORS = {
     "Maryland": "#2dd4bf",
     "Virginia": "#5c8ee8",
     "Washington, D.C.": "#f97316",
-    "West Virginia": "#a78bfa",
     "Pennsylvania / Other": "#f5c542",
 }
 JURISDICTION_DONUT_STYLES = {
     "Maryland": {"color": "#d85a62", "depth": "#742932", "icon": "🦀"},
     "Washington, D.C.": {"color": "#d7a63d", "depth": "#74531d", "icon": "🏛️"},
     "Virginia": {"color": "#5c8ee8", "depth": "#274f99", "icon": "❤️"},
-    "West Virginia": {"color": "#a78bfa", "depth": "#4c3f78", "icon": "🏔️"},
     "Pennsylvania": {"color": "#5dbb82", "depth": "#276942", "icon": "🔔"},
     "Pennsylvania / Other": {"color": "#5dbb82", "depth": "#276942", "icon": "🔔"},
 }
@@ -100,6 +95,7 @@ DASHBOARD_PAGES = {
     "Maps": "maps",
     "Logo Factory": "logo-factory",
     "Laboratory": "laboratory",
+    "Barrister Output": "barrister-output",
 }
 NAV_DISPLAY = {
     "Executive Summary": {"label": "Executive", "icon": "🏁", "accent": "#f472b6"},
@@ -112,6 +108,7 @@ NAV_DISPLAY = {
     "Maps": {"label": "Maps", "icon": "🗺️", "accent": "#2563eb"},
     "Logo Factory": {"label": "Logo Store", "icon": "🏭", "accent": "#a78bfa"},
     "Laboratory": {"label": "Laboratory", "icon": "🧪", "accent": "#f8fafc"},
+    "Barrister Output": {"label": "Engine Output", "icon": "📟", "accent": "#22c55e"},
 }
 HIDDEN_PAGES = {
     "Coordinate Match Report": "coordinate-match-report",
@@ -125,6 +122,7 @@ HIDDEN_PAGES = {
     "ledger": "Ledger",
     "engine-log": "Engine Log",
     "barrister-output": "Engine Log",
+    "barrister-output": "Barrister Output",
 }
 PAGE_ROUTE_ALIASES = {
     "barrister-journey": "Barrister Journey",
@@ -138,20 +136,20 @@ PAGE_ROUTE_ALIASES = {
     "chart-lab": "Laboratory",
     "executive-summary": "Executive Summary",
     "add-service-event": "Add Service Event",
+    "barrister-output": "Barrister Output",
 }
 LOCATIONS_PATH = Path(__file__).parent / "data" / "locations.csv"
 LOGOS_DIR = Path(__file__).parent / "assets" / "logos"
 BRAND_FACTORY_APPROVED_DIR = Path(__file__).parent / "assets" / "brand_factory" / "approved"
 BACKUPS_DIR = Path(__file__).parent / "data" / "backups"
-SPLASH_IMAGE_PATH = Path(__file__).resolve().parent / "static" / "splash" / "barrister_splash.jpg"
-SPLASH_IMAGE_URL = "data:image/jpeg;base64," + base64.b64encode(SPLASH_IMAGE_PATH.read_bytes()).decode("ascii") if SPLASH_IMAGE_PATH.exists() else ""
+SPLASH_IMAGE_PATH = Path(__file__).parent / "static" / "splash" / "barrister_splash.jpg"
+SPLASH_IMAGE_URL = "app/static/splash/barrister_splash.jpg"
 SPLASH_IMAGE_WIDTH = 853
 SPLASH_IMAGE_HEIGHT = 1280
 PIN_ICON_URLS = {
     "Maryland": "app/static/map/pin_maryland.svg",
     "Virginia": "app/static/map/pin_virginia.svg",
     "Washington, D.C.": "app/static/map/pin_dc.svg",
-    "West Virginia": "app/static/map/pin_pennsylvania.svg",  # TODO: swap once a dedicated pin_west_virginia.svg (purple, #a78bfa) is added
     "Pennsylvania / Other": "app/static/map/pin_pennsylvania.svg",
 }
 PLOTLY_CONFIG = {
@@ -704,318 +702,7 @@ def configure_page() -> None:
     gap: .55rem;
 }
 .record-icon-line .record-client-text {
-    color: #f8fafc;
-    font-size: .95rem;
     font-weight: 850;
-    line-height: 1.14;
-}
-
-/* === REDESIGN PASS: Executive Summary KPIs + Journey polish (additive, CSS-only where possible) === */
-@keyframes dashFadeUp {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.metric-card {
-    position: relative;
-    opacity: 0;
-    animation: dashFadeUp .5s ease forwards;
-    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-.metric-card:nth-child(1) { animation-delay: .02s; }
-.metric-card:nth-child(2) { animation-delay: .08s; }
-.metric-card:nth-child(3) { animation-delay: .14s; }
-.metric-card:nth-child(4) { animation-delay: .20s; }
-.metric-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 14%;
-    right: 14%;
-    height: 3px;
-    border-radius: 0 0 6px 6px;
-    background: linear-gradient(90deg, transparent, var(--metric-accent, #2dd4bf), transparent);
-    opacity: .85;
-}
-.metric-card:hover {
-    transform: translateY(-3px);
-    border-color: color-mix(in srgb, var(--metric-accent, #2dd4bf) 46%, rgba(148,163,184,.28));
-    box-shadow: 0 18px 34px rgba(0,0,0,.26), 0 0 22px color-mix(in srgb, var(--metric-accent, #2dd4bf) 20%, transparent), inset 0 1px 0 rgba(255,255,255,.06);
-}
-.metric-icon {
-    font-size: .92rem;
-    line-height: 1;
-    opacity: .82;
-    margin-bottom: .05rem;
-}
-.metric-detail {
-    margin-top: .3rem;
-    color: #8fa1bb;
-    font-size: .56rem;
-    font-weight: 680;
-    letter-spacing: .03em;
-    line-height: 1.15;
-    text-align: center;
-}
-@media (max-width: 700px) {
-    .metric-icon, .metric-detail { display: none; }
-}
-.live-pulse-dot {
-    display: inline-block;
-    width: 7px;
-    height: 7px;
-    margin-right: .42rem;
-    border-radius: 999px;
-    background: #34d399;
-    vertical-align: middle;
-    animation: livePulse 2.1s ease-in-out infinite;
-}
-@keyframes livePulse {
-    0% { box-shadow: 0 0 0 0 rgba(52,211,153,.55); }
-    70% { box-shadow: 0 0 0 7px rgba(52,211,153,0); }
-    100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); }
-}
-.upcoming-list li {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    padding: .18rem .22rem;
-    border-radius: 8px;
-    opacity: 0;
-    animation: dashFadeUp .4s ease forwards;
-    transition: background .15s ease;
-}
-.upcoming-list li:hover { background: rgba(255,255,255,.035); }
-.upcoming-dot {
-    flex: 0 0 auto;
-    width: 6px;
-    height: 6px;
-    border-radius: 999px;
-    background: #38bdf8;
-    box-shadow: 0 0 8px rgba(56,189,248,.55);
-}
-.upcoming-main { flex: 1; min-width: 0; }
-.upcoming-date {
-    flex: 0 0 auto;
-    color: #8fa1bb;
-    font-size: .64rem;
-    font-weight: 700;
-    white-space: nowrap;
-}
-.premium-donut-card {
-    opacity: 0;
-    animation: dashFadeUp .6s ease forwards;
-}
-.donut-legend-row {
-    opacity: 0;
-    animation: dashFadeUp .5s ease forwards;
-    transition: border-color .15s ease;
-}
-.donut-legend-summary:hover .legend-name { color: #eaf6ff; }
-.journey-fuel-button {
-    animation: fuelIdlePulse 2.6s ease-in-out infinite;
-}
-@keyframes fuelIdlePulse {
-    0%, 100% { box-shadow: 0 8px 18px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.05), 0 0 0 0 rgba(45,212,191,0); }
-    50% { box-shadow: 0 8px 18px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.05), 0 0 14px 2px rgba(45,212,191,.3); }
-}
-.journey-track:not(.replay-active)::before {
-    animation: journeyTrackShimmer 3.2s linear infinite;
-}
-@keyframes journeyTrackShimmer {
-    from { background-position: 0 0; }
-    to { background-position: 0 44px; }
-}
-
-.journey-finish-line.is-visible {
-    animation: finishGlowPulse 1.6s ease-in-out 2;
-}
-@keyframes finishGlowPulse {
-    0%, 100% { box-shadow: none; }
-    50% { box-shadow: 0 0 22px rgba(248,250,252,.35); }
-}
-.journey-stop {
-    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
-}
-.journey-stop:hover {
-    transform: translateY(-2px);
-    border-color: color-mix(in srgb, var(--stop-accent, #2dd4bf) 42%, rgba(148,163,184,.26));
-    box-shadow: 0 12px 26px rgba(0,0,0,.2), 0 0 16px color-mix(in srgb, var(--stop-accent, #2dd4bf) 16%, transparent);
-}
-.journey-stop::before {
-    background: var(--stop-accent, #2dd4bf) !important;
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--stop-accent, #2dd4bf) 30%, transparent) !important;
-}
-.journey-checkpoint, .journey-milestone {
-    opacity: 0;
-    animation: dashFadeUp .45s ease forwards;
-}
-.client-marquee-viewport {
-    position: relative;
-    overflow: hidden;
-    border-radius: 14px;
-    padding: .85rem 0;
-    background: linear-gradient(180deg, rgba(3,10,20,.55), rgba(3,10,20,.82));
-    mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
-    -webkit-mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
-}
-.client-marquee-viewport::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 6px;
-    height: 2px;
-    background: repeating-linear-gradient(90deg, rgba(248,250,252,.32) 0 14px, transparent 14px 28px);
-}
-.client-marquee-track {
-    display: flex;
-    width: max-content;
-    gap: .65rem;
-    animation: clientMarqueeScroll 38s linear infinite;
-}
-.client-marquee:hover .client-marquee-track {
-    animation-play-state: paused;
-}
-@keyframes clientMarqueeScroll {
-    from { transform: translateX(-50%); }
-    to { transform: translateX(0%); }
-}
-.client-marquee-item {
-    flex: 0 0 auto;
-    width: 88px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .32rem;
-}
-.marquee-logo-badge {
-    width: 64px;
-    height: 64px;
-    border-radius: 14px;
-}
-.marquee-client-name {
-    width: 100%;
-    color: #c2cddd;
-    font-size: .58rem;
-    font-weight: 700;
-    line-height: 1.15;
-    text-align: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-@media (max-width: 700px) {
-    .client-marquee-item { width: 68px; }
-    .marquee-logo-badge { width: 50px; height: 50px; border-radius: 12px; }
-    .marquee-client-name { font-size: .52rem; }
-}
-/* === END REDESIGN PASS === */
-
-/* === CLIENT ANALYTICS REDESIGN PASS === */
-.champ-logo-badge {
-    width: 44px;
-    height: 44px;
-    border-radius: 11px;
-}
-.champ-step {
-    opacity: 0;
-    animation: dashFadeUp .5s ease forwards;
-    transition: transform .16s ease;
-}
-.champ-step:nth-child(1) { animation-delay: .06s; }
-.champ-step:nth-child(2) { animation-delay: 0s; }
-.champ-step:nth-child(3) { animation-delay: .12s; }
-.champ-step:hover { transform: translateY(-3px); }
-.record-card {
-    position: relative;
-    opacity: 0;
-    animation: dashFadeUp .5s ease forwards;
-    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
-}
-.record-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 14%;
-    right: 14%;
-    height: 3px;
-    border-radius: 0 0 6px 6px;
-    background: linear-gradient(90deg, transparent, var(--record-accent, #2dd4bf), transparent);
-    opacity: .85;
-}
-.record-card:hover {
-    transform: translateY(-3px);
-    border-color: color-mix(in srgb, var(--record-accent, #2dd4bf) 42%, rgba(148,163,184,.26));
-    box-shadow: 0 16px 30px rgba(0,0,0,.22), 0 0 18px color-mix(in srgb, var(--record-accent, #2dd4bf) 16%, transparent);
-}
-.record-card:nth-child(1) { animation-delay: .02s; }
-.record-card:nth-child(2) { animation-delay: .08s; }
-.record-card:nth-child(3) { animation-delay: .14s; }
-.record-card:nth-child(4) { animation-delay: .2s; }
-.standing-row {
-    opacity: 0;
-    animation: dashFadeUp .45s ease forwards;
-    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
-}
-.standing-row:hover {
-    transform: translateY(-2px);
-    border-color: rgba(45,212,191,.4);
-    box-shadow: 0 14px 28px rgba(0,0,0,.2), 0 0 16px rgba(45,212,191,.14);
-}
-.directory-card {
-    position: relative;
-    opacity: 0;
-    animation: dashFadeUp .45s ease forwards;
-    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
-}
-.directory-card::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 3px;
-    width: var(--activity-pct, 20%);
-    border-radius: 0 4px 4px 12px;
-    background: linear-gradient(90deg, #2dd4bf, #38bdf8);
-    box-shadow: 0 0 10px rgba(45,212,191,.3);
-}
-.directory-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(56,189,248,.4);
-    box-shadow: 0 14px 26px rgba(0,0,0,.18), 0 0 14px rgba(56,189,248,.12);
-}
-.record-icon-badge {
-    width: 54px !important;
-    height: 54px !important;
-    min-width: 54px !important;
-    border-radius: 13px !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.55rem;
-    line-height: 1;
-}
-.financial-rank-chip {
-    flex: 0 0 auto;
-    min-width: 20px;
-    color: #f6d892;
-    font-size: .72rem;
-    font-weight: 850;
-}
-.financial-card-value-link {
-    color: #70ddd1 !important;
-    font-size: .8rem;
-    font-weight: 850;
-    text-align: right;
-    white-space: nowrap;
-    text-decoration: none !important;
-}
-.financial-card-value-link:hover {
-    color: #9ff0e6 !important;
-}
-/* === END CLIENT ANALYTICS REDESIGN PASS === */
-.client-champ-podium {
-    margin: .1rem 0 1.1rem;
 }
 
 <style>
@@ -1047,26 +734,6 @@ def configure_page() -> None:
 .transition-icons-clean {
     filter: grayscale(1) brightness(1.25) contrast(.9) drop-shadow(0 0 6px rgba(226,232,240,.22)) !important;
 }
-        .journey-start-actions {
-            display: inline-flex;
-            align-items: center;
-            justify-content: flex-end;
-        }
-        .journey-teddy-button {
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            text-decoration: none !important;
-            color: inherit !important;
-            line-height: 1 !important;
-            flex: 0 0 auto;}
-        .journey-two-space-gap {
-            display: inline-block;
-            width: 3px;
-            min-width: 3px;
-            flex: 0 0 3px;
-        }
-
 </style>
 
 </style>
@@ -1199,7 +866,7 @@ def render_splash_screen() -> None:
                 padding-bottom: 0;
             }}
             .splash-image-frame {{
-                margin-top: -92px;
+                margin-top: -102px;
             }}
             .splash-poster-official {{
                 width: min(107vw, 68vh) !important;
@@ -1222,17 +889,13 @@ def render_splash_screen() -> None:
         unsafe_allow_html=True,
     )
 
-def metric_card(label: str, value: object, detail: str = "", icon: str = "", accent: str = "") -> str:
+def metric_card(label: str, value: object, detail: str = "") -> str:
     if isinstance(value, float) and value.is_integer():
         value = int(value)
     display = f"{value:,}" if isinstance(value, int) else str(value if value not in (None, "") else "N/A")
-    icon_markup = f'<div class="metric-icon">{escape(icon)}</div>' if icon else ""
-    detail_markup = f'<div class="metric-detail">{escape(detail)}</div>' if detail else ""
-    accent_style = f' style="--metric-accent: {escape(accent, quote=True)}"' if accent else ""
     return (
-        f'<div class="metric-card"{accent_style}>{icon_markup}'
-        f'<div class="metric-label">{escape(label)}</div>'
-        f'<div class="metric-value">{escape(display)}</div>{detail_markup}</div>'
+        f'<div class="metric-card"><div class="metric-label">{escape(label)}</div>'
+        f'<div class="metric-value">{escape(display)}</div></div>'
     )
 
 
@@ -1257,6 +920,85 @@ def _logo_key(value: object) -> str:
         .replace("'", "")
         .replace(".", "")
     )
+
+
+@st.cache_data(show_spinner=False)
+def _cached_asset_data_uri(path_str: str, mtime: float) -> str:
+    import base64
+    path = Path(path_str)
+    if not path.exists():
+        return ""
+    return "data:image/png;base64," + base64.b64encode(path.read_bytes()).decode("utf-8")
+
+
+def _client_logo_key(value: object) -> str:
+    raw = str(value or "").lower()
+    compact = (
+        raw.replace(" ", "")
+        .replace("-", "")
+        .replace("_", "")
+        .replace("&", "and")
+        .replace("'", "")
+        .replace(".", "")
+    )
+
+    aliases = {
+        "usda": "usda",
+        "unitedstatesdepartmentofagriculture": "usda",
+        "jointbaseandrews": "jointbaseandrews",
+        "jba": "jointbaseandrews",
+        "hilton": "hilton",
+        "hamptoninnandsuites": "hamptoninn",
+        "hamptoninn": "hamptoninn",
+        "hampton": "hamptoninn",
+        "bloomingdales": "bloomingdales",
+        "bloomingdale": "bloomingdales",
+        "verizon": "verizon",
+        "davispolk": "davispolk",
+        "davispolkandwardwell": "davispolk",
+        "macys": "macys",
+        "macy": "macys",
+        "tjmaxx": "tjmaxx",
+        "tjmax": "tjmaxx",
+        "marshalls": "marshalls",
+        "homegoods": "homegoods",
+        "homesense": "homesense",
+        "underarmour": "underarmour",
+        "dunkin": "dunkin",
+        "baskinrobbins": "baskinrobbins",
+        "711": "711",
+        "7eleven": "711",
+        "seveneleven": "711",
+        "pepsi": "pepsi",
+        "pepsico": "pepsi",
+        "montpelier": "montpelier",
+        "montpelierliquors": "montpelier",
+        "montpellier": "montpelier",
+        "residential": "residential",
+        "foodlion": "foodlion",
+        "giant": "giant",
+        "giantfoodstores": "giant",
+        "weis": "weis",
+        "weismarkets": "weis",
+        "atriumvillage": "atriumvillage",
+        "marylandbaptistagehome": "marylandbaptistagehome",
+        "mdbaptistagehome": "marylandbaptistagehome",
+        "hebrewhome": "hebrewhomegw",
+        "hebrewhomeofgreaterwashington": "hebrewhomegw",
+        "vanhollen": "vanhollen",
+        "officeofmdsenatorchrisvanhollen": "vanhollen",
+        "alsobrooks": "alsobrooks",
+        "officeofmdsenatorangelaalsobrooks": "alsobrooks",
+    }
+
+    if compact in aliases:
+        return aliases[compact]
+
+    for needle, key in aliases.items():
+        if needle and needle in compact:
+            return key
+
+    return compact
 
 
 def client_logo_markup(client: object, logo_files: dict[str, Path], class_name: str = "client-logo-badge") -> str:
@@ -1320,6 +1062,90 @@ def client_logo_markup(client: object, logo_files: dict[str, Path], class_name: 
     )
 
 
+def _cd_client_key(value: object) -> str:
+    raw = str(value or "").lower()
+    compact = (
+        raw.replace(" ", "")
+        .replace("-", "")
+        .replace("_", "")
+        .replace("&", "and")
+        .replace("'", "")
+        .replace(".", "")
+        .replace(",", "")
+    )
+
+    aliases = {
+        "usda": "usda",
+        "unitedstatesdepartmentofagriculture": "usda",
+        "foodlion": "foodlion",
+        "hebrewhomeofgreaterwashington": "hebrewhomegw",
+        "hebrewhome": "hebrewhomegw",
+        "officeofmdsenatorangelaalsobrooks": "alsobrooks",
+        "angelaalsobrooks": "alsobrooks",
+        "alsobrooks": "alsobrooks",
+        "officeofmdsenatorchrisvanhollen": "vanhollen",
+        "chrisvanhollen": "vanhollen",
+        "vanhollen": "vanhollen",
+        "macys": "macys",
+        "macy": "macys",
+        "giantfoodstores": "giant",
+        "giant": "giant",
+        "verizon": "verizon",
+        "tjmaxx": "tjmaxx",
+        "marshalls": "marshalls",
+        "bloomingdales": "bloomingdales",
+        "bloomingdale": "bloomingdales",
+        "711": "711",
+        "7eleven": "711",
+        "seveneleven": "711",
+        "weis": "weis",
+        "weismarkets": "weis",
+        "hilton": "hilton",
+        "hamptoninn": "hamptoninn",
+        "hamptoninnandsuites": "hamptoninn",
+    }
+
+    if compact in aliases:
+        return aliases[compact]
+
+    for needle, key in aliases.items():
+        if needle and needle in compact:
+            return key
+
+    return compact
+# === CAREERDASHBOARD GLOBAL CLIENT KEY FIX END ===
+
+    wanted = _cd_client_key(client_name)
+
+    logo_path = None
+
+    for key, path in logo_files.items():
+        if _cd_client_key(key) == wanted:
+            logo_path = Path(path)
+            break
+
+    if logo_path is None:
+        for key, path in logo_files.items():
+            nk = _cd_client_key(key)
+            if nk and (nk in wanted or wanted in nk):
+                logo_path = Path(path)
+                break
+
+    if logo_path and logo_path.exists():
+        src = _cd_asset_data_uri(str(logo_path), logo_path.stat().st_mtime)
+        if src:
+            return (
+                f'<span class="{class_name}">'
+                f'<img src="{src}" alt="{escape(client_name)} logo" loading="lazy" />'
+                f'</span>'
+            )
+
+    return (
+        f'<span class="{class_name}">'
+        f'<span class="client-logo-placeholder">{escape(client_initials(client_name))}</span>'
+        f'</span>'
+    )
+
 def completed_client_portfolio(data: WorkbookData) -> pd.DataFrame:
     chronology = completed_chronology(data)
     if chronology.empty or "client" not in chronology:
@@ -1335,32 +1161,136 @@ def completed_client_portfolio(data: WorkbookData) -> pd.DataFrame:
     return portfolio
 
 
-def render_client_logo_marquee(data: WorkbookData) -> None:
-    """F1-style scrolling sponsor board of every client served — pure CSS, pauses on hover."""
-    portfolio = completed_client_portfolio(data)
-    if portfolio.empty:
-        return
-    logo_files, _ = discover_logos(LOGOS_DIR)
-    clients = portfolio["Client"].tolist()
+def render_client_portfolio_wall(data: WorkbookData) -> None:
+    """Render Executive logo wall and splash as one unified showcase."""
+    import base64
+    import streamlit.components.v1 as components
 
-    def tile(client: str) -> str:
-        return (
-            '<div class="client-marquee-item">'
-            f'{client_logo_markup(client, logo_files, "client-logo-badge marquee-logo-badge")}'
-            f'<div class="marquee-client-name">{escape(client_card_display_name(client))}</div>'
-            '</div>'
-        )
+    tile_dir = BRAND_FACTORY_APPROVED_DIR / "_client_portfolio_tiles"
+    splash = BRAND_FACTORY_APPROVED_DIR / "_clients_visited_served_splash.jpeg"
 
-    tiles = "".join(tile(client) for client in clients)
-    st.markdown(
-        '<div class="client-portfolio client-marquee">'
-        f'<div class="portfolio-heading">CLIENTS SERVED · {len(clients)}</div>'
-        '<div class="client-marquee-viewport">'
-        f'<div class="client-marquee-track">{tiles}{tiles}</div>'
-        '</div>'
-        '</div>',
-        unsafe_allow_html=True,
-    )
+    rows = [
+        ["usda", "hilton", "hamptoninn", "bloomingdales", "verizon", "davispolk"],
+        ["macys", "tjmaxx", "marshalls", "homegoods", "homesense", "underarmour"],
+        ["dunkin", "baskinrobbins", "711", "pepsi", "montpelier", "residential"],
+        ["foodlion", "giant", "weis", "atriumvillage", "marylandbaptistagehome", "hebrewhomegw"],
+        ["vanhollen", "jointbaseandrews", "alsobrooks"],
+    ]
+
+    def img_b64(path: Path) -> str:
+        return base64.b64encode(path.read_bytes()).decode("utf-8") if path.exists() else ""
+
+    def tile_img(name: str) -> str:
+        path = tile_dir / f"{name}.png"
+        if not path.exists():
+            return f'<div class="tile missing">{name}</div>'
+        return f'<img class="tile" src="data:image/png;base64,{img_b64(path)}" alt="{name}">'
+
+    row_html = []
+    for row in rows:
+        if len(row) == 6:
+            row_html.append('<div class="wall-row">' + ''.join(tile_img(name) for name in row) + '</div>')
+        else:
+            row_html.append('<div class="wall-row centered">' + ''.join(tile_img(name) for name in row) + '</div>')
+
+    splash_html = ""
+    if splash.exists():
+        splash_html = f'<img class="splash" src="data:image/jpeg;base64,{img_b64(splash)}" alt="Clients Visited Clients Served">'
+
+    html = """
+    <html>
+    <head>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            overflow: hidden;
+        }
+
+        .showcase {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 4px;
+            border-radius: 22px;
+            border: 1px solid rgba(148,163,184,.18);
+            background:
+                radial-gradient(circle at 18% 0%, rgba(148,163,184,.10), transparent 34%),
+                linear-gradient(180deg, rgba(8,17,31,.94), rgba(4,10,20,.98));
+            box-shadow:
+                0 18px 38px rgba(0,0,0,.24),
+                inset 0 1px 0 rgba(255,255,255,.045);
+            overflow: hidden;
+        }
+
+        .logo-wall {
+            padding: 0;
+            border-radius: 18px 18px 10px 10px;
+            background: linear-gradient(180deg, rgba(3,10,20,.72), rgba(3,10,20,.90));
+            overflow: hidden;
+        }
+
+        .wall-row {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 3px;
+            margin-bottom: 3px;
+        }
+
+        .wall-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .wall-row.centered {
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+        }
+
+        .tile {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+        }
+
+        .wall-row.centered .tile {
+            width: calc((100% - 15px) / 6);
+        }
+
+        .splash {
+            display: block;
+            width: 100%;
+            height: auto;
+            margin-top: 5px;
+            border-radius: 14px;
+            box-shadow: 0 8px 18px rgba(0,0,0,.20);
+        }
+
+        .missing {
+            aspect-ratio: 230 / 192;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fca5a5;
+            font: 10px system-ui;
+            border: 1px dashed rgba(248,113,113,.55);
+            background: rgba(127,29,29,.2);
+        }
+    </style>
+    </head>
+    <body>
+        <div class="showcase">
+            <div class="logo-wall">
+                """ + ''.join(row_html) + """
+            </div>
+            """ + splash_html + """
+        </div>
+    </body>
+    </html>
+    """
+
+    components.html(html, height=410, scrolling=False)
 
 def style_figure(figure: go.Figure, height: int = 390) -> go.Figure:
     figure.update_layout(
@@ -1424,10 +1354,6 @@ def compact_state_code(value: object) -> str:
         return "VA"
     if normalized.startswith("PA") or normalized == "PENNSYLVANIA":
         return "PA"
-    if normalized.startswith("WV") or normalized == "WEST VIRGINIA":
-        return "WV"
-    if normalized.startswith("DE") or normalized == "DELAWARE":
-        return "DE"
     return str(value or "").strip()
 
 
@@ -1555,21 +1481,15 @@ def known_location_options(data: WorkbookData) -> list[str]:
 def render_upcoming_assignments(data: WorkbookData) -> None:
     upcoming = upcoming_assignments(data)
     items = []
-    for index, row in enumerate(upcoming.to_dict("records")):
+    for row in upcoming.to_dict("records"):
         location = ", ".join(value for value in [str(row.get("city", "")).strip(), str(row.get("state", "")).strip()] if value)
-        date_label = scheduled_date_label(row.get("event_date", ""))
-        date_markup = f'<span class="upcoming-date">{escape(date_label)}</span>' if date_label not in ("", "No Date") else ""
-        delay = min(index * 0.045, 0.4)
         items.append(
-            f'<li style="animation-delay:{delay:.3f}s"><span class="upcoming-dot"></span>'
-            '<div class="upcoming-main"><strong>'
-            f'{escape(str(row.get("client", "")))}</strong>'
+            f'<li><strong>{escape(str(row.get("client", "")))}</strong>'
             + (f' — {escape(location)}' if location else "")
-            + f'</div>{date_markup}</li>'
+            + '</li>'
         )
     st.markdown(
-        '<div class="upcoming-assignments"><div class="upcoming-title">'
-        f'<span class="live-pulse-dot"></span>Upcoming Assignments ({len(upcoming)})</div>'
+        f'<div class="upcoming-assignments"><div class="upcoming-title">Upcoming Assignments ({len(upcoming)})</div>'
         f'<ul class="upcoming-list">{"".join(items) if items else "<li>None scheduled</li>"}</ul></div>',
         unsafe_allow_html=True,
     )
@@ -1599,7 +1519,7 @@ def render_premium_jurisdiction_donut(activity: pd.DataFrame) -> None:
     legend_rows = []
     largest = activity.iloc[0]
 
-    for legend_index, row in enumerate(activity.to_dict("records")):
+    for row in activity.to_dict("records"):
         name = str(row["state_region"])
         events = int(row["events"])
         percentage = float(row["percentage"])
@@ -1629,9 +1549,8 @@ def render_premium_jurisdiction_donut(activity: pd.DataFrame) -> None:
             f'<div class="donut-label" style="left:{label_left:.1f}%; top:{label_top:.1f}%;">'
             f'<span>{style["icon"]}</span><span>{percentage:.1f}%</span></div>'
         )
-        legend_delay = min(legend_index * 0.06, 0.3)
         legend_rows.append(
-            f'<details class="donut-legend-row" style="border-left:4px solid {style["color"]}; animation-delay:{legend_delay:.3f}s;">'
+            f'<details class="donut-legend-row" style="border-left:4px solid {style["color"]};">'
             f'<summary class="donut-legend-summary">'
             f'<div class="legend-icon">{style["icon"]}</div>'
             f'<div class="legend-name">{escape(name)}</div>'
@@ -1688,37 +1607,22 @@ def render_summary(data: WorkbookData, filtered_timeline: pd.DataFrame) -> None:
             "Service Events",
             scorecard_metric(data.scorecard, "Completed Service Events", fallback=len(completed)),
             "Scorecard completed events",
-            "🏁",
-            "#2dd4bf",
         ),
         (
             "Unique Clients",
             unique_fallback,
             "Completed client authority",
-            "🤝",
-            "#38bdf8",
         ),
-        (
-            "Repeat Clients",
-            repeat_client_count(data),
-            "Client List completed visits > 1",
-            "🔁",
-            "#a78bfa",
-        ),
+        ("Repeat Clients", repeat_client_count(data), "Client List completed visits > 1"),
         (
             "Jurisdictions",
             scorecard_metric(data.scorecard, "Jurisdictions Covered", "States Worked", fallback=regions_fallback),
             "Verified coverage",
-            "🗺️",
-            "#f59e0b",
         ),
     ]
-    metric_markup = "".join(
-        metric_card(label, value, detail, icon=icon, accent=accent)
-        for label, value, detail, icon, accent in metrics
-    )
+    metric_markup = "".join(metric_card(label, value, detail) for label, value, detail in metrics)
     st.markdown(f'<div class="executive-metrics">{metric_markup}</div>', unsafe_allow_html=True)
-    render_client_logo_marquee(data)
+    render_client_portfolio_wall(data)
 
     completed_activity = filtered_timeline
     if "status" in completed_activity:
@@ -1810,7 +1714,7 @@ def render_barrister_journey(data: WorkbookData, timeline: pd.DataFrame) -> None
         f'data-known-revenue="{escape(format_currency(known_revenue))}">'
         '<button id="journeyReplayCar" class="journey-replay-car" type="button" aria-label="Pause or resume career replay"><span class="journey-car-icon">🏎️</span><span id="journeyAchievementBadge" class="journey-achievement-badge">+CLIENT</span></button>'
         '<div id="journeyReplaySummary" class="journey-replay-summary" aria-live="polite"></div>'
-        '<div class="journey-start"><span>START 🏁</span><div class="journey-start-actions"><a href="http://100.70.235.51:8000/" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Bronx Bombers Daily">⚾️</a><span class="journey-two-space-gap"></span><a href="http://100.70.235.51:8011" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Heroes and Muses">📚</a><span class="journey-two-space-gap"></span><a href="http://100.70.235.51:9000" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Showcase">🧸</a><span class="journey-two-space-gap"></span><button id="journeyFuelButton" class="journey-fuel-button" type="button" aria-label="Start or restart career replay" title="Start or restart career replay">⛽</button></div></div>' 
+        '<div class="journey-start"><span>START 🏁</span><button id="journeyFuelButton" class="journey-fuel-button" type="button" aria-label="Start or restart career replay" title="Start or restart career replay">⛽</button></div>'
     ]
     for row in chronological.to_dict("records"):
         state_key = jurisdiction_group(row.get("state_region", row.get("region_code", "")))
@@ -1833,10 +1737,8 @@ def render_barrister_journey(data: WorkbookData, timeline: pd.DataFrame) -> None
         event_date = row.get("event_date")
         date_label = pd.Timestamp(event_date).strftime("%b %d, %Y") if pd.notna(event_date) else ""
         date_markup = f'<div class="journey-date">{escape(date_label)}</div>' if date_label else ""
-        stop_accent = JURISDICTION_COLORS.get(state_key, JURISDICTION_COLORS["Pennsylvania / Other"])
         pieces.append(
             '<div class="journey-stop" '
-            f'style="--stop-accent:{escape(stop_accent, quote=True)}" '
             f'data-visit="{escape(str(number))}" data-client="{escape(client, quote=True)}" '
             f'data-location="{escape(location or "Location not provided", quote=True)}" '
             f'data-new-client="{"1" if is_new_client else "0"}">'
@@ -2464,58 +2366,16 @@ def career_record_cards(data: WorkbookData, directory: pd.DataFrame) -> list[dic
     return records
 
 
-def render_client_podium(directory: pd.DataFrame) -> None:
-    standings = directory[directory["# of Visits"].gt(0)].sort_values(
-        ["# of Visits", "1st Visit", "Client"], ascending=[False, True, True]
-    ).reset_index(drop=True)
-    if standings.empty:
-        return
-    logo_files, _ = discover_logos(LOGOS_DIR)
-    medals = ["🥇", "🥈", "🥉"]
-    order = [1, 0, 2]
-    top = standings.head(3).to_dict("records")
-    if len(top) < 3:
-        order = list(range(len(top)))
-    blocks = []
-    for position in order:
-        row = top[position]
-        client = str(row["Client"])
-        visits = int(row["# of Visits"])
-        height = 78 + (3 - position) * 30
-        blocks.append(
-            '<div class="champ-step">'
-            f'<div class="champ-medal">{medals[position]}</div>'
-            f'{client_logo_markup(client, logo_files, "client-logo-badge champ-logo-badge")}'
-            f'<div class="champ-name" title="{escape(client, quote=True)}">{escape(client_card_display_name(client))}</div>'
-            f'<div class="champ-value">{escape(pluralize(visits, "Visit"))}</div>'
-            f'<div class="champ-block" style="height:{height}px"></div>'
-            '</div>'
-        )
-    st.markdown(
-        '<div class="section-kicker">TOP OF THE LEADERBOARD</div>'
-        '<div class="section-title">PODIUM</div>'
-        f'<div class="champ-podium client-champ-podium">{"".join(blocks)}</div>',
-        unsafe_allow_html=True,
-    )
-
-
 def render_career_records(data: WorkbookData, directory: pd.DataFrame) -> None:
     records = career_record_cards(data, directory)
     if not records:
         return
-    logo_files, _ = discover_logos(LOGOS_DIR)
-    accents = ["#2dd4bf", "#f5c542", "#fb7185", "#5c8ee8"]
     cards = []
-    for index, record in enumerate(records):
-        accent = accents[index % len(accents)]
-        icon_markup = client_logo_markup(record["client"], logo_files, "client-logo-badge mini-tile-icon")
+    for record in records:
         cards.append(
-            f'<div class="record-card" style="--record-accent:{accent}">'
+            '<div class="record-card">'
             f'<div class="record-label">{escape(record["label"])}</div>'
-            '<div class="record-icon-line">'
-            f'{icon_markup}'
-            f'<div class="record-client-text">{escape(record["client"])}</div>'
-            '</div>'
+            f'<div class="record-client">{escape(record["client"])}</div>'
             f'<div class="record-value">{escape(record["value"])}</div>'
             '</div>'
         )
@@ -2766,32 +2626,21 @@ def render_financial_records(financial: pd.DataFrame, rollup: pd.DataFrame, data
     road_client, road_value = road_warrior_record(data)
 
     records = [
-        {"icon": "💰", "label": "Total Career Revenue", "client": format_currency(total_revenue), "value": "Known revenue only", "use_logo": False},
-        {"icon": "👑", "label": "Revenue King", "client": highest_client, "value": highest_client_value, "use_logo": True},
-        {"icon": "⚡", "label": "Highest Avg / Visit", "client": highest_average_client, "value": highest_average_value, "use_logo": True},
-        {"icon": "🎯", "label": "Best State Efficiency", "client": best_state, "value": best_state_value, "use_logo": False},
-        {"icon": "📅", "label": "Highest Revenue Month", "client": highest_month, "value": highest_month_value, "use_logo": False},
-        {"icon": "✅", "label": "Revenue Completion", "client": format_percent(completion), "value": f"{events_with_revenue} of {completed_events} completed visits", "use_logo": False},
-        {"icon": "🔁", "label": "Most Valuable Repeat Client", "client": repeat_client, "value": repeat_value, "use_logo": True},
-        {"icon": "🛣️", "label": "Road Warrior", "client": road_client, "value": road_value, "use_logo": True},
+        {"label": "💰 Total Career Revenue", "client": format_currency(total_revenue), "value": "Known revenue only"},
+        {"label": "👑 Revenue King", "client": highest_client, "value": highest_client_value},
+        {"label": "⚡ Highest Avg / Visit", "client": highest_average_client, "value": highest_average_value},
+        {"label": "🎯 Best State Efficiency", "client": best_state, "value": best_state_value},
+        {"label": "📅 Highest Revenue Month", "client": highest_month, "value": highest_month_value},
+        {"label": "✅ Revenue Completion", "client": format_percent(completion), "value": f"{events_with_revenue} of {completed_events} completed visits"},
+        {"label": "🔁 Most Valuable Repeat Client", "client": repeat_client, "value": repeat_value},
+        {"label": "🛣️ Road Warrior", "client": road_client, "value": road_value},
     ]
-    empty_state_values = {"No revenue data", "No repeat revenue", "Future metric"}
-    logo_files, _ = discover_logos(LOGOS_DIR)
-    accents = ["#2dd4bf", "#f5c542", "#fb7185", "#5c8ee8", "#a78bfa", "#f97316", "#34d399", "#38bdf8"]
     cards = []
-    for index, record in enumerate(records):
-        accent = accents[index % len(accents)]
-        if record["use_logo"] and record["client"] not in empty_state_values:
-            icon_markup = client_logo_markup(record["client"], logo_files, "client-logo-badge mini-tile-icon")
-        else:
-            icon_markup = f'<div class="client-logo-badge record-icon-badge">{escape(record["icon"])}</div>'
+    for record in records:
         cards.append(
-            f'<div class="record-card" style="--record-accent:{accent}">'
-            f'<div class="record-label">{escape(record["icon"])} {escape(record["label"])}</div>'
-            '<div class="record-icon-line">'
-            f'{icon_markup}'
-            f'<div class="record-client-text">{escape(record["client"])}</div>'
-            '</div>'
+            '<div class="record-card">'
+            f'<div class="record-label">{escape(record["label"])}</div>'
+            f'<div class="record-client">{escape(record["client"])}</div>'
             f'<div class="record-value">{escape(record["value"])}</div>'
             '</div>'
         )
@@ -2817,47 +2666,33 @@ def render_financial_standings(data: WorkbookData) -> None:
     rollup = financial_client_rollup(financial)
     render_financial_records(financial, rollup, data)
 
-    logo_files, _ = discover_logos(LOGOS_DIR)
-    top_by_total = rollup.sort_values(["total_revenue", "client"], ascending=[False, True]).head(10)
-    max_total = float(top_by_total["total_revenue"].max()) if not top_by_total.empty else 0.0
     total_rows = []
-    for rank, row in enumerate(top_by_total.to_dict("records"), start=1):
-        client = str(row["client"])
-        pct = max(4, min(float(row["total_revenue"]) / max_total * 100, 100)) if max_total else 4
+    for rank, row in enumerate(
+        rollup.sort_values(["total_revenue", "client"], ascending=[False, True]).head(10).to_dict("records"),
+        start=1,
+    ):
         total_rows.append(
-            '<div class="financial-card-row">'
-            '<div class="financial-card-top">'
-            '<div class="standing-client-line">'
-            f'<div class="financial-rank-chip">#{rank}</div>'
-            f'{client_logo_markup(client, logo_files, "client-logo-badge mini-tile-icon")}'
-            f'<div class="standing-client">{escape(client)}</div>'
-            '</div>'
-            f'<a class="financial-card-value-link" href="{client_profile_url("financial-analytics", client)}" target="_self">{escape(format_currency(row["total_revenue"]))}</a>'
-            '</div>'
-            f'<div class="financial-card-track"><div class="financial-card-fill" style="width:{pct:.1f}%"></div></div>'
-            f'<div class="financial-card-meta"><span>{int(row["visits"])} visits</span><span>Total revenue</span></div>'
+            '<div class="financial-row">'
+            f'<div class="financial-rank">#{rank}</div>'
+            f'<a class="client-link financial-client" href="{client_profile_url("financial-analytics", str(row["client"]))}" target="_self">{escape(str(row["client"]))}</a>'
+            f'<div class="financial-meta">{int(row["visits"])} visits</div>'
+            f'<div class="financial-money">{escape(format_currency(row["total_revenue"]))}</div>'
+            '<div class="financial-meta">Total</div>'
             '</div>'
         )
     render_financial_ranking("TOP REVENUE CLIENTS", total_rows, "No revenue-bearing completed visits are available yet.")
 
-    top_by_avg = rollup.sort_values(["avg_revenue", "client"], ascending=[False, True]).head(10)
-    max_avg = float(top_by_avg["avg_revenue"].max()) if not top_by_avg.empty else 0.0
     average_rows = []
-    for rank, row in enumerate(top_by_avg.to_dict("records"), start=1):
-        client = str(row["client"])
-        pct = max(4, min(float(row["avg_revenue"]) / max_avg * 100, 100)) if max_avg else 4
+    for rank, row in enumerate(
+        rollup.sort_values(["avg_revenue", "client"], ascending=[False, True]).head(10).to_dict("records"),
+        start=1,
+    ):
         average_rows.append(
-            '<div class="financial-card-row">'
-            '<div class="financial-card-top">'
-            '<div class="standing-client-line">'
-            f'<div class="financial-rank-chip">#{rank}</div>'
-            f'{client_logo_markup(client, logo_files, "client-logo-badge mini-tile-icon")}'
-            f'<div class="standing-client">{escape(client)}</div>'
-            '</div>'
-            f'<a class="financial-card-value-link" href="{client_profile_url("financial-analytics", client)}" target="_self">{escape(format_currency_precise(row["avg_revenue"]))}</a>'
-            '</div>'
-            f'<div class="financial-card-track"><div class="financial-card-fill" style="width:{pct:.1f}%"></div></div>'
-            f'<div class="financial-card-meta"><span>{int(row["visits"])} visits</span><span>Per visit</span></div>'
+            '<div class="financial-row avg-row">'
+            f'<div class="financial-rank">#{rank}</div>'
+            f'<a class="client-link financial-client" href="{client_profile_url("financial-analytics", str(row["client"]))}" target="_self">{escape(str(row["client"]))}</a>'
+            f'<div class="financial-meta">{int(row["visits"])} visits</div>'
+            f'<div class="financial-money">{escape(format_currency_precise(row["avg_revenue"]))}</div>'
             '</div>'
         )
     render_financial_ranking("TOP AVERAGE REVENUE / VISIT", average_rows, "No average revenue ranking is available yet.")
@@ -3445,7 +3280,6 @@ def render_client_directory_cards(directory: pd.DataFrame) -> None:
     display_directory = display_directory[display_directory["Client"].fillna("").astype(str).str.strip().ne("")].copy()
     display_directory["display_name"] = display_directory["Client"].astype(str).map(client_card_display_name)
     display_directory = display_directory.sort_values("display_name", key=lambda values: values.str.casefold()).reset_index(drop=True)
-    max_visits = max(int(display_directory["# of Visits"].max()), 1) if not display_directory.empty else 1
     split_at = math.ceil(len(display_directory) / 2)
     first_column = display_directory.iloc[:split_at].to_dict("records")
     second_column = display_directory.iloc[split_at:].to_dict("records")
@@ -3464,10 +3298,8 @@ def render_client_directory_cards(directory: pd.DataFrame) -> None:
         locations = int(row["# of Locations"])
         first_visit = int(row["1st Visit"])
         first_visit_display = f"#{first_visit}" if first_visit else "N/A"
-        activity_pct = max(6, round(visits / max_visits * 100, 1))
         cards.append(
-            f'<a class="client-link directory-card" style="--activity-pct:{activity_pct}%" '
-            f'href="{client_profile_url("client-analytics", client)}" target="_self">'
+            f'<a class="client-link directory-card" href="{client_profile_url("client-analytics", client)}" target="_self">'
             f'{visual}'
             '<div>'
             f'<div class="directory-name" title="{escape(client, quote=True)}">{escape(display_client)}</div>'
@@ -3498,7 +3330,6 @@ def render_client_analytics(data: WorkbookData) -> None:
         return
 
     directory = client_directory_frame(data)
-    render_client_podium(directory)
     render_career_records(data, directory)
     render_client_standings(directory)
     render_client_directory_cards(directory)
@@ -3526,8 +3357,6 @@ def jurisdiction_group(state: object) -> str:
         return "Virginia"
     if normalized in {"dc", "washingtondc", "districtofcolumbia"}:
         return "Washington, D.C."
-    if normalized in {"wv", "westvirginia"}:
-        return "West Virginia"
     return "Pennsylvania / Other"
 
 
@@ -4326,7 +4155,7 @@ def render_manage_existing_event(data: WorkbookData) -> None:
             if not edit_location:
                 edit_location = selected_location
             edit_date = st.date_input("Date", value=_event_date_default(selected["event_date"]), key=f"edit_date_{selected_ref}")
-            status_options = ["Scheduled", "Completed"]
+            status_options = ["Completed", "Scheduled"]
             current_status = str(selected["status"])
             edit_status = st.radio(
                 "Status",
@@ -4449,38 +4278,7 @@ def render_logo_factory_page() -> None:
     tile_builder = Path(__file__).parent / "tools" / "build_client_portfolio_tiles.py"
     sheet_builder = Path(__file__).parent / "tools" / "build_client_portfolio_sheet.py"
 
-    logo_store_title, logo_factory_link = st.columns([4, 1])
-
-    with logo_store_title:
-        st.markdown(
-            '<div class="section-title">LOGO STORE</div>',
-            unsafe_allow_html=True,
-        )
-
-    with logo_factory_link:
-        st.markdown(
-            """
-            <a href="http://100.70.235.51:8090"
-               target="_blank"
-               style="
-                   display:flex;
-                   align-items:center;
-                   justify-content:center;
-                   width:100%;
-                   min-height:48px;
-                   margin-top:4px;
-                   padding:10px 14px;
-                   border:1px solid rgba(168,85,247,.65);
-                   border-radius:14px;
-                   background:rgba(30,20,50,.88);
-                   color:#ffffff;
-                   font-weight:800;
-                   text-decoration:none;
-                   white-space:nowrap;
-               ">🎨 Logo Factory</a>
-            """,
-            unsafe_allow_html=True,
-        )
+    st.markdown('<div class="section-title">LOGO FACTORY</div>', unsafe_allow_html=True)
 
     if not profile_file.exists():
         st.error("Missing logo profile file: assets/brand_factory/logo_profiles.json")
@@ -4631,7 +4429,7 @@ def render_add_service_event(data: WorkbookData) -> None:
     location_options = known_location_options(data)
     with st.form("add_service_event_form", clear_on_submit=False):
         st.markdown('<div class="event-form-shell">', unsafe_allow_html=True)
-        status = st.radio("Status", ["Scheduled", "Completed"], horizontal=True, index=0)
+        status = st.radio("Status", ["Completed", "Scheduled"], horizontal=True, index=0)
         client = st.selectbox(
             "Client",
             clients,
@@ -4706,6 +4504,34 @@ def render_add_service_event(data: WorkbookData) -> None:
 
 
 
+def render_barrister_output_console() -> None:
+    st.header("Barrister Output")
+
+    report_path = Path("/Users/caspiancowboy/Documents/BarristerEngine/BarristerEngine/logs/latest_barrister_output.txt")
+    log_dir = Path("/Users/caspiancowboy/Documents/BarristerEngine/BarristerEngine/logs")
+
+    if report_path.exists():
+        text = report_path.read_text(errors="ignore")
+        source = report_path
+    elif log_dir.exists():
+        candidates = sorted(
+            list(log_dir.glob("morning_report*.txt")) +
+            list(log_dir.glob("engine_v*.txt")) +
+            list(log_dir.glob("*.txt")),
+            key=lambda p: p.stat().st_mtime,
+            reverse=True,
+        )
+        source = candidates[0] if candidates else None
+        text = source.read_text(errors="ignore") if source else "No Barrister output found yet."
+    else:
+        source = None
+        text = f"BarristerEngine logs folder not found:\n{log_dir}"
+
+    st.text_area("Latest BarristerEngine Output", text, height=850)
+    st.caption(f"Source: {source if source else 'None'}")
+
+
+
 def _engine_log_event_first_text(raw: str) -> str:
     """Return an event-first display: Events first, batch/output metadata last."""
     if not raw:
@@ -4756,14 +4582,7 @@ def _engine_log_event_first_text(raw: str) -> str:
 def render_engine_log_page() -> None:
     st.header("EVENTS")
 
-    local_engine_root = Path.home() / "Documents" / "BarristerEngine" / "BarristerEngine"
-    cloud_engine_root = Path(__file__).parent / "BarristerEngine"
-
-    engine_root = (
-        local_engine_root
-        if local_engine_root.exists()
-        else cloud_engine_root
-    )
+    engine_root = Path("/Users/caspiancowboy/Documents/BarristerEngine/BarristerEngine")
     report_path = engine_root / "logs" / "latest_barrister_output.txt"
     log_dir = engine_root / "logs"
 
@@ -4889,7 +4708,128 @@ def main() -> None:
         render_ledger_editor(data)
     elif section == "Laboratory":
         render_chart_lab(data)
+    elif section == "Barrister Output":
+        render_barrister_output_console()
 
 
 if __name__ == "__main__":
     main()
+
+
+# === CAREERDASHBOARD 2.0 PHASE 1 STEP 1 POLISH START ===
+import streamlit as st
+
+# === CAREERDASHBOARD 2.0 LOGO CACHE START ===
+from functools import lru_cache
+import base64
+from pathlib import Path
+
+# === CAREERDASHBOARD 2.0 STATIC CLIENT WALL START ===
+from pathlib import Path as _CDPath
+import base64 as _cd_base64
+
+# === CAREERDASHBOARD ACCOLADE TILE HELPER START ===
+@st.cache_data(show_spinner=False)
+def _cd_asset_data_uri(path_str: str, mtime: float) -> str:
+    import base64
+    p = Path(path_str)
+    if not p.exists():
+        return ""
+    return "data:image/png;base64," + base64.b64encode(p.read_bytes()).decode("utf-8")
+
+
+def _cd_client_key(value: object) -> str:
+    raw = str(value or "").lower()
+    compact = (
+        raw.replace(" ", "")
+        .replace("-", "")
+        .replace("_", "")
+        .replace("&", "and")
+        .replace("'", "")
+        .replace(".", "")
+        .replace(",", "")
+    )
+
+    aliases = {
+        "usda": "usda",
+        "unitedstatesdepartmentofagriculture": "usda",
+        "foodlion": "foodlion",
+        "hebrewhomeofgreaterwashington": "hebrewhomegw",
+        "hebrewhome": "hebrewhomegw",
+        "officeofmdsenatorangelaalsobrooks": "alsobrooks",
+        "angelaalsobrooks": "alsobrooks",
+        "alsobrooks": "alsobrooks",
+        "officeofmdsenatorchrisvanhollen": "vanhollen",
+        "chrisvanhollen": "vanhollen",
+        "vanhollen": "vanhollen",
+        "macys": "macys",
+        "macy": "macys",
+        "giantfoodstores": "giant",
+        "giant": "giant",
+        "verizon": "verizon",
+        "tjmaxx": "tjmaxx",
+        "marshalls": "marshalls",
+        "bloomingdales": "bloomingdales",
+        "bloomingdale": "bloomingdales",
+        "711": "711",
+        "7eleven": "711",
+        "seveneleven": "711",
+        "weis": "weis",
+        "weismarkets": "weis",
+        "hilton": "hilton",
+        "hamptoninn": "hamptoninn",
+        "hamptoninnandsuites": "hamptoninn",
+    }
+
+    if compact in aliases:
+        return aliases[compact]
+
+    for needle, key in aliases.items():
+        if needle and needle in compact:
+            return key
+
+    return compact
+
+
+def _cd_mini_tile_icon_html(client_value: object, class_name: str = "client-logo-badge") -> str:
+    name = str(client_value or "")
+    key = _cd_client_key(name)
+    tile = BRAND_FACTORY_APPROVED_DIR / "_client_portfolio_tiles" / f"{key}.png"
+
+    if tile.exists():
+        src = _cd_asset_data_uri(str(tile), tile.stat().st_mtime)
+        if src:
+            return (
+                f'<span class="{class_name} mini-tile-icon">'
+                f'<img src="{src}" alt="{escape(name)} logo" loading="lazy" />'
+                f'</span>'
+            )
+
+    return (
+        f'<span class="{class_name} mini-tile-icon">'
+        f'<span class="client-logo-placeholder">{escape(client_initials(name))}</span>'
+        f'</span>'
+    )
+
+
+def _cd_accolade_logo_html(client_value: object) -> str:
+    return (
+        '<div class="accolade-logo-center">'
+        + _cd_mini_tile_icon_html(client_value, "client-logo-badge accolade-logo-badge")
+        + '</div>'
+    )
+# === CAREERDASHBOARD ACCOLADE TILE HELPER END ===
+
+
+
+
+
+
+
+def _cd_static_client_wall_html():
+    """Static client portfolio wall generated by Logo Factory.
+
+    Replaces dynamic per-logo rendering with one prebuilt image:
+    assets/brand_factory/approved/_client_portfolio_sheet.png
+    """
+    st.markdown(_cd_static_client_wall_html(), unsafe_allow_html=True)

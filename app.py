@@ -1934,7 +1934,7 @@ def render_journey_replay_script() -> None:
                 let animationFrame = null;
                 let activeScroller = null;
                 let previousScrollerOverflow = "";
-                const speedLevels = [1.00, 1.50, 2.25];
+                const speedLevels = [1.00, 1.70, 2.50, 0.00];
                 const basePixelsPerSecond = 145;
 
                 function stops() {
@@ -2064,7 +2064,7 @@ def render_journey_replay_script() -> None:
                     const elapsed = Math.min(48, now - lastFrame);
                     lastFrame = now;
                     if (!paused) {
-                        setJourneyBoostSmoke(speedLevels[speedIndex] >= 2.25);
+                        setJourneyBoostSmoke(speedLevels[speedIndex] >= 2.50);
                         replayY = Math.min(finishY, replayY + (basePixelsPerSecond * speedLevels[speedIndex] * elapsed / 1000));
                         renderCar();
                         while (nextStopIndex < replayStops.length && replayY >= yFor(replayStops[nextStopIndex])) {
@@ -4061,6 +4061,42 @@ def render_ledger_kpi_row(data: WorkbookData) -> None:
     st.markdown(f'<div class="ledger-kpi-row">{markup}</div>', unsafe_allow_html=True)
 
 
+def render_canonical_project_registry() -> None:
+    st.markdown(
+        """
+        <div style="
+            margin:.45rem 0 .9rem;
+            padding:.8rem .9rem;
+            border:1px solid rgba(56,189,248,.22);
+            border-radius:12px;
+            background:rgba(8,18,32,.72);
+        ">
+            <div style="
+                margin-bottom:.55rem;
+                color:#e2e8f0;
+                font-size:.78rem;
+                font-weight:850;
+                letter-spacing:.08em;
+                text-transform:uppercase;
+            ">
+                Canonical Project Registry
+            </div>
+            <div class="ledger-path"><strong>8088 · Production:</strong> ~/Documents/BarristerCloud</div>
+            <div class="ledger-path"><strong>8501 · Development/Test:</strong> ~/Documents/CareerDashboard</div>
+            <div class="ledger-path"><strong>8020 · Transition Lab:</strong> ~/Documents/Bronx-3D-Transition</div>
+            <div class="ledger-path"><strong>8011 · Heroes &amp; Muses:</strong> ~/Documents/Heroes-Muses-Library</div>
+            <div class="ledger-path"><strong>9000 · Family Showcase:</strong> ~/Documents/Family-Legacy-Archive</div>
+            <div class="ledger-path"><strong>8000 · Bronx Daily:</strong> active server; project folder still requires verification</div>
+            <div style="margin-top:.65rem;color:#94a3b8;font-size:.68rem;line-height:1.45;">
+                BarristerCloud is the Git-backed production source. CareerDashboard is the isolated development clone.
+                BarristerEngine, ticket_processor_test, bronx, and Codex are not assigned active dashboard ports;
+                inspect them before use and never infer their purpose from their names.
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
 def render_ledger_editor(data: WorkbookData) -> None:
     st.subheader("Ledger Editor")
     last_save_message = st.session_state.pop("ledger_editor_last_save", None)
@@ -4098,6 +4134,7 @@ def render_ledger_editor(data: WorkbookData) -> None:
         st.caption(f"{len(frame)} timeline rows · {len(display.columns)} visible columns")
         st.caption(f"Active workbook: {data.path.name}")
         st.caption(str(data.path))
+        render_canonical_project_registry()
         if last_save_message:
             st.success(last_save_message)
         return
@@ -4115,6 +4152,7 @@ def render_ledger_editor(data: WorkbookData) -> None:
     st.caption(f"{len(frame)} timeline rows · {len(display.columns)} visible columns")
     st.caption(f"Active workbook: {data.path.name}")
     st.caption(str(data.path))
+    render_canonical_project_registry()
     if disabled_columns:
         st.caption("Read-only columns: " + ", ".join(disabled_columns))
     if last_save_message:
@@ -4477,7 +4515,7 @@ def render_logo_factory_page() -> None:
                    font-weight:800;
                    text-decoration:none;
                    white-space:nowrap;
-               ">🎨 Logo Factory</a>
+               ">🎨 Logo Lab</a>
             """,
             unsafe_allow_html=True,
         )

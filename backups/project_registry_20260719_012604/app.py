@@ -57,7 +57,6 @@ from event_writer import (
     replace_workbook_sheet_table,
     update_existing_event,
 )
-from pages.career_analytics_page import render_career_analytics_page
 
 
 APP_NAME = "Barrister Dashboard"
@@ -92,29 +91,27 @@ CLIENT_CARD_ALIASES = {
 }
 DASHBOARD_PAGES = {
     "Executive Summary": "executive-summary",
-    "Client Timeline": "client-timeline",
+    "Journey": "journey",
     "Add Service Event": "add-service-event",
-    "Client": "client",
     "Client Analytics": "client-analytics",
-    "Scorecard": "scorecard",
-    "Finance": "finance",
-    "Ledger": "ledger",
-    "Laboratory": "laboratory",
+    "Financial Analytics": "financial-analytics",
     "Engine Log": "engine-log",
+    "Ledger": "ledger",
+    "Maps": "maps",
     "Logo Factory": "logo-factory",
+    "Laboratory": "laboratory",
 }
 NAV_DISPLAY = {
-    "Executive Summary": {"label": "Exec", "icon": "🏁", "accent": "#f472b6"},
-    "Client Timeline": {"label": "Journey", "icon": "🏎️", "accent": "#dc2626"},
+    "Executive Summary": {"label": "Executive", "icon": "🏁", "accent": "#f472b6"},
+    "Journey": {"label": "Journey", "icon": "🏎️", "accent": "#dc2626"},
     "Add Service Event": {"label": "Add Event", "icon": "➕", "accent": "#f97316"},
-    "Client": {"label": "Client", "icon": "👥", "accent": "#2dd4bf"},
-    "Client Analytics": {"label": "Client Analytics", "icon": "📈", "accent": "#a78bfa"},
-    "Scorecard": {"label": "Scorecard", "icon": "🏆", "accent": "#fb7185"},
-    "Finance": {"label": "Finance", "icon": "💰", "accent": "#22c55e"},
-    "Ledger": {"label": "Ledger", "icon": "📓", "accent": "#38bdf8"},
-    "Laboratory": {"label": "Laboratory", "icon": "🧪", "accent": "#f8fafc"},
+    "Client Analytics": {"label": "Clients", "icon": "📊", "accent": "#f5c542"},
+    "Financial Analytics": {"label": "Finance", "icon": "💰", "accent": "#5dbb82"},
     "Engine Log": {"label": "Engine Log", "icon": "📟", "accent": "#22c55e"},
+    "Ledger": {"label": "Ledger", "icon": "📓", "accent": "#38bdf8"},
+    "Maps": {"label": "Maps", "icon": "🗺️", "accent": "#2563eb"},
     "Logo Factory": {"label": "Logo Store", "icon": "🏭", "accent": "#a78bfa"},
+    "Laboratory": {"label": "Laboratory", "icon": "🧪", "accent": "#f8fafc"},
 }
 HIDDEN_PAGES = {
     "Coordinate Match Report": "coordinate-match-report",
@@ -130,24 +127,17 @@ HIDDEN_PAGES = {
     "barrister-output": "Engine Log",
 }
 PAGE_ROUTE_ALIASES = {
-    "executive-summary": "Executive Summary",
-    "client-timeline": "Client Timeline",
-    "journey": "Client Timeline",
-    "add-event": "Add Service Event",
-    "add-service-event": "Add Service Event",
-    "client": "Client",
-    "top-clients": "Client",
+    "barrister-journey": "Barrister Journey",
+    "client-timeline": "Barrister Journey",
+    "career-timeline": "Barrister Journey",
     "client-analytics": "Client Analytics",
-    "career-analytics": "Client Analytics",
-    "scorecard": "Scorecard",
-    "finance": "Finance",
-    "financial-status": "Finance",
-    "ledger": "Ledger",
-    "laboratory": "Laboratory",
+    "financial-analytics": "Financial Analytics",
+    "maps": "Maps",
+    "ledger-editor": "Ledger Editor",
+    "ledger-viewer": "Ledger Editor",
     "chart-lab": "Laboratory",
-    "engine-log": "Engine Log",
-    "barrister-output": "Engine Log",
-    "logo-factory": "Logo Factory",
+    "executive-summary": "Executive Summary",
+    "add-service-event": "Add Service Event",
 }
 LOCATIONS_PATH = Path(__file__).parent / "data" / "locations.csv"
 LOGOS_DIR = Path(__file__).parent / "assets" / "logos"
@@ -1889,39 +1879,6 @@ def render_journey_replay_script() -> None:
                 const summary = doc.getElementById("journeyReplaySummary");
                 const finishLine = doc.getElementById("journeyFinishLine");
 
-                function bindDirectNavigation(selector, destination) {
-                    const element = doc.querySelector(selector);
-                    if (!element) {
-                        return;
-                    }
-                    if (element.dataset.directNavigationBound === "1") {
-                        return;
-                    }
-                    element.dataset.directNavigationBound = "1";
-                    element.addEventListener("click", function(event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        try {
-                            window.top.location.assign(destination);
-                        } catch (error) {
-                            win.location.assign(destination);
-                        }
-                    }, true);
-                }
-
-                bindDirectNavigation(
-                    '[aria-label="Open Bronx Bombers Daily"]',
-                    "http://100.70.235.51:8000/"
-                );
-                bindDirectNavigation(
-                    '[aria-label="Open Heroes and Muses"]',
-                    "http://100.70.235.51:8011"
-                );
-                bindDirectNavigation(
-                    '[aria-label="Open Showcase"]',
-                    "http://100.70.235.51:9000"
-                );
-
                 const journeyTopButton = doc.getElementById("journeyTopButton");
                 if (journeyTopButton) {
                     journeyTopButton.addEventListener("click", function(event) {
@@ -1977,7 +1934,7 @@ def render_journey_replay_script() -> None:
                 let animationFrame = null;
                 let activeScroller = null;
                 let previousScrollerOverflow = "";
-                const speedLevels = [1.00, 1.70, 2.50, 0.00];
+                const speedLevels = [1.00, 1.50, 2.25];
                 const basePixelsPerSecond = 145;
 
                 function stops() {
@@ -2107,7 +2064,7 @@ def render_journey_replay_script() -> None:
                     const elapsed = Math.min(48, now - lastFrame);
                     lastFrame = now;
                     if (!paused) {
-                        setJourneyBoostSmoke(speedLevels[speedIndex] >= 2.50);
+                        setJourneyBoostSmoke(speedLevels[speedIndex] >= 2.25);
                         replayY = Math.min(finishY, replayY + (basePixelsPerSecond * speedLevels[speedIndex] * elapsed / 1000));
                         renderCar();
                         while (nextStopIndex < replayStops.length && replayY >= yFor(replayStops[nextStopIndex])) {
@@ -3355,25 +3312,131 @@ def chart_lab_card(label: str, title: str, story: str, body: str) -> str:
 
 def render_chart_lab(data: WorkbookData) -> None:
     st.markdown('<div class="section-title">LABORATORY</div>', unsafe_allow_html=True)
-
-    demo_path = (
-        Path(__file__).resolve().parent
-        / "laboratory_demos"
-        / "three-transitions-demo.html"
-    )
-
-    if not demo_path.exists():
-        st.error(
-            "Laboratory demo is missing: "
-            "laboratory_demos/three-transitions-demo.html"
-        )
+    datasets = chart_lab_dataset_options(data)
+    if not datasets:
+        chart_lab_empty("No revenue data is available for Laboratory.")
         return
 
-    components.html(
-        demo_path.read_text(encoding="utf-8"),
-        height=650,
-        scrolling=False,
+    st.markdown(
+        '<div class="chart-lab-note">Choose one dataset, then compare eight different ways of telling the same revenue story.</div>',
+        unsafe_allow_html=True,
     )
+    dataset_names = list(datasets)
+    default_dataset = dataset_names.index("Top Revenue Clients") if "Top Revenue Clients" in datasets else 0
+    selected = st.selectbox("Dataset", dataset_names, index=default_dataset)
+    lab_frame = chart_lab_frame(datasets[selected])
+
+    concept_cards = [
+        chart_lab_card(
+            "STYLE A",
+            "Classic Vertical Revenue Columns",
+            "Traditional column comparison with clean spacing and direct dollar labels.",
+            chart_lab_columns(lab_frame),
+        ),
+        chart_lab_card(
+            "STYLE B",
+            "Premium Vertical Revenue Columns",
+            "Rounded, elevated business-dashboard columns for a more polished executive feel.",
+            chart_lab_columns(lab_frame, "premium-columns"),
+        ),
+        chart_lab_card(
+            "STYLE C",
+            "Pseudo-3D Revenue Columns",
+            "Modern depth and angled faces without drifting into old-school Excel 3D.",
+            chart_lab_columns(lab_frame, "pseudo3d-columns"),
+        ),
+        chart_lab_card(
+            "STYLE D",
+            "Revenue Tower / Money Stack",
+            "Revenue becomes stacked units so scale is understood almost instantly.",
+            chart_lab_money_towers(lab_frame),
+        ),
+        chart_lab_card(
+            "STYLE E",
+            "Casino Chip Stacks",
+            "Memorable chip stacks turn dollars into a premium, tactile comparison.",
+            chart_lab_chip_stacks(lab_frame),
+        ),
+        chart_lab_card(
+            "STYLE F",
+            "F1 Constructor Garage",
+            "A team-garage standings board that connects the finance story to the F1 theme.",
+            chart_lab_garage(lab_frame),
+        ),
+        chart_lab_card(
+            "STYLE G",
+            "Podium / Championship View",
+            "A rankings-first presentation for a season-review or winner narrative.",
+            chart_lab_podium(lab_frame),
+        ),
+        chart_lab_card(
+            "STYLE H",
+            "Non-Bar Revenue Orbit",
+            "Radial medallions avoid bars entirely and show each entry as a revenue badge.",
+            chart_lab_radial(lab_frame),
+        ),
+        chart_lab_card(
+            "STYLE I",
+            "Executive Vertical Columns",
+            "Annual-report columns with true proportional height and strong scale separation.",
+            chart_lab_columns(lab_frame, "executive-columns"),
+        ),
+        chart_lab_card(
+            "STYLE J",
+            "Premium 3D Columns",
+            "Executive pseudo-3D columns with angled faces, shadow, and modern depth.",
+            chart_lab_columns(lab_frame, "premium3d-columns"),
+        ),
+        chart_lab_card(
+            "STYLE K",
+            "F1 Fuel Tanks",
+            "Telemetry-inspired fuel levels convert revenue into cockpit-ready tank readings.",
+            chart_lab_fuel_tanks(lab_frame),
+        ),
+        chart_lab_card(
+            "STYLE L",
+            "Skyline Revenue Towers",
+            "A financial-district skyline where each building height tracks revenue scale.",
+            chart_lab_skyline(lab_frame),
+        ),
+        chart_lab_card(
+            "STYLE M",
+            "Pit Lane Progress",
+            "Race-track sectors and finish-line markers show how far each entry runs.",
+            chart_lab_pit_lane(lab_frame),
+        ),
+        chart_lab_card(
+            "STYLE N",
+            "Trophy Cabinet",
+            "Trophy size and rank placement make the revenue leaders feel like awards.",
+            chart_lab_trophy_cabinet(lab_frame),
+        ),
+        chart_lab_card(
+            "STYLE O",
+            "Vault Stacks",
+            "Gold-bar stacks turn revenue into a luxury finance vault visual.",
+            chart_lab_vault_stacks(lab_frame),
+        ),
+        chart_lab_card(
+            "STYLE P",
+            "Cargo Container Yard",
+            "Stacked containers give the revenue story a clean logistics-yard metaphor.",
+            chart_lab_container_yard(lab_frame),
+        ),
+        chart_lab_card(
+            "STYLE Q",
+            "Circuit Power Grid",
+            "Illuminated power cells give revenue a technical F1 telemetry language.",
+            chart_lab_power_grid(lab_frame),
+        ),
+        chart_lab_card(
+            "STYLE R",
+            "Codex Wildcard",
+            "Revenue planets orbit like a private operations map, with size carrying scale.",
+            chart_lab_wildcard(lab_frame),
+        ),
+    ]
+    st.markdown(f'<div class="chart-lab-grid">{"".join(concept_cards)}</div>', unsafe_allow_html=True)
 
 
 def render_client_directory_cards(directory: pd.DataFrame) -> None:
@@ -3998,42 +4061,6 @@ def render_ledger_kpi_row(data: WorkbookData) -> None:
     st.markdown(f'<div class="ledger-kpi-row">{markup}</div>', unsafe_allow_html=True)
 
 
-def render_canonical_project_registry() -> None:
-    st.markdown(
-        """
-        <div style="
-            margin:.45rem 0 .9rem;
-            padding:.8rem .9rem;
-            border:1px solid rgba(56,189,248,.22);
-            border-radius:12px;
-            background:rgba(8,18,32,.72);
-        ">
-            <div style="
-                margin-bottom:.55rem;
-                color:#e2e8f0;
-                font-size:.78rem;
-                font-weight:850;
-                letter-spacing:.08em;
-                text-transform:uppercase;
-            ">
-                Canonical Project Registry
-            </div>
-            <div class="ledger-path"><strong>8088 · Production:</strong> ~/Documents/BarristerCloud</div>
-            <div class="ledger-path"><strong>8501 · Development/Test:</strong> ~/Documents/CareerDashboard</div>
-            <div class="ledger-path"><strong>8020 · Transition Lab:</strong> ~/Documents/Bronx-3D-Transition</div>
-            <div class="ledger-path"><strong>8011 · Heroes &amp; Muses:</strong> ~/Documents/Heroes-Muses-Library</div>
-            <div class="ledger-path"><strong>9000 · Family Showcase:</strong> ~/Documents/Family-Legacy-Archive</div>
-            <div class="ledger-path"><strong>8000 · Bronx Daily:</strong> active server; project folder still requires verification</div>
-            <div style="margin-top:.65rem;color:#94a3b8;font-size:.68rem;line-height:1.45;">
-                BarristerCloud is the Git-backed production source. CareerDashboard is the isolated development clone.
-                BarristerEngine, ticket_processor_test, bronx, and Codex are not assigned active dashboard ports;
-                inspect them before use and never infer their purpose from their names.
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
 def render_ledger_editor(data: WorkbookData) -> None:
     st.subheader("Ledger Editor")
     last_save_message = st.session_state.pop("ledger_editor_last_save", None)
@@ -4071,7 +4098,6 @@ def render_ledger_editor(data: WorkbookData) -> None:
         st.caption(f"{len(frame)} timeline rows · {len(display.columns)} visible columns")
         st.caption(f"Active workbook: {data.path.name}")
         st.caption(str(data.path))
-        render_canonical_project_registry()
         if last_save_message:
             st.success(last_save_message)
         return
@@ -4089,7 +4115,6 @@ def render_ledger_editor(data: WorkbookData) -> None:
     st.caption(f"{len(frame)} timeline rows · {len(display.columns)} visible columns")
     st.caption(f"Active workbook: {data.path.name}")
     st.caption(str(data.path))
-    render_canonical_project_registry()
     if disabled_columns:
         st.caption("Read-only columns: " + ", ".join(disabled_columns))
     if last_save_message:
@@ -4435,8 +4460,8 @@ def render_logo_factory_page() -> None:
     with logo_factory_link:
         st.markdown(
             """
-            <a onclick="window.top.location.assign('http://100.70.235.51:8090'); return false;" href="http://100.70.235.51:8090"
-               target="_self"
+            <a href="http://100.70.235.51:8090"
+               target="_blank"
                style="
                    display:flex;
                    align-items:center;
@@ -4452,7 +4477,7 @@ def render_logo_factory_page() -> None:
                    font-weight:800;
                    text-decoration:none;
                    white-space:nowrap;
-               ">🎨 Logo Lab</a>
+               ">🎨 Logo Factory</a>
             """,
             unsafe_allow_html=True,
         )
@@ -4840,28 +4865,31 @@ def main() -> None:
 
     if section == "Executive Summary":
         render_summary(data, timeline)
-    elif section == "Client Timeline":
+    elif section == "Journey":
+        render_barrister_journey(data, timeline)
+    elif section == "Barrister Journey":
         render_barrister_journey(data, completed_chronology(data))
-    elif section == "Add Service Event":
-        render_add_service_event(data)
-    elif section == "Client":
-        render_client_analytics(data)
     elif section == "Client Analytics":
-        render_career_analytics_page(
-            Path(__file__).resolve().parent / "data" / "current_master.xlsx"
-        )
-    elif section == "Scorecard":
-        render_scorecard(data)
-    elif section == "Finance":
+        render_client_analytics(data)
+    elif section == "Financial Analytics":
         render_financial_analytics(data)
-    elif section == "Ledger":
-        render_ledger_editor(data)
-    elif section == "Laboratory":
-        render_chart_lab(data)
     elif section == "Engine Log":
         render_engine_log_page()
     elif section == "Logo Factory":
         render_logo_factory_page()
+    elif section == "Maps":
+        render_maps_page(data)
+    elif section == "Coordinate Match Report":
+        render_coordinate_match_report(data)
+    elif section == "Add Service Event":
+        render_add_service_event(data)
+    elif section == "Ledger Editor":
+        render_ledger_editor(data)
+    elif section == "Ledger":
+        render_ledger_editor(data)
+    elif section == "Laboratory":
+        render_chart_lab(data)
+
 
 if __name__ == "__main__":
     main()

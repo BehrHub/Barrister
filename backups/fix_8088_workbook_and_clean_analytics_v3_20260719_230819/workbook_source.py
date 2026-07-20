@@ -273,36 +273,19 @@ def _as_count(value: object, fallback: int) -> int:
 
 
 def find_source_workbook() -> Path | None:
-    """
-    Return the authoritative legacy dashboard workbook.
-
-    Career Analytics uses data/current_master.xlsx directly and must never
-    become the global workbook for the existing dashboard pages.
-    """
-    preferred = DATA_DIR / "Barrister_Master.xlsx"
-    if preferred.is_file():
-        return preferred
-
     IMPORTS_DIR.mkdir(parents=True, exist_ok=True)
-
-    def eligible(path: Path) -> bool:
-        return (
-            path.is_file()
-            and path.suffix.lower() in SUPPORTED_EXTENSIONS
-            and not path.name.startswith("~$")
-            and path.name != "current_master.xlsx"
-        )
-
-    imported = [path for path in IMPORTS_DIR.iterdir() if eligible(path)]
+    imported = [
+        path for path in IMPORTS_DIR.iterdir()
+        if path.is_file() and path.suffix.lower() in SUPPORTED_EXTENSIONS and not path.name.startswith("~$")
+    ]
     if imported:
         return max(imported, key=lambda path: (path.stat().st_mtime_ns, path.name))
+    root_files = [
+        path for path in DATA_DIR.iterdir()
+        if path.is_file() and path.suffix.lower() in SUPPORTED_EXTENSIONS and not path.name.startswith("~$")
+    ]
+    return max(root_files, key=lambda path: (path.stat().st_mtime_ns, path.name)) if root_files else None
 
-    root_files = [path for path in DATA_DIR.iterdir() if eligible(path)]
-    return (
-        max(root_files, key=lambda path: (path.stat().st_mtime_ns, path.name))
-        if root_files
-        else None
-    )
 
 def workbook_version(path: Path) -> tuple[str, int, int]:
     stat = path.stat()

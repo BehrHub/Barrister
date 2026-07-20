@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Book page-dive transition — prototype</title>
+<style>
+  :root {
+    --amber: #e8b96b;
+    --amber-deep: #b9822f;
+    --ink: #0d0a08;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #05070a;
+    color: #f4ede0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    overflow: hidden;
+    height: 100%;
+  }
+  .wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 18px;
+  }
+  .stage {
+    position: relative;
+    width: min(720px, 92vw);
+    height: min(460px, 60vh);
+    border-radius: 18px;
+    background: radial-gradient(circle at 50% 40%, #14181f 0%, #05070a 75%);
+    overflow: hidden;
+    border: 1px solid #1c2230;
+    perspective: 1400px;
+  }
+
+  /* ---------- idle book button ---------- */
+  .book-trigger {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 5;
+  }
+  .book-trigger:disabled { cursor: default; }
+  .book3d {
+    position: relative;
+    width: 120px;
+    height: 88px;
+    transform-style: preserve-3d;
+    animation: idleBob 2.6s ease-in-out infinite;
+  }
+  @keyframes idleBob {
+    0%, 100% { transform: translateY(0) rotateX(4deg); }
+    50% { transform: translateY(-6px) rotateX(4deg); }
+  }
+  .cover {
+    position: absolute;
+    top: 0;
+    width: 60px;
+    height: 88px;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #7a4a26, #4a2c16);
+    box-shadow: 0 10px 26px rgba(0,0,0,.5);
+  }
+  .cover-left {
+    left: 0;
+    border-radius: 4px 2px 2px 4px;
+    transform-origin: right center;
+  }
+  .cover-right {
+    right: 0;
+    border-radius: 2px 4px 4px 2px;
+    transform-origin: left center;
+    background: linear-gradient(225deg, #8a5730, #4a2c16);
+  }
+  .spine-glow {
+    position: absolute;
+    left: 50%;
+    top: 6%;
+    bottom: 6%;
+    width: 3px;
+    transform: translateX(-50%);
+    background: var(--amber);
+    opacity: .55;
+    filter: blur(1px);
+    border-radius: 2px;
+  }
+  .book-label {
+    font-size: 14px;
+    letter-spacing: .04em;
+    color: #cbb99a;
+  }
+
+  /* ---------- page fragments ---------- */
+  .fragments {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 4;
+  }
+  .frag {
+    position: absolute;
+    width: 26px;
+    height: 34px;
+    background: #f4ecdb;
+    border-radius: 2px;
+    opacity: 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,.35);
+  }
+
+  /* ---------- library scene ---------- */
+  .library {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: scale(1.18);
+    z-index: 3;
+    background:
+      radial-gradient(circle at 50% 30%, rgba(232,185,107,.35), transparent 60%),
+      linear-gradient(180deg, #1a140c 0%, #0c0906 100%);
+  }
+  .shelf-row {
+    position: absolute;
+    left: 6%;
+    right: 6%;
+    height: 15%;
+    display: flex;
+    gap: 3px;
+    align-items: flex-end;
+  }
+  .shelf-row.r1 { top: 20%; }
+  .shelf-row.r2 { top: 42%; }
+  .shelf-row.r3 { top: 64%; }
+  .book-spine-deco {
+    flex: 1;
+    height: 100%;
+    border-radius: 2px 2px 0 0;
+    opacity: .85;
+  }
+  .library-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 14%;
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #e8b96b;
+    opacity: 0;
+  }
+
+  /* ---------- destination site ---------- */
+  .destination {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 6;
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  .browser-card {
+    width: 82%;
+    max-width: 480px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #14100a;
+    border: 1px solid #33291a;
+    box-shadow: 0 20px 50px rgba(0,0,0,.5);
+  }
+  .browser-chrome {
+    display: flex;
+    gap: 6px;
+    padding: 10px 12px;
+    background: #1d1710;
+    border-bottom: 1px solid #33291a;
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: #4a3a24; }
+  .site-body { padding: 26px 22px 30px; }
+  .site-kicker {
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: #b9822f;
+    margin: 0 0 8px;
+  }
+  .site-title {
+    font-size: 26px;
+    margin: 0 0 10px;
+    color: #f4ede0;
+    font-weight: 600;
+  }
+  .site-copy {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #b8ab93;
+    margin: 0;
+  }
+
+  /* ---------- controls ---------- */
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 40px;
+  }
+  .replay-btn {
+    display: none;
+    padding: 9px 18px;
+    border-radius: 999px;
+    border: 1px solid #3a3020;
+    background: #14100a;
+    color: #e8b96b;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .replay-btn:hover { background: #1d1710; }
+  .hint {
+    font-size: 12px;
+    color: #6b6255;
+  }
+
+  /* ---------- phase classes ---------- */
+  .stage.opening .cover-left { animation: openLeft .8s ease-in forwards; }
+  .stage.opening .cover-right { animation: openRight .8s ease-in forwards; }
+  .stage.opening .spine-glow { animation: spineFlash .8s ease-in forwards; }
+  @keyframes openLeft { to { transform: rotateY(35deg); } }
+  @keyframes openRight { to { transform: rotateY(-150deg); } }
+  @keyframes spineFlash { to { opacity: 1; width: 6px; filter: blur(3px); } }
+
+  .stage.diving .book-trigger { animation: bookZoom 1.2s cubic-bezier(.5,0,.85,1) forwards; }
+  @keyframes bookZoom {
+    to { transform: scale(9); opacity: 0; }
+  }
+  .stage.diving .frag { animation: fragFly 1.1s ease-out forwards; }
+  @keyframes fragFly {
+    0% { opacity: .95; transform: translate(0,0) rotate(0deg) scale(1); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(1.6); }
+  }
+
+  .stage.entering .library { animation: libraryIn 1.8s ease-out forwards; }
+  @keyframes libraryIn {
+    0% { opacity: 0; transform: scale(1.18); }
+    60% { opacity: 1; }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  .stage.entering .library-caption { animation: captionInOut 1.8s ease forwards; }
+  @keyframes captionInOut {
+    0% { opacity: 0; transform: translateY(6px); }
+    30% { opacity: 1; transform: translateY(0); }
+    75% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  .stage.arriving .destination { animation: destIn 1.1s ease-out forwards; }
+  @keyframes destIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .stage.arriving .library { animation: libraryOut 1.1s ease-in forwards; }
+  @keyframes libraryOut {
+    to { opacity: 0; transform: scale(.94); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stage" id="stage">
+
+    <button class="book-trigger" id="bookBtn" aria-label="Open the book">
+      <div class="book3d">
+        <div class="cover cover-left"></div>
+        <div class="cover cover-right"></div>
+        <div class="spine-glow"></div>
+      </div>
+      <div class="book-label">Click the book to enter</div>
+    </button>
+
+    <div class="fragments" id="fragments"></div>
+
+    <div class="library" id="library">
+      <div class="shelf-row r1"></div>
+      <div class="shelf-row r2"></div>
+      <div class="shelf-row r3"></div>
+      <div class="library-caption">Entering the library…</div>
+    </div>
+
+    <div class="destination" id="destination">
+      <div class="browser-card">
+        <div class="browser-chrome">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <div class="site-body">
+          <p class="site-kicker">Heroes &amp; Muses</p>
+          <h1 class="site-title">Welcome in</h1>
+          <p class="site-copy">This is where the destination site content lands once the dive completes.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <div class="hint" id="hint">Total runtime: ~5.5s</div>
+    <button class="replay-btn" id="replayBtn">↺ Replay</button>
+  </div>
+</div>
+
+<script>
+  const stage = document.getElementById('stage');
+  const bookBtn = document.getElementById('bookBtn');
+  const fragmentsEl = document.getElementById('fragments');
+  const replayBtn = document.getElementById('replayBtn');
+  const hint = document.getElementById('hint');
+
+  const shelfColors = ['#7a4a26','#8a5730','#4a2c16','#b9822f','#5c3a1e','#9a6a3a','#3a2414'];
+  document.querySelectorAll('.shelf-row').forEach(row => {
+    for (let i = 0; i < 14; i++) {
+      const spine = document.createElement('div');
+      spine.className = 'book-spine-deco';
+      spine.style.background = shelfColors[i % shelfColors.length];
+      spine.style.height = (55 + Math.random() * 45) + '%';
+      row.appendChild(spine);
+    }
+  });
+
+  function buildFragments() {
+    fragmentsEl.innerHTML = '';
+    const count = 14;
+    for (let i = 0; i < count; i++) {
+      const f = document.createElement('div');
+      f.className = 'frag';
+      const angle = (Math.PI * 2 * i) / count + Math.random() * 0.4;
+      const dist = 180 + Math.random() * 140;
+      const tx = Math.cos(angle) * dist;
+      const ty = Math.sin(angle) * dist - 40;
+      f.style.setProperty('--tx', tx + 'px');
+      f.style.setProperty('--ty', ty + 'px');
+      f.style.setProperty('--rot', (Math.random() * 540 - 270) + 'deg');
+      f.style.animationDelay = (Math.random() * 0.25) + 's';
+      fragmentsEl.appendChild(f);
+    }
+  }
+
+  function playTimeline() {
+    bookBtn.disabled = true;
+    hint.textContent = 'Playing…';
+    buildFragments();
+
+    stage.classList.add('opening');
+
+    setTimeout(() => stage.classList.add('diving'), 750);
+    setTimeout(() => stage.classList.add('entering'), 1950);
+    setTimeout(() => stage.classList.add('arriving'), 3950);
+    setTimeout(() => {
+      hint.textContent = 'Done — 5.5s total';
+      replayBtn.style.display = 'inline-block';
+    }, 5450);
+  }
+
+  function reset() {
+    stage.classList.remove('opening', 'diving', 'entering', 'arriving');
+    bookBtn.style.transform = '';
+    bookBtn.style.opacity = '';
+    bookBtn.disabled = false;
+    replayBtn.style.display = 'none';
+    hint.textContent = 'Total runtime: ~5.5s';
+    void stage.offsetWidth;
+  }
+
+  bookBtn.addEventListener('click', playTimeline);
+  replayBtn.addEventListener('click', () => {
+    reset();
+    requestAnimationFrame(playTimeline);
+  });
+</script>
+</body>
+</html>

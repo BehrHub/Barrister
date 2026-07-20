@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Batter swing — baseball transition prototype</title>
+<style>
+  :root {
+    --navy: #0c2340;
+    --navy-deep: #071527;
+    --cream: #f4ede0;
+    --red: #c1272d;
+    --amber: #e8b96b;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #05070a;
+    color: var(--cream);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    overflow: hidden;
+    height: 100%;
+  }
+  .wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 18px;
+  }
+  .stage {
+    position: relative;
+    width: 720px;
+    max-width: 92vw;
+    height: 460px;
+    max-height: 60vh;
+    border-radius: 18px;
+    background: radial-gradient(circle at 50% 40%, #10192a 0%, #05070a 75%);
+    overflow: hidden;
+    border: 1px solid #1c2438;
+  }
+  .field-line {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 34%;
+    height: 1px;
+    background: #1c2438;
+  }
+
+  /* ---------- batter figure ---------- */
+  .batter {
+    position: absolute;
+    bottom: 32%;
+    left: -60px;
+    width: 40px;
+    height: 74px;
+    opacity: 0;
+    z-index: 4;
+  }
+  .batter svg { display: block; overflow: visible; }
+  .leg { transform-origin: 20px 42px; }
+  .arm-free { transform-origin: 20px 20px; }
+  .bat-arm { transform-origin: 20px 20px; }
+
+  /* ---------- ball ---------- */
+  .ball-wrap {
+    position: absolute;
+    bottom: 40%;
+    left: 300px;
+    width: 46px;
+    height: 46px;
+    z-index: 3;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  .ball-wrap:disabled { cursor: default; }
+  .ball {
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: drop-shadow(0 6px 14px rgba(0,0,0,.45));
+  }
+  .ball-idle { animation: idleSpin 2.6s ease-in-out infinite; }
+  @keyframes idleSpin {
+    0%, 100% { transform: rotate(-6deg); }
+    50% { transform: rotate(6deg); }
+  }
+  .trail {
+    position: absolute;
+    top: 0; left: 0;
+    width: 46px;
+    height: 46px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .impact-flash {
+    position: absolute;
+    bottom: 40%;
+    left: 300px;
+    width: 46px;
+    height: 46px;
+    transform: translate(-50%, 50%);
+    border-radius: 50%;
+    background: #fff8ec;
+    opacity: 0;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .play-hint {
+    position: absolute;
+    left: 50%;
+    bottom: 10%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #6b7484;
+    z-index: 6;
+  }
+
+  .tunnel { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 7; pointer-events: none; }
+  .ring { position: absolute; border: 3px solid var(--amber); border-radius: 50%; opacity: 0; width: 60px; height: 60px; }
+  .flash { position: absolute; inset: 0; background: #fff8ec; opacity: 0; z-index: 8; pointer-events: none; }
+  .destination { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 9; opacity: 0; transform: translateY(24px); }
+  .browser-card { width: 82%; max-width: 480px; border-radius: 12px; overflow: hidden; background: repeating-linear-gradient(90deg, var(--navy) 0 14px, var(--navy-deep) 14px 15px); border: 1px solid #1c2438; box-shadow: 0 20px 50px rgba(0,0,0,.5); }
+  .browser-chrome { display: flex; gap: 6px; padding: 10px 12px; background: var(--navy-deep); border-bottom: 1px solid #1c2438; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: #24344f; }
+  .site-body { padding: 26px 22px 30px; background: rgba(7,21,39,.72); }
+  .site-kicker { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--amber); margin: 0 0 8px; }
+  .site-title { font-size: 26px; margin: 0 0 10px; color: var(--cream); font-weight: 700; }
+  .site-copy { font-size: 13px; line-height: 1.6; color: #c7d0dd; margin: 0; }
+
+  .controls { display: flex; align-items: center; gap: 10px; height: 40px; }
+  .replay-btn { display: none; padding: 9px 18px; border-radius: 999px; border: 1px solid #24344f; background: var(--navy-deep); color: var(--amber); font-size: 13px; cursor: pointer; }
+  .replay-btn:hover { background: #0f1c30; }
+  .hint { font-size: 12px; color: #5c6879; }
+
+  /* ---------- phase: walking in ---------- */
+  .stage.walking .batter { animation: walkIn 1.5s linear forwards; }
+  @keyframes walkIn {
+    0% { opacity: 1; left: -60px; }
+    100% { opacity: 1; left: 210px; }
+  }
+  .stage.walking .leg-left { animation: legSwingA .38s ease-in-out infinite; }
+  .stage.walking .leg-right { animation: legSwingB .38s ease-in-out infinite; }
+  .stage.walking .arm-free { animation: armSwing .38s ease-in-out infinite; }
+  .stage.walking .batter svg { animation: bob .38s ease-in-out infinite; }
+  @keyframes legSwingA { 0%, 100% { transform: rotate(26deg); } 50% { transform: rotate(-26deg); } }
+  @keyframes legSwingB { 0%, 100% { transform: rotate(-26deg); } 50% { transform: rotate(26deg); } }
+  @keyframes armSwing { 0%, 100% { transform: rotate(-18deg); } 50% { transform: rotate(18deg); } }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+
+  /* ---------- phase: swing ---------- */
+  .stage.swinging .bat-arm { animation: swing .28s cubic-bezier(.3,0,.15,1) forwards; }
+  @keyframes swing {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(-142deg); }
+  }
+
+  /* ---------- phase: impact ---------- */
+  .stage.impact .batter { animation: batterOut .3s ease forwards; }
+  @keyframes batterOut { to { opacity: 0; } }
+  .stage.impact .impact-flash { animation: impactPop .3s ease forwards; }
+  @keyframes impactPop {
+    0% { opacity: 0; transform: translate(-50%,50%) scale(.4); }
+    35% { opacity: .95; transform: translate(-50%,50%) scale(1.3); }
+    100% { opacity: 0; transform: translate(-50%,50%) scale(1.8); }
+  }
+  .stage.impact .ball-idle { animation: none; }
+  .ball-squash { animation: squash .12s ease forwards; }
+  @keyframes squash { 50% { transform: scale(.75,1.2); } }
+
+  /* ---------- phase: fly ---------- */
+  .stage.flying .ball-wrap { animation: ballFly .55s cubic-bezier(.6,0,.9,.4) forwards; }
+  @keyframes ballFly {
+    0% { transform: translate(0,0) rotate(0deg) scale(1); }
+    100% { transform: translate(300px,-40px) rotate(320deg) scale(.4); }
+  }
+  .stage.flying .ball { animation: ballBlur .55s ease-in forwards; }
+  @keyframes ballBlur { to { filter: blur(3px); } }
+  .stage.flying .trail:nth-child(1) { animation: trailFade .5s ease-out .04s forwards; }
+  .stage.flying .trail:nth-child(2) { animation: trailFade .5s ease-out .09s forwards; }
+  .stage.flying .trail:nth-child(3) { animation: trailFade .5s ease-out .14s forwards; }
+  @keyframes trailFade {
+    0% { opacity: .5; transform: translate(0,0) scale(1); }
+    100% { opacity: 0; transform: translate(270px,-40px) scale(.4); }
+  }
+  .stage.flying { animation: shake .5s linear; }
+  @keyframes shake {
+    0%, 100% { transform: translate(0,0); }
+    20% { transform: translate(-4px, 2px); }
+    40% { transform: translate(4px, -2px); }
+    60% { transform: translate(-3px, -1px); }
+    80% { transform: translate(3px, 2px); }
+  }
+
+  /* ---------- phase: tunnel ---------- */
+  .stage.tunnel .ring { animation: ringFly 1.7s ease-out forwards; }
+  @keyframes ringFly { 0% { opacity: 0; width: 40px; height: 40px; } 12% { opacity: .9; } 100% { opacity: 0; width: 900px; height: 900px; } }
+  .stage.tunnel { animation: tunnelDark 1.7s ease forwards; }
+  @keyframes tunnelDark {
+    0% { background: radial-gradient(circle at 50% 40%, #10192a 0%, #05070a 75%); }
+    50% { background: radial-gradient(circle at 50% 40%, #1c2c4a 0%, #020304 75%); }
+    100% { background: radial-gradient(circle at 50% 50%, #2a3f66 0%, #020304 70%); }
+  }
+  .stage.tunnel .flash { animation: flashPop 1.7s ease forwards; }
+  @keyframes flashPop { 0%, 70% { opacity: 0; } 88% { opacity: .9; } 100% { opacity: 0; } }
+
+  /* ---------- phase: arriving ---------- */
+  .stage.arriving .destination { animation: destIn 1s ease-out forwards; }
+  @keyframes destIn { to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stage" id="stage">
+
+    <div class="field-line"></div>
+
+    <div class="batter" id="batter">
+      <svg viewBox="0 0 40 74" width="40" height="74">
+        <line class="leg leg-left" x1="20" y1="42" x2="12" y2="68" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+        <line class="leg leg-right" x1="20" y1="42" x2="28" y2="68" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+        <line x1="20" y1="16" x2="20" y2="42" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+        <line class="arm-free" x1="20" y1="20" x2="12" y2="32" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+        <g class="bat-arm">
+          <line x1="20" y1="20" x2="27" y2="14" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+          <line class="bat" x1="27" y1="14" x2="35" y2="-4" stroke="#a9682f" stroke-width="4" stroke-linecap="round"/>
+        </g>
+        <circle cx="20" cy="10" r="6" fill="#111"/>
+        <polygon points="14,7 27,7 24,4 16,4" fill="#c1272d"/>
+      </svg>
+    </div>
+
+    <button class="ball-wrap" id="ballBtn" aria-label="Click the ball to start">
+      <svg class="trail" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#f4ede0"/></svg>
+      <svg class="trail" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#f4ede0"/></svg>
+      <svg class="trail" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#f4ede0"/></svg>
+      <svg class="ball ball-idle" id="ballShape" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="46" fill="#f4ede0" stroke="#c9bfa8" stroke-width="2"/>
+        <path d="M 28 8 Q 50 50 28 92" fill="none" stroke="#c1272d" stroke-width="3"/>
+        <path d="M 72 8 Q 50 50 72 92" fill="none" stroke="#c1272d" stroke-width="3"/>
+      </svg>
+    </button>
+    <div class="impact-flash"></div>
+
+    <div class="play-hint" id="playHint">Click the ball to play</div>
+
+    <div class="tunnel" id="tunnelRings"></div>
+    <div class="flash"></div>
+
+    <div class="destination">
+      <div class="browser-card">
+        <div class="browser-chrome"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="site-body">
+          <p class="site-kicker">Bronx Daily</p>
+          <h1 class="site-title">Welcome in</h1>
+          <p class="site-copy">This is where the Bronx Daily homepage lands once the swing connects.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <div class="hint" id="hint">Total runtime: ~5.3s</div>
+    <button class="replay-btn" id="replayBtn">↺ Replay</button>
+  </div>
+</div>
+
+<script>
+  const stage = document.getElementById('stage');
+  const ballBtn = document.getElementById('ballBtn');
+  const ballShape = document.getElementById('ballShape');
+  const tunnelRings = document.getElementById('tunnelRings');
+  const replayBtn = document.getElementById('replayBtn');
+  const hint = document.getElementById('hint');
+  const playHint = document.getElementById('playHint');
+
+  function buildRings() {
+    tunnelRings.innerHTML = '';
+    for (let i = 0; i < 7; i++) {
+      const ring = document.createElement('div');
+      ring.className = 'ring';
+      ring.style.animationDelay = (i * 0.16) + 's';
+      tunnelRings.appendChild(ring);
+    }
+  }
+
+  function playTimeline() {
+    ballBtn.disabled = true;
+    playHint.style.display = 'none';
+    hint.textContent = 'Playing…';
+    buildRings();
+
+    stage.classList.add('walking');
+
+    setTimeout(() => {
+      stage.classList.remove('walking');
+      stage.classList.add('swinging');
+    }, 1500);
+
+    setTimeout(() => {
+      stage.classList.add('impact');
+      ballShape.classList.add('ball-squash');
+    }, 1780);
+
+    setTimeout(() => stage.classList.add('flying'), 1900);
+
+    setTimeout(() => stage.classList.add('tunnel'), 2450);
+
+    setTimeout(() => stage.classList.add('arriving'), 4150);
+
+    setTimeout(() => {
+      hint.textContent = 'Done — 5.3s total';
+      replayBtn.style.display = 'inline-block';
+    }, 5150);
+  }
+
+  function reset() {
+    stage.classList.remove('walking', 'swinging', 'impact', 'flying', 'tunnel', 'arriving');
+    ballShape.classList.remove('ball-squash');
+    ballBtn.disabled = false;
+    playHint.style.display = 'block';
+    replayBtn.style.display = 'none';
+    hint.textContent = 'Total runtime: ~5.3s';
+    void stage.offsetWidth;
+  }
+
+  ballBtn.addEventListener('click', playTimeline);
+  replayBtn.addEventListener('click', () => {
+    reset();
+    requestAnimationFrame(playTimeline);
+  });
+</script>
+</body>
+</html>

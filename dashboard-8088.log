@@ -1,7 +1,4 @@
 
-Collecting usage statistics. To deactivate, set browser.gatherUsageStats to false.
-
-
   You can now view your Streamlit app in your browser.
 
   URL: http://0.0.0.0:8088
@@ -11,3 +8,13 @@ Collecting usage statistics. To deactivate, set browser.gatherUsageStats to fals
   $ xcode-select --install
   $ pip install watchdog
             
+/Users/caspiancowboy/Documents/CareerDashboard/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+/Users/caspiancowboy/Documents/CareerDashboard/.venv/lib/python3.9/site-packages/openpyxl/worksheet/_reader.py:329: UserWarning: Unknown extension is not supported and will be removed
+  warn(msg)
+/Users/caspiancowboy/Documents/CareerDashboard/.venv/lib/python3.9/site-packages/openpyxl/worksheet/_reader.py:329: UserWarning: Conditional Formatting extension is not supported and will be removed
+  warn(msg)
+/Users/caspiancowboy/Documents/CareerDashboard/.venv/lib/python3.9/site-packages/openpyxl/worksheet/_reader.py:329: UserWarning: Unknown extension is not supported and will be removed
+  warn(msg)
+/Users/caspiancowboy/Documents/CareerDashboard/.venv/lib/python3.9/site-packages/openpyxl/worksheet/_reader.py:329: UserWarning: Conditional Formatting extension is not supported and will be removed
+  warn(msg)

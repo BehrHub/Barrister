@@ -2632,29 +2632,82 @@ def authoritative_month_order(label: str) -> int:
 
 
 def financial_frame(data: WorkbookData) -> pd.DataFrame:
-    completed = completed_chronology(data)
-    if completed.empty:
-        return completed
-    frame = completed.copy()
-    if "revenue" in frame:
-        frame["revenue_amount"] = revenue_series(frame["revenue"])
-    else:
-        frame["revenue_amount"] = pd.NA
-    if "client" in frame:
-        usda_rows = frame["client"].fillna("").astype(str).str.strip().str.casefold().eq("usda")
-        usda_count = int(usda_rows.sum())
-        if usda_count:
-            frame.loc[usda_rows, "revenue_amount"] = USDA_TOTAL_REVENUE / usda_count
+    """Build Finance from current_master.xlsx Service Events."""
+    source = Path(__file__).resolve().parent / "data" / "current_master.xlsx"
+    output_columns = [
+        "visit_number", "event_date", "client", "revenue",
+        "revenue_amount", "has_revenue", "city", "region_code",
+        "state_region", "status", "location", "date_label",
+        "month_label", "month_order",
+    ]
+    if not source.is_file():
+        return pd.DataFrame(columns=output_columns)
+    try:
+        service_events = pd.read_excel(source, sheet_name="Service Events")
+    except (OSError, ValueError, ImportError):
+        return pd.DataFrame(columns=output_columns)
+    if service_events.empty:
+        return pd.DataFrame(columns=output_columns)
+
+    def normalize(value: object) -> str:
+        return re.sub(r"[^a-z0-9]+", "", str(value).casefold())
+
+    lookup = {normalize(column): column for column in service_events.columns}
+
+    def find_column(*aliases: str) -> str | None:
+        for alias in aliases:
+            column = lookup.get(normalize(alias))
+            if column is not None:
+                return column
+        return None
+
+    event_col = find_column("Event #", "Event Number", "Visit #", "event_number")
+    date_col = find_column("Service Date", "Event Date", "Visit Date", "Date")
+    client_col = find_column("Client", "Client Name")
+    revenue_col = find_column("Confirmed Revenue", "Revenue", "Confirmed Amount", "Amount")
+    city_col = find_column("City")
+    state_col = find_column("Jurisdiction", "State", "State/Region", "Region Code")
+    status_col = find_column("Status")
+
+    if event_col is None or client_col is None or revenue_col is None:
+        return pd.DataFrame(columns=output_columns)
+
+    frame = pd.DataFrame(index=service_events.index)
+    frame["visit_number"] = pd.to_numeric(service_events[event_col], errors="coerce")
+    frame["event_date"] = (
+        pd.to_datetime(service_events[date_col], errors="coerce")
+        if date_col is not None else pd.NaT
+    )
+    frame["client"] = service_events[client_col].fillna("").astype(str).str.strip()
+    frame["revenue_amount"] = revenue_series(service_events[revenue_col])
+    frame["revenue"] = frame["revenue_amount"]
+    frame["city"] = (
+        service_events[city_col].fillna("").astype(str).str.strip()
+        if city_col is not None else ""
+    )
+    frame["region_code"] = (
+        service_events[state_col].fillna("").astype(str).str.strip()
+        if state_col is not None else ""
+    )
+    frame["state_region"] = frame["region_code"]
+    frame["status"] = (
+        service_events[status_col].fillna("Completed").astype(str).str.strip()
+        if status_col is not None else "Completed"
+    )
+    frame = frame[frame["status"].str.casefold().eq("completed")].copy()
     frame["has_revenue"] = pd.to_numeric(frame["revenue_amount"], errors="coerce").notna()
     frame["location"] = (
-        frame.get("city", pd.Series("", index=frame.index)).fillna("").astype(str).str.strip()
+        frame["city"].fillna("").astype(str).str.strip()
         + ", "
-        + frame.get("region_code", pd.Series("", index=frame.index)).fillna("").astype(str).str.strip()
+        + frame["region_code"].fillna("").astype(str).str.strip()
     ).str.strip(", ")
-    frame["date_label"] = frame.get("event_date", pd.Series(pd.NaT, index=frame.index)).map(scheduled_date_label)
-    frame["month_label"] = frame.apply(lambda row: authoritative_month_label(row.get("visit_number"), row.get("event_date")), axis=1)
+    frame["date_label"] = frame["event_date"].map(scheduled_date_label)
+    frame["month_label"] = frame.apply(
+        lambda row: authoritative_month_label(row.get("visit_number"), row.get("event_date")),
+        axis=1,
+    )
     frame["month_order"] = frame["month_label"].map(authoritative_month_order)
-    return frame
+    return frame.reset_index(drop=True)
 
 
 def financial_client_rollup(financial: pd.DataFrame) -> pd.DataFrame:
@@ -2666,11 +2719,6 @@ def financial_client_rollup(financial: pd.DataFrame) -> pd.DataFrame:
     visits = financial.groupby("client").size().rename("visits")
     totals = revenue_rows.groupby("client")["revenue_amount"].sum().rename("total_revenue")
     rollup = pd.concat([visits, totals], axis=1).dropna(subset=["total_revenue"]).reset_index()
-    usda_index = rollup.index[rollup["client"].astype(str).str.casefold().eq("usda")].tolist()
-    if usda_index:
-        index = usda_index[0]
-        rollup.loc[index, "visits"] = USDA_VISIT_COUNT
-        rollup.loc[index, "total_revenue"] = USDA_TOTAL_REVENUE
     rollup["visits"] = rollup["visits"].astype(int)
     rollup["avg_revenue"] = rollup["total_revenue"].astype(float).div(rollup["visits"].replace(0, pd.NA))
     return rollup
@@ -4461,7 +4509,7 @@ def render_logo_factory_page() -> None:
     with logo_factory_link:
         st.markdown(
             """
-            <a onclick="window.top.location.assign('http://100.70.235.51:8090'); return false;" href="http://100.70.235.51:8090"
+            <a onclick="window.top.location.assign('?page=logo-factory'); return false;" href="?page=logo-factory"
                target="_self"
                style="
                    display:flex;

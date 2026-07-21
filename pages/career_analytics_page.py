@@ -49,7 +49,7 @@ def render_career_analytics_page() -> None:
         st.dataframe(
             pd.DataFrame(validation["validation_mismatches"]),
             hide_index=True,
-            width="stretch",
+            use_container_width=True,
         )
 
     summary = analytics["summary"]
@@ -78,39 +78,39 @@ def render_career_analytics_page() -> None:
     )
 
     st.subheader("Record Board")
-    st.dataframe(pd.DataFrame(analytics["record_board"]), hide_index=True, width="stretch")
+    st.dataframe(pd.DataFrame(analytics["record_board"]), hide_index=True, use_container_width=True)
 
     st.subheader("Career Season Graph")
     weekly = pd.DataFrame(analytics["weekly_series"])
     dual_chart(weekly, "workweek")
 
     with st.expander("Weekly and MY_MONTH tables", expanded=False):
-        st.dataframe(weekly, hide_index=True, width="stretch")
-        st.dataframe(pd.DataFrame(analytics["monthly_series"]), hide_index=True, width="stretch")
+        st.dataframe(weekly, hide_index=True, use_container_width=True)
+        st.dataframe(pd.DataFrame(analytics["monthly_series"]), hide_index=True, use_container_width=True)
 
     st.subheader("Weekday Performance")
     weekdays = pd.DataFrame(analytics["weekday_series"])
     dual_chart(weekdays, "weekday", 330)
-    st.dataframe(weekdays, hide_index=True, width="stretch")
+    st.dataframe(weekdays, hide_index=True, use_container_width=True)
 
     st.subheader("Client Analytics")
     st.dataframe(
         pd.DataFrame(analytics["client_analytics"]["ranked_clients"]),
         hide_index=True,
-        width="stretch",
+        use_container_width=True,
     )
 
     st.subheader("Territory and Dispatch")
     st.dataframe(
         pd.DataFrame(analytics["territory_analytics"]["sector_distribution"]),
         hide_index=True,
-        width="stretch",
+        use_container_width=True,
     )
 
     st.subheader("Hall of Fame")
-    st.dataframe(pd.DataFrame(analytics["hall_of_fame"]), hide_index=True, width="stretch")
+    st.dataframe(pd.DataFrame(analytics["hall_of_fame"]), hide_index=True, use_container_width=True)
 
     score = analytics["scorecard"]
     st.subheader("Scorecard")
     st.metric("Overall Career Score", f"{score['overall_score']:.1%}", f"Grade {score['grade']}")
-    st.dataframe(pd.DataFrame(score["dimensions"]), hide_index=True, width="stretch")
+    st.dataframe(pd.DataFrame(score["dimensions"]), hide_index=True, use_container_width=True)

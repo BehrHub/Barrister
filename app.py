@@ -4509,8 +4509,8 @@ def render_logo_factory_page() -> None:
     with logo_factory_link:
         st.markdown(
             """
-            <a onclick="window.top.location.assign('?page=logo-factory'); return false;" href="?page=logo-factory"
-               target="_self"
+            <a href="http://100.70.235.51:8090"
+               target="_blank"
                style="
                    display:flex;
                    align-items:center;

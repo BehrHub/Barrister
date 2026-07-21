@@ -5,7 +5,6 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 from services.canonical_career_source import build_canonical_career_analytics
-from services.career_analytics_engine import build_career_analytics_from_workbook
 
 @st.cache_data(show_spinner=False)
 def load_cached_career_analytics(path: str, modified_ns: int) -> dict:
@@ -34,83 +33,320 @@ def dual_chart(frame: pd.DataFrame, x: str, height: int=360) -> None:
 
 def render_career_analytics_page() -> None:
     css()
-    analytics = build_canonical_career_analytics(
-        Path(__file__).resolve().parents[1]
-    )
+    root = Path(__file__).resolve().parents[1]
+
+    try:
+        analytics = build_canonical_career_analytics(root)
+    except Exception:
+        analytics = None
 
     st.markdown(
         '<div class="section-title">CAREER ANALYTICS</div>',
         unsafe_allow_html=True,
     )
 
-    validation = analytics["validation"]
-    if validation["validation_status"] != "PASSED":
-        st.warning("Canonical source validation mismatch")
+    if analytics is None:
+        master_path = root / "data" / "Barrister_Master.xlsx"
+        detail_path = root / "data" / "current_master.xlsx"
+
+        timeline = pd.read_excel(master_path, sheet_name="Timeline")
+        service = pd.read_excel(detail_path, sheet_name="Service Events")
+
+        def normalized(value: object) -> str:
+            import re
+            return re.sub(
+                r"[^a-z0-9]+",
+                "",
+                str(value).casefold(),
+            )
+
+        def find_column(frame: pd.DataFrame, *aliases: str):
+            lookup = {
+                normalized(column): column
+                for column in frame.columns
+            }
+            for alias in aliases:
+                match = lookup.get(normalized(alias))
+                if match is not None:
+                    return match
+            return None
+
+        event_col = find_column(
+            timeline,
+            "Visit #",
+            "Event #",
+            "Event Number",
+        )
+        client_col = find_column(timeline, "Client", "Client Name")
+        state_col = find_column(
+            timeline,
+            "State/Region",
+            "State",
+            "Jurisdiction",
+        )
+        status_col = find_column(timeline, "Status")
+
+        detail_event = find_column(
+            service,
+            "Event #",
+            "Event Number",
+            "Visit #",
+        )
+        detail_client = find_column(service, "Client", "Client Name")
+        detail_revenue = find_column(
+            service,
+            "Confirmed Revenue",
+            "Revenue",
+            "Amount",
+        )
+        detail_date = find_column(
+            service,
+            "Service Date",
+            "Event Date",
+            "Date",
+        )
+
+        completed = timeline.copy()
+        if status_col is not None:
+            completed = completed[
+                completed[status_col]
+                .fillna("")
+                .astype(str)
+                .str.casefold()
+                .eq("completed")
+            ].copy()
+
+        event_numbers = pd.to_numeric(
+            completed[event_col],
+            errors="coerce",
+        ).dropna() if event_col is not None else pd.Series(dtype=float)
+
+        revenue = pd.Series(dtype=float)
+        if detail_revenue is not None:
+            revenue = pd.to_numeric(
+                service[detail_revenue]
+                .astype(str)
+                .str.replace(r"[^0-9.\-]", "", regex=True),
+                errors="coerce",
+            )
+
+        dates = (
+            pd.to_datetime(service[detail_date], errors="coerce")
+            if detail_date is not None
+            else pd.Series(dtype="datetime64[ns]")
+        )
+
+        clients = (
+            completed[client_col]
+            .fillna("")
+            .astype(str)
+            .str.strip()
+            if client_col is not None
+            else pd.Series(dtype=str)
+        )
+
+        states = (
+            completed[state_col]
+            .fillna("")
+            .astype(str)
+            .str.strip()
+            if state_col is not None
+            else pd.Series(dtype=str)
+        )
+
+        summary_cards = [
+            (
+                "Career Events",
+                f"{len(completed):,}",
+                (
+                    f"Through Event #{int(event_numbers.max())}"
+                    if not event_numbers.empty
+                    else "Timeline"
+                ),
+            ),
+            (
+                "Career Revenue",
+                f"${float(revenue.sum()):,.2f}",
+                "Confirmed Service Events revenue",
+            ),
+            (
+                "Unique Clients",
+                f"{clients[clients.ne('')].nunique():,}",
+                "Completed chronology",
+            ),
+            (
+                "Worked Days",
+                f"{dates.dropna().dt.date.nunique():,}",
+                f"{states[states.ne('')].nunique()} jurisdictions",
+            ),
+        ]
+
+        st.markdown(
+            '<div class="ca-grid">'
+            + "".join(metric(*card) for card in summary_cards)
+            + "</div>",
+            unsafe_allow_html=True,
+        )
+
+        st.subheader("Top Clients")
+
+        client_source = (
+            service[detail_client]
+            .fillna("")
+            .astype(str)
+            .str.strip()
+            if detail_client is not None
+            else pd.Series(dtype=str)
+        )
+
+        fallback = pd.DataFrame({
+            "Client": client_source,
+            "Revenue": revenue,
+        })
+        fallback = fallback[fallback["Client"].ne("")]
+
+        if fallback.empty:
+            st.info("No client financial records are available.")
+        else:
+            ranked = (
+                fallback.groupby("Client", as_index=False)
+                .agg(
+                    Events=("Client", "size"),
+                    Revenue=("Revenue", "sum"),
+                )
+                .sort_values(
+                    ["Revenue", "Events"],
+                    ascending=[False, False],
+                )
+            )
+            st.dataframe(
+                ranked,
+                hide_index=True,
+                use_container_width=True,
+            )
+
+        st.caption(
+            "Career Analytics is using its live workbook fallback "
+            "while detailed record calculations are unavailable."
+        )
+        return
+
+    validation = analytics.get("validation", {})
+    if validation.get("validation_status") not in {None, "PASSED"}:
+        mismatches = validation.get("validation_mismatches", [])
+        if mismatches:
+            st.warning("Some detailed analytics require review.")
+
+    summary = analytics["summary"]
+
+    def whole(value: object) -> int:
+        try:
+            return int(float(value))
+        except (TypeError, ValueError):
+            return 0
+
+    def money(value: object) -> float:
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return 0.0
+
+    cards = [
+        (
+            "Career Events",
+            f"{whole(summary.get('career_events')):,}",
+            f"Through Event #{whole(summary.get('highest_completed_event'))}",
+        ),
+        (
+            "Career Revenue",
+            f"${money(summary.get('career_revenue')):,.2f}",
+            "Confirmed revenue",
+        ),
+        (
+            "Unique Clients",
+            f"{whole(summary.get('unique_clients')):,}",
+            f"{whole(analytics.get('client_analytics', {}).get('repeat_clients'))} repeat",
+        ),
+        (
+            "Worked Days",
+            f"{whole(summary.get('worked_days')):,}",
+            f"{whole(summary.get('jurisdictions'))} jurisdictions",
+        ),
+        (
+            "Work Orders",
+            f"{whole(summary.get('unique_work_orders')):,}",
+            "Unique nonblank WOs",
+        ),
+        (
+            "Longest Streak",
+            str(whole(summary.get("longest_business_day_streak"))),
+            f"Current: {whole(summary.get('current_business_day_streak'))}",
+        ),
+        (
+            "Avg / Paid Event",
+            f"${money(summary.get('average_revenue_paid_event')):,.2f}",
+            "Positive confirmed revenue",
+        ),
+        (
+            "Career Score",
+            f"{money(summary.get('overall_score')):.1%}",
+            f"Grade {summary.get('career_grade', '—')}",
+        ),
+    ]
+
+    st.markdown(
+        '<div class="ca-grid">'
+        + "".join(metric(*card) for card in cards)
+        + "</div>",
+        unsafe_allow_html=True,
+    )
+
+    records = analytics.get("career_records", [])
+    if records:
+        st.subheader("12 Career Records")
+        st.markdown(
+            '<div class="ca-records">'
+            + "".join(
+                metric(
+                    str(record.get("title", "")),
+                    str(record.get("display_value", "")),
+                    str(record.get("context", "")),
+                )
+                for record in records
+            )
+            + "</div>",
+            unsafe_allow_html=True,
+        )
+
+    sections = [
+        ("Record Board", analytics.get("record_board", [])),
+        ("Weekly Performance", analytics.get("weekly_series", [])),
+        ("Monthly Performance", analytics.get("monthly_series", [])),
+        ("Weekday Performance", analytics.get("weekday_series", [])),
+        (
+            "Client Analytics",
+            analytics.get("client_analytics", {}).get(
+                "ranked_clients",
+                [],
+            ),
+        ),
+        (
+            "Territory and Dispatch",
+            analytics.get("territory_analytics", {}).get(
+                "sector_distribution",
+                [],
+            ),
+        ),
+        ("Hall of Fame", analytics.get("hall_of_fame", [])),
+    ]
+
+    for title, rows in sections:
+        frame = pd.DataFrame(rows)
+        if frame.empty:
+            continue
+        st.subheader(title)
         st.dataframe(
-            pd.DataFrame(validation["validation_mismatches"]),
+            frame,
             hide_index=True,
             use_container_width=True,
         )
-
-    summary = analytics["summary"]
-    cards = [
-        ("Career Events", f"{summary['career_events']:,}", f"Through Event #{summary['highest_completed_event']}"),
-        ("Career Revenue", f"${summary['career_revenue']:,.2f}", "Confirmed revenue"),
-        ("Unique Clients", f"{summary['unique_clients']:,}", f"{analytics['client_analytics']['repeat_clients']} repeat"),
-        ("Worked Days", f"{summary['worked_days']:,}", f"{summary['jurisdictions']} jurisdictions"),
-        ("Work Orders", f"{summary['unique_work_orders']:,}", "Unique nonblank WOs"),
-        ("Longest Streak", str(summary["longest_business_day_streak"]), f"Current: {summary['current_business_day_streak']}"),
-        ("Avg / Paid Event", f"${summary['average_revenue_paid_event']:,.2f}", "Positive confirmed revenue"),
-        ("Career Score", f"{summary['overall_score']:.1%}", f"Grade {summary['career_grade']}"),
-    ]
-    st.markdown(
-        '<div class="ca-grid">' + "".join(metric(*card) for card in cards) + "</div>",
-        unsafe_allow_html=True,
-    )
-
-    st.subheader("12 Career Records")
-    st.markdown(
-        '<div class="ca-records">' + "".join(
-            metric(record["title"], record["display_value"], record["context"])
-            for record in analytics["career_records"]
-        ) + "</div>",
-        unsafe_allow_html=True,
-    )
-
-    st.subheader("Record Board")
-    st.dataframe(pd.DataFrame(analytics["record_board"]), hide_index=True, use_container_width=True)
-
-    st.subheader("Career Season Graph")
-    weekly = pd.DataFrame(analytics["weekly_series"])
-    dual_chart(weekly, "workweek")
-
-    with st.expander("Weekly and MY_MONTH tables", expanded=False):
-        st.dataframe(weekly, hide_index=True, use_container_width=True)
-        st.dataframe(pd.DataFrame(analytics["monthly_series"]), hide_index=True, use_container_width=True)
-
-    st.subheader("Weekday Performance")
-    weekdays = pd.DataFrame(analytics["weekday_series"])
-    dual_chart(weekdays, "weekday", 330)
-    st.dataframe(weekdays, hide_index=True, use_container_width=True)
-
-    st.subheader("Client Analytics")
-    st.dataframe(
-        pd.DataFrame(analytics["client_analytics"]["ranked_clients"]),
-        hide_index=True,
-        use_container_width=True,
-    )
-
-    st.subheader("Territory and Dispatch")
-    st.dataframe(
-        pd.DataFrame(analytics["territory_analytics"]["sector_distribution"]),
-        hide_index=True,
-        use_container_width=True,
-    )
-
-    st.subheader("Hall of Fame")
-    st.dataframe(pd.DataFrame(analytics["hall_of_fame"]), hide_index=True, use_container_width=True)
-
-    score = analytics["scorecard"]
-    st.subheader("Scorecard")
-    st.metric("Overall Career Score", f"{score['overall_score']:.1%}", f"Grade {score['grade']}")
-    st.dataframe(pd.DataFrame(score["dimensions"]), hide_index=True, use_container_width=True)

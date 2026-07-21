@@ -3796,48 +3796,22 @@ def render_coordinate_match_report(data: WorkbookData) -> None:
 
 def render_scorecard(data: WorkbookData) -> None:
     st.subheader("Scorecard Metrics")
-
-    required = {"metric", "value"}
-    if data.scorecard.empty or not required.issubset(data.scorecard.columns):
+    if data.scorecard.empty or not {"metric", "value"}.issubset(data.scorecard.columns):
         st.info("No usable Scorecard metrics were detected.")
         return
 
-    scorecard = data.scorecard.copy()
+    pipeline_pattern = r"scheduled|upcoming|awarded|following|rollout|total timeline positions"
+    scorecard = data.scorecard[
+        ~data.scorecard["metric"].fillna("").astype(str).str.contains(pipeline_pattern, case=False, regex=True)
+    ].copy()
     headline = scorecard.head(5)
-    normal_rows = []
-    legend_rows = []
+    columns = st.columns(len(headline))
+    for column, row in zip(columns, headline.to_dict("records")):
+        column.markdown(metric_card(str(row["metric"]), row["value"], "Workbook scorecard"), unsafe_allow_html=True)
 
-    for row in headline.to_dict("records"):
-        if str(row["metric"]).strip().casefold() == "financial status legend":
-            legend_rows.append(row)
-        else:
-            normal_rows.append(row)
-
-    if normal_rows:
-        columns = st.columns(len(normal_rows))
-        for column, row in zip(columns, normal_rows):
-            column.markdown(
-                metric_card(str(row["metric"]), row["value"], "Workbook scorecard"),
-                unsafe_allow_html=True,
-            )
-
-    for row in legend_rows:
-        value = str(row["value"]).replace("|", " · ").replace(
-            "Closed/updated", "Closed / Updated"
-        )
-        st.markdown(
-            '<div style="margin:.35rem 0 .65rem;padding:.42rem .68rem;'
-            'border:1px solid rgba(45,212,191,.45);border-radius:10px;'
-            'background:rgba(15,31,50,.72);font-size:.76rem;font-weight:700;'
-            'line-height:1.2;color:#dbe7f5;">'
-            '<span style="font-size:.6rem;letter-spacing:.07em;'
-            'text-transform:uppercase;color:#9fb1c8;margin-right:.5rem;">'
-            'Financial Status</span>' + value + '</div>',
-            unsafe_allow_html=True,
-        )
-
-    display_columns = [column for column in ("metric", "value", "source") if column in scorecard]
-    display = scorecard[display_columns].copy().fillna("").astype(str)
+    display_columns = [column for column in ["metric", "value", "source"] if column in scorecard]
+    display = scorecard[display_columns].copy()
+    display = display.fillna("").astype(str)
     display.columns = [column.title() for column in display.columns]
     st.dataframe(display, hide_index=True, width="stretch")
 
@@ -4873,7 +4847,9 @@ def main() -> None:
     elif section == "Client":
         render_client_analytics(data)
     elif section == "Client Analytics":
-        render_career_analytics_page()
+        render_career_analytics_page(
+            Path(__file__).resolve().parent / "data" / "current_master.xlsx"
+        )
     elif section == "Scorecard":
         render_scorecard(data)
     elif section == "Finance":

@@ -18,11 +18,3 @@
   warn(msg)
 /Users/caspiancowboy/Documents/CareerDashboard/.venv/lib/python3.9/site-packages/openpyxl/worksheet/_reader.py:329: UserWarning: Conditional Formatting extension is not supported and will be removed
   warn(msg)
-/Users/caspiancowboy/Documents/CareerDashboard/.venv/lib/python3.9/site-packages/openpyxl/worksheet/_reader.py:329: UserWarning: Unknown extension is not supported and will be removed
-  warn(msg)
-/Users/caspiancowboy/Documents/CareerDashboard/.venv/lib/python3.9/site-packages/openpyxl/worksheet/_reader.py:329: UserWarning: Conditional Formatting extension is not supported and will be removed
-  warn(msg)
-/Users/caspiancowboy/Documents/CareerDashboard/.venv/lib/python3.9/site-packages/openpyxl/worksheet/_reader.py:329: UserWarning: Unknown extension is not supported and will be removed
-  warn(msg)
-/Users/caspiancowboy/Documents/CareerDashboard/.venv/lib/python3.9/site-packages/openpyxl/worksheet/_reader.py:329: UserWarning: Conditional Formatting extension is not supported and will be removed
-  warn(msg)

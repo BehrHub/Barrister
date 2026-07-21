@@ -4,8 +4,7 @@ from pathlib import Path
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
-from services.canonical_career_source import build_canonical_career_analytics
-from services.career_analytics_engine import build_career_analytics_from_workbook
+from services.live_career_analytics_adapter import build_live_career_analytics
 
 @st.cache_data(show_spinner=False)
 def load_cached_career_analytics(path: str, modified_ns: int) -> dict:
@@ -32,85 +31,63 @@ def dual_chart(frame: pd.DataFrame, x: str, height: int=360) -> None:
     fig.update_layout(barmode="group",height=height,margin=dict(l=10,r=10,t=20,b=10),paper_bgcolor="rgba(0,0,0,0)",plot_bgcolor="rgba(0,0,0,0)",font=dict(color="#dbe7f5"),yaxis2=dict(overlaying="y",side="right",showgrid=False),legend=dict(orientation="h"))
     st.plotly_chart(fig,use_container_width=True,config={"displayModeBar":False})
 
-def render_career_analytics_page() -> None:
+def render_career_analytics_page(data) -> None:
     css()
-    analytics = build_canonical_career_analytics(
-        Path(__file__).resolve().parents[1]
-    )
-
-    st.markdown(
-        '<div class="section-title">CAREER ANALYTICS</div>',
-        unsafe_allow_html=True,
-    )
-
+    analytics = build_live_career_analytics(data)
+    st.markdown('<div class="section-title">CAREER ANALYTICS</div>', unsafe_allow_html=True)
     validation = analytics["validation"]
     if validation["validation_status"] != "PASSED":
-        st.warning("Canonical source validation mismatch")
-        st.dataframe(
-            pd.DataFrame(validation["validation_mismatches"]),
-            hide_index=True,
-            width="stretch",
-        )
-
-    summary = analytics["summary"]
-    cards = [
-        ("Career Events", f"{summary['career_events']:,}", f"Through Event #{summary['highest_completed_event']}"),
-        ("Career Revenue", f"${summary['career_revenue']:,.2f}", "Confirmed revenue"),
-        ("Unique Clients", f"{summary['unique_clients']:,}", f"{analytics['client_analytics']['repeat_clients']} repeat"),
-        ("Worked Days", f"{summary['worked_days']:,}", f"{summary['jurisdictions']} jurisdictions"),
-        ("Work Orders", f"{summary['unique_work_orders']:,}", "Unique nonblank WOs"),
-        ("Longest Streak", str(summary["longest_business_day_streak"]), f"Current: {summary['current_business_day_streak']}"),
-        ("Avg / Paid Event", f"${summary['average_revenue_paid_event']:,.2f}", "Positive confirmed revenue"),
-        ("Career Score", f"{summary['overall_score']:.1%}", f"Grade {summary['career_grade']}"),
+        st.warning("Workbook validation mismatches detected")
+        st.dataframe(pd.DataFrame(validation["validation_mismatches"]), hide_index=True, width="stretch")
+    s = analytics["summary"]
+    summary = [
+        ("Career Events", f"{s['career_events']:,}", f"Through Event #{s['highest_completed_event']}"),
+        ("Career Revenue", f"${s['career_revenue']:,.2f}", "Confirmed Event revenue"),
+        ("Unique Clients", f"{s['unique_clients']:,}", f"{analytics['client_analytics']['repeat_clients']} repeat"),
+        ("Worked Days", f"{s['worked_days']:,}", f"{s['jurisdictions']} jurisdictions"),
+        ("Work Orders", f"{s['unique_work_orders']:,}", "Unique nonblank WOs"),
+        ("Longest Streak", str(s['longest_business_day_streak']), f"Current: {s['current_business_day_streak']}"),
+        ("Avg / Paid Event", f"${s['average_revenue_paid_event']:,.2f}", "Positive confirmed revenue"),
+        ("Career Score", f"{s['overall_score']:.1%}", f"Grade {s['career_grade']}"),
     ]
-    st.markdown(
-        '<div class="ca-grid">' + "".join(metric(*card) for card in cards) + "</div>",
-        unsafe_allow_html=True,
-    )
-
+    st.markdown('<div class="ca-grid">' + ''.join(metric(*x) for x in summary) + '</div>', unsafe_allow_html=True)
     st.subheader("12 Career Records")
-    st.markdown(
-        '<div class="ca-records">' + "".join(
-            metric(record["title"], record["display_value"], record["context"])
-            for record in analytics["career_records"]
-        ) + "</div>",
-        unsafe_allow_html=True,
-    )
-
+    st.markdown('<div class="ca-records">' + ''.join(metric(r['title'], r['display_value'], r['context']) for r in analytics['career_records']) + '</div>', unsafe_allow_html=True)
     st.subheader("Record Board")
     st.dataframe(pd.DataFrame(analytics["record_board"]), hide_index=True, width="stretch")
-
     st.subheader("Career Season Graph")
     weekly = pd.DataFrame(analytics["weekly_series"])
     dual_chart(weekly, "workweek")
-
     with st.expander("Weekly and MY_MONTH tables", expanded=False):
         st.dataframe(weekly, hide_index=True, width="stretch")
         st.dataframe(pd.DataFrame(analytics["monthly_series"]), hide_index=True, width="stretch")
-
     st.subheader("Weekday Performance")
     weekdays = pd.DataFrame(analytics["weekday_series"])
     dual_chart(weekdays, "weekday", 330)
     st.dataframe(weekdays, hide_index=True, width="stretch")
-
+    c = analytics["client_analytics"]
     st.subheader("Client Analytics")
-    st.dataframe(
-        pd.DataFrame(analytics["client_analytics"]["ranked_clients"]),
-        hide_index=True,
-        width="stretch",
-    )
-
+    st.markdown('<div class="ca-grid">' + ''.join(metric(*x) for x in [
+        ("Total Clients", str(c['total_clients']), ""),
+        ("Repeat Clients", str(c['repeat_clients']), f"{c['repeat_client_rate']:.1%}"),
+        ("One-Time Clients", str(c['one_time_clients']), ""),
+        ("Average Visits", f"{c['average_visits_per_client']:.2f}", "Per client"),
+    ]) + '</div>', unsafe_allow_html=True)
+    st.dataframe(pd.DataFrame(c["ranked_clients"]), hide_index=True, width="stretch")
+    t = analytics["territory_analytics"]
     st.subheader("Territory and Dispatch")
-    st.dataframe(
-        pd.DataFrame(analytics["territory_analytics"]["sector_distribution"]),
-        hide_index=True,
-        width="stretch",
-    )
-
+    st.markdown('<div class="ca-grid">' + ''.join(metric(*x) for x in [
+        ("Jurisdictions", str(t['jurisdictions']), ", ".join(t['jurisdiction_set'])),
+        ("Cities", str(t['cities']), ""),
+        ("Most-Visited City", str(t['most_visited_city'].get('city', '—')), f"{int(t['most_visited_city'].get('events', 0))} Events"),
+        ("Jobs / Dispatch Day", f"{t['average_jobs_per_dispatch_day']:.2f}", ""),
+    ]) + '</div>', unsafe_allow_html=True)
+    st.dataframe(pd.DataFrame(t["sector_distribution"]), hide_index=True, width="stretch")
     st.subheader("Hall of Fame")
     st.dataframe(pd.DataFrame(analytics["hall_of_fame"]), hide_index=True, width="stretch")
-
     score = analytics["scorecard"]
     st.subheader("Scorecard")
     st.metric("Overall Career Score", f"{score['overall_score']:.1%}", f"Grade {score['grade']}")
     st.dataframe(pd.DataFrame(score["dimensions"]), hide_index=True, width="stretch")
+    with st.expander("Financial status", expanded=False):
+        st.json(analytics["financial_status"])

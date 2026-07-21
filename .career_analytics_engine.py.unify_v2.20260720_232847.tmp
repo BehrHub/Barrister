@@ -1,0 +1,672 @@
+from __future__ import annotations
+
+from collections import Counter
+from datetime import date, datetime, timedelta
+from pathlib import Path
+from typing import Any, Iterable
+import json
+import math
+import re
+
+import pandas as pd
+
+REQUIRED_SHEETS = ("Service Events", "Work Orders & Ledger")
+VALIDATION_SHEET = "Career Analytics"
+WEEKDAY_ORDER = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+GRADE_BANDS = [(0.90, "A"), (0.80, "B"), (0.70, "C"), (0.60, "D"), (0.00, "F")]
+
+SERVICE_MAP = {
+    "Event #": "event_number", "Physical Visit ID": "physical_visit_id",
+    "Service Date": "service_date", "Weekday": "weekday", "Workweek #": "workweek",
+    "MY_MONTH": "my_month", "Client ID": "client_id", "Client": "client",
+    "Site Name": "site_name", "City": "city", "State": "state",
+    "Jurisdiction": "jurisdiction", "Location Key": "location_key", "Status": "status",
+    "Visit Type": "visit_type", "Work Order Count": "work_order_count",
+    "Work Orders": "work_orders", "Confirmed Revenue": "confirmed_revenue",
+    "Revenue Eligibility": "revenue_eligibility", "Financial Scope": "financial_scope",
+    "Breakdown Expected": "breakdown_expected",
+}
+LEDGER_MAP = {
+    "Ledger Record ID": "ledger_record_id", "Work Order #": "work_order",
+    "Event #": "event_number", "Client ID": "client_id", "Client": "client",
+    "Service Date": "service_date", "Agreed Amount": "agreed_amount",
+    "Breakdown Confirmed": "breakdown_confirmed", "Breakdown Amount": "breakdown_amount",
+    "Breakdown Date": "breakdown_date", "Expected Payment Date": "expected_payment_date",
+    "ACH Confirmed": "ach_confirmed", "ACH Amount": "ach_amount", "ACH Date": "ach_date",
+    "Variance": "variance", "Reconciliation Status": "reconciliation_status",
+    "Mapping Status": "mapping_status", "Alias / Related WO": "alias_related_wo",
+}
+
+DEFAULT_SECTORS = {
+    "Macy's": "Retail", "Bloomingdale's": "Retail", "7-Eleven": "Retail",
+    "Giant Food Stores": "Retail", "Food Lion": "Retail", "Weis Markets": "Retail",
+    "Under Armour": "Retail", "HomeGoods": "Retail", "TJ Maxx": "Retail",
+    "Marshalls": "Retail", "Dunkin": "Retail", "Hampton Inn & Suites": "Hospitality",
+    "Hilton Hotels": "Hospitality", "USDA": "Government",
+    "Office of U.S. Senator": "Government",
+    "Office of MD Senator Chris Van Hollen": "Government",
+    "Office of MD Senator Angela Alsobrooks": "Government",
+    "Joint Base Andrews": "Military",
+}
+
+
+def clean(value: Any) -> str:
+    if value is None or (isinstance(value, float) and math.isnan(value)):
+        return ""
+    return re.sub(r"\s+", " ", str(value)).strip()
+
+
+def number(value: Any) -> float:
+    if value is None or value == "": return 0.0
+    if isinstance(value, (int, float)) and not pd.isna(value): return float(value)
+    raw = re.sub(r"[^0-9.\-]", "", str(value))
+    try: return float(raw) if raw not in {"", "-", ".", "-."} else 0.0
+    except ValueError: return 0.0
+
+
+def integer(value: Any) -> int:
+    try: return int(float(value))
+    except (TypeError, ValueError): return 0
+
+
+def truthy(value: Any) -> bool:
+    return clean(value).casefold() in {"yes", "y", "true", "1", "confirmed", "completed", "complete", "included", "include"}
+
+
+def as_date(value: Any) -> date | None:
+    if value is None or value == "":
+        return None
+    if isinstance(value, (int, float)) and not isinstance(value, bool) and not pd.isna(value):
+        numeric = float(value)
+        if 20000 <= numeric <= 80000:
+            parsed = pd.Timestamp("1899-12-30") + pd.to_timedelta(numeric, unit="D")
+            return parsed.date()
+    parsed = pd.to_datetime(value, errors="coerce")
+    return None if pd.isna(parsed) else parsed.date()
+
+
+def normalize(frame: pd.DataFrame, mapping: dict[str, str], sheet: str) -> pd.DataFrame:
+    missing = [column for column in mapping if column not in frame.columns]
+    if missing:
+        raise ValueError(f"{sheet} missing required columns: {missing}. Available columns: {list(frame.columns)}")
+    return frame.rename(columns=mapping)[list(mapping.values())].copy()
+
+
+def business_next(previous: date, current: date) -> bool:
+    candidate = previous + timedelta(days=1)
+    while candidate.weekday() >= 5:
+        candidate += timedelta(days=1)
+    return current == candidate
+
+
+def streak(values: Iterable[date], business: bool = True) -> dict[str, Any]:
+    ordered = sorted(set(values))
+    if not ordered:
+        return {"longest": 0, "longest_start": None, "longest_end": None,
+                "current": 0, "current_start": None, "current_end": None}
+    best = current_len = 1
+    best_start = current_start = ordered[0]
+    best_end = ordered[0]
+    for previous, current in zip(ordered, ordered[1:]):
+        continues = business_next(previous, current) if business else current == previous + timedelta(days=1)
+        if continues: current_len += 1
+        else: current_len, current_start = 1, current
+        if current_len > best: best, best_start, best_end = current_len, current_start, current
+    return {"longest": best, "longest_start": best_start, "longest_end": best_end,
+            "current": current_len, "current_start": current_start, "current_end": ordered[-1]}
+
+
+def rolling(events: pd.DataFrame, days: int) -> dict[str, Any]:
+    best = {"events": 0, "revenue": 0.0, "start": None, "end": None}
+    for start in sorted(events.service_date.unique()):
+        end = start + timedelta(days=days - 1)
+        subset = events[events.service_date.between(start, end)]
+        candidate = (len(subset), float(subset.confirmed_revenue.sum()), -start.toordinal())
+        current = (best["events"], best["revenue"], -(best["start"].toordinal() if best["start"] else 10**9))
+        if candidate > current:
+            best = {"events": int(len(subset)), "revenue": float(subset.confirmed_revenue.sum()), "start": start, "end": end}
+    return best
+
+
+def grouped_series(events: pd.DataFrame, column: str, key_name: str) -> list[dict[str, Any]]:
+    rows = []
+    for key, group in events.groupby(column, sort=True, dropna=False):
+        if not clean(key): continue
+        count, revenue = len(group), float(group.confirmed_revenue.sum())
+        display_key: Any = clean(key)
+        if key_name == "workweek": display_key = integer(key)
+        rows.append({key_name: display_key, "events": int(count), "revenue": revenue,
+                     "average_per_event": revenue / count if count else 0.0})
+    max_events = max((r["events"] for r in rows), default=0)
+    max_revenue = max((r["revenue"] for r in rows), default=0.0)
+    for row in rows:
+        row["is_event_record"] = row["events"] == max_events
+        row["is_revenue_record"] = abs(row["revenue"] - max_revenue) <= 0.005
+    return rows
+
+
+def client_table(events: pd.DataFrame) -> list[dict[str, Any]]:
+    rows = []
+    for client_id, group in events.groupby("client_id", sort=False, dropna=False):
+        ordered = group.sort_values(["service_date", "event_number"])
+        name = next((clean(x) for x in ordered.client if clean(x)), clean(client_id) or "Unknown")
+        count, revenue = len(group), float(group.confirmed_revenue.sum())
+        rows.append({"client_id": clean(client_id), "client": name, "events": int(count),
+                     "confirmed_revenue": revenue, "average_revenue": revenue / count if count else 0.0,
+                     "locations": int(group.location_key.map(clean).replace("", pd.NA).dropna().nunique()),
+                     "repeat": count >= 2, "first_event_number": int(ordered.iloc[0].event_number),
+                     "first_service_date": ordered.iloc[0].service_date,
+                     "latest_event_number": int(ordered.iloc[-1].event_number),
+                     "latest_service_date": ordered.iloc[-1].service_date})
+    return sorted(rows, key=lambda r: (-r["events"], -r["confirmed_revenue"], r["first_event_number"]))
+
+
+def milestone(identifier: str, title: str, current: float, target: float, achieved_date=None, detail="") -> dict[str, Any]:
+    achieved = current >= target
+    return {"id": identifier, "title": title, "status": "ACHIEVED" if achieved else "OPEN",
+            "achieved_date": achieved_date if achieved else None,
+            "detail": detail if achieved else f"{target-current:,.0f} remaining",
+            "current_value": current, "target_value": target, "remaining": max(0, target-current),
+            "progress": min(1.0, current/target) if target else 1.0}
+
+
+def extract_validation(frame: pd.DataFrame | None) -> dict[str, Any]:
+    if frame is None or frame.empty: return {}
+    aliases = {"career events": "career_events", "unique clients": "unique_clients",
+               "jurisdictions": "jurisdictions", "worked days": "worked_days",
+               "work orders": "unique_work_orders", "career revenue": "career_revenue",
+               "longest business-day streak": "longest_business_day_streak",
+               "current business-day streak": "current_business_day_streak",
+               "repeat client rate": "repeat_client_rate", "overall career score": "overall_score"}
+    result = {}
+    for row in frame.fillna("").values.tolist():
+        for i, cell in enumerate(row):
+            key = aliases.get(clean(cell).casefold())
+            if key:
+                result[key] = next((value for value in row[i+1:i+4] if clean(value)), None)
+    return result
+
+
+def build_career_analytics(service_events: list[dict], ledger_rows: list[dict],
+                           workbook_validation: dict | None = None,
+                           as_of_date: date | None = None,
+                           sector_map: dict[str, str] | None = None) -> dict[str, Any]:
+    events, ledger = pd.DataFrame(service_events), pd.DataFrame(ledger_rows)
+    for column in SERVICE_MAP.values():
+        if column not in events: raise ValueError(f"Normalized Service Events missing column: {column}")
+    for column in LEDGER_MAP.values():
+        if column not in ledger: raise ValueError(f"Normalized Work Orders & Ledger missing column: {column}")
+
+    events.service_date = events.service_date.map(as_date)
+    events.event_number = events.event_number.map(integer)
+    events.confirmed_revenue = events.confirmed_revenue.map(number)
+    for column in ["status", "client_id", "client", "city", "jurisdiction", "location_key", "weekday", "my_month"]:
+        events[column] = events[column].map(clean)
+    completed = events[events.status.str.casefold().eq("completed") & events.service_date.notna()].sort_values(["service_date", "event_number"])
+    if completed.empty: raise ValueError("No completed Service Events with valid dates were found.")
+    latest_date = max(completed.service_date)
+    as_of = as_of_date or latest_date
+    completed = completed[completed.service_date <= as_of].copy()
+
+    ledger.work_order = ledger.work_order.map(clean)
+    for column in ["breakdown_amount", "ach_amount", "variance"]: ledger[column] = ledger[column].map(number)
+
+    career_events, worked_days = len(completed), completed.service_date.nunique()
+    career_revenue = float(completed.confirmed_revenue.sum())
+    paid = completed[completed.confirmed_revenue > 0]
+    unique_clients = completed.client_id.replace("", pd.NA).dropna().nunique()
+    unique_work_orders = ledger.work_order.replace("", pd.NA).dropna().nunique()
+    work_dates = sorted(completed.service_date.unique())
+    business, calendar = streak(work_dates, True), streak(work_dates, False)
+    revenue_days = completed.groupby("service_date").confirmed_revenue.sum()
+    revenue_streak = streak(list(revenue_days[revenue_days > 0].index), True)
+
+    paid_run = paid_best = 0; previous = None
+    for row in completed.sort_values("event_number").to_dict("records"):
+        if row["confirmed_revenue"] > 0:
+            paid_run = paid_run + 1 if previous is not None and row["event_number"] == previous + 1 else 1
+        else: paid_run = 0
+        paid_best, previous = max(paid_best, paid_run), row["event_number"]
+
+    rolls = {n: rolling(completed, n) for n in (3, 5, 7)}
+    day = completed.groupby("service_date").agg(events=("event_number", "count"), revenue=("confirmed_revenue", "sum")).reset_index()
+    best_day_events = day.sort_values(["events", "revenue", "service_date"], ascending=[False, False, True]).iloc[0]
+    best_day_revenue = day.sort_values(["revenue", "events", "service_date"], ascending=[False, False, True]).iloc[0]
+    weekly = grouped_series(completed, "workweek", "workweek")
+    monthly = grouped_series(completed, "my_month", "my_month")
+    weekdays = grouped_series(completed, "weekday", "weekday")
+    weekdays.sort(key=lambda r: WEEKDAY_ORDER.index(r["weekday"]) if r["weekday"] in WEEKDAY_ORDER else 99)
+    week_event = max(weekly, key=lambda r: (r["events"], r["revenue"]), default={})
+    week_revenue = max(weekly, key=lambda r: (r["revenue"], r["events"]), default={})
+    month_event = max(monthly, key=lambda r: (r["events"], r["revenue"]), default={})
+    month_revenue = max(monthly, key=lambda r: (r["revenue"], r["events"]), default={})
+
+    clients = client_table(completed)
+    repeats = sum(r["repeat"] for r in clients); one_time = len(clients)-repeats
+    largest = clients[0] if clients else {}
+    mvp = max(clients, key=lambda r: (r["confirmed_revenue"], r["events"], -r["first_event_number"]), default={})
+    recent = completed[completed.service_date >= latest_date - timedelta(days=29)]
+    recent_clients = client_table(recent) if not recent.empty else []
+    fastest = max(recent_clients, key=lambda r: (r["events"], r["confirmed_revenue"], r["latest_service_date"], -r["first_event_number"]), default={})
+
+    city = completed[completed.city.ne("")].groupby("city", sort=False).agg(events=("event_number", "count"), revenue=("confirmed_revenue", "sum"), first=("event_number", "min")).reset_index()
+    city_best = city.sort_values(["events", "revenue", "first"], ascending=[False, False, True]).iloc[0].to_dict() if not city.empty else {}
+    juris = completed[completed.jurisdiction.ne("")].groupby("jurisdiction", sort=False).agg(events=("event_number", "count"), revenue=("confirmed_revenue", "sum"), first=("event_number", "min")).reset_index()
+    juris_best = juris.sort_values(["events", "revenue", "first"], ascending=[False, False, True]).iloc[0].to_dict() if not juris.empty else {}
+
+    sectors = dict(DEFAULT_SECTORS); sectors.update(sector_map or {})
+    sector_counts: Counter[str] = Counter(); unknown = set()
+    for client in completed.client:
+        sector = sectors.get(client)
+        if not sector: sector, _ = "Commercial/Other", unknown.add(client)
+        sector_counts[sector] += 1
+    sector_distribution = [{"sector": s, "events": n, "share": n/career_events} for s,n in sorted(sector_counts.items(), key=lambda x:(-x[1],x[0]))]
+
+    avg_paid = career_revenue/len(paid) if len(paid) else 0.0
+    avg_day = career_revenue/worked_days if worked_days else 0.0
+    repeat_rate = repeats/unique_clients if unique_clients else 0.0
+    financial_scope = completed[completed.financial_scope.map(truthy)]
+    financial_completion = len(financial_scope[financial_scope.confirmed_revenue > 0])/len(financial_scope) if len(financial_scope) else 0.0
+    jurisdiction_count = completed.jurisdiction.replace("", pd.NA).dropna().nunique()
+    city_count = completed.city.replace("", pd.NA).dropna().nunique()
+    dimensions = [
+        {"id":"events_completed","label":"Events Completed","score":career_events/100,"benchmark":"100 Events"},
+        {"id":"revenue","label":"Revenue","score":career_revenue/10000,"benchmark":"$10,000"},
+        {"id":"client_growth","label":"Client Growth","score":unique_clients/35,"benchmark":"35 clients"},
+        {"id":"territory","label":"Territory","score":jurisdiction_count/5,"benchmark":"5 jurisdictions"},
+        {"id":"consistency","label":"Consistency","score":business["longest"]/15,"benchmark":"15-day streak"},
+        {"id":"financial_completion","label":"Financial Completion","score":financial_completion,"benchmark":"100%"},
+    ]
+    overall = sum(min(1.0, d["score"]) for d in dimensions)/len(dimensions)
+    grade = next(label for floor,label in GRADE_BANDS if overall >= floor)
+
+    summary = {"career_events":career_events,"highest_completed_event":int(completed.event_number.max()),
+               "worked_days":int(worked_days),"unique_clients":int(unique_clients),"unique_work_orders":int(unique_work_orders),
+               "career_revenue":career_revenue,"average_revenue_paid_event":avg_paid,"average_revenue_worked_day":avg_day,
+               "jurisdictions":int(jurisdiction_count),"cities":int(city_count),
+               "current_business_day_streak":business["current"],"longest_business_day_streak":business["longest"],
+               "overall_score":overall,"career_grade":grade}
+
+    cards = [
+        ("longest_business_day_streak","Longest Business-Day Streak",business["longest"],str(business["longest"]),f'{business["longest_start"]} to {business["longest_end"]}'),
+        ("events_rolling_3","Most Events / Rolling 3 Days",rolls[3]["events"],str(rolls[3]["events"]),f'{rolls[3]["start"]} to {rolls[3]["end"]}'),
+        ("events_rolling_7","Most Events / Rolling 7 Days",rolls[7]["events"],str(rolls[7]["events"]),f'{rolls[7]["start"]} to {rolls[7]["end"]}'),
+        ("highest_revenue_workweek","Highest-Grossing Workweek",week_revenue.get("revenue",0),f'${week_revenue.get("revenue",0):,.2f}',f'Workweek {week_revenue.get("workweek","")}'),
+        ("highest_revenue_workday","Highest-Grossing Workday",float(best_day_revenue.revenue),f'${float(best_day_revenue.revenue):,.2f}',str(best_day_revenue.service_date)),
+        ("average_revenue_paid_event","Average Revenue / Paid Event",avg_paid,f'${avg_paid:,.2f}',f'{len(paid)} paid Events'),
+        ("unique_clients","Unique Clients",int(unique_clients),str(unique_clients),f'{repeats} repeat clients'),
+        ("repeat_client_rate","Repeat Client Rate",repeat_rate,f'{repeat_rate:.1%}',f'{repeats} repeat / {unique_clients} total'),
+        ("territory_footprint","Territory Footprint",int(jurisdiction_count),str(jurisdiction_count),", ".join(sorted(completed.jurisdiction.replace("",pd.NA).dropna().unique()))),
+        ("career_mvp_client","Career MVP Client",mvp.get("client",""),mvp.get("client","—"),f'${mvp.get("confirmed_revenue",0):,.2f} · {mvp.get("events",0)} Events'),
+        ("career_high_water_marks","Career High-Water Marks",career_events,f'{career_events} / ${career_revenue:,.0f}',f'{unique_clients} clients · {worked_days} days'),
+        ("iron_man_index","Iron Man Index",business["longest"]/15,f'{business["longest"]/15:.1%}',f'{business["longest"]}/15 Career-best streak'),
+    ]
+    career_records = [{"id":i,"title":t,"value":v,"display_value":d,"context":c,"window_start":None,"window_end":None,
+                       "status":"CAREER_RECORD" if i not in {"unique_clients","repeat_client_rate","territory_footprint","career_high_water_marks"} else "SUMMARY",
+                       "source_metric_ids":[i]} for i,t,v,d,c in cards]
+    record_board = [
+        {"record":"Longest business-day streak","value":business["longest"],"context":f'{business["longest_start"]} to {business["longest_end"]}'},
+        {"record":"Current business-day streak","value":business["current"],"context":f'Ending {business["current_end"]}'},
+        {"record":"Longest calendar-day streak","value":calendar["longest"],"context":"Calendar days"},
+        {"record":"Longest revenue streak","value":revenue_streak["longest"],"context":"Positive-revenue workdays"},
+        {"record":"Most consecutive paid Events","value":paid_best,"context":"Event-number sequence"},
+        {"record":"Most Events in one day","value":int(best_day_events.events),"context":str(best_day_events.service_date)},
+        {"record":"Most Events in rolling 3 days","value":rolls[3]["events"],"context":f'{rolls[3]["start"]} to {rolls[3]["end"]}'},
+        {"record":"Most Events in rolling 5 days","value":rolls[5]["events"],"context":f'{rolls[5]["start"]} to {rolls[5]["end"]}'},
+        {"record":"Most Events in rolling 7 days","value":rolls[7]["events"],"context":f'{rolls[7]["start"]} to {rolls[7]["end"]}'},
+        {"record":"Most Events in one workweek","value":week_event.get("events",0),"context":f'Workweek {week_event.get("workweek","")}'},
+        {"record":"Most Events in one MY_MONTH","value":month_event.get("events",0),"context":month_event.get("my_month","")},
+    ]
+
+    ordered = completed.sort_values(["service_date","event_number"])
+    def event_date(n): return ordered.iloc[n-1].service_date if len(ordered)>=n else None
+    intro = ordered.drop_duplicates("client_id",keep="first")
+    cumulative = ordered.confirmed_revenue.cumsum(); first_1000 = ordered.loc[cumulative.ge(1000)].iloc[0].service_date if cumulative.ge(1000).any() else None
+    hall = [milestone("first_client","First Client",career_events,1,event_date(1),f'{event_date(1)} — {ordered.iloc[0].client}'),
+            milestone("10_events","10 Career Events",career_events,10,event_date(10),str(event_date(10))),
+            milestone("25_events","25 Career Events",career_events,25,event_date(25),str(event_date(25))),
+            milestone("50_events","50 Career Events",career_events,50,event_date(50),str(event_date(50))),
+            milestone("25_clients","25 Unique Clients",unique_clients,25,intro.iloc[24].service_date if len(intro)>=25 else None,""),
+            milestone("first_1000","First $1,000 Revenue",career_revenue,1000,first_1000,str(first_1000)),
+            milestone("10_event_week","First 10-Event Workweek",week_event.get("events",0),10,None,f'Workweek {week_event.get("workweek","")}'),
+            milestone("75_events","75 Career Events",career_events,75), milestone("100_events","100 Career Events",career_events,100),
+            milestone("10000_revenue","$10,000 Career Revenue",career_revenue,10000), milestone("30_clients","30 Unique Clients",unique_clients,30),
+            milestone("15_streak","15-Day Business Streak",business["longest"],15)]
+
+    metrics = {**summary,"events_one_day":int(best_day_events.events),"events_rolling_3":rolls[3]["events"],"events_rolling_5":rolls[5]["events"],
+               "events_rolling_7":rolls[7]["events"],"events_workweek":week_event.get("events",0),"events_my_month":month_event.get("events",0),
+               "highest_revenue_day":float(best_day_revenue.revenue),"highest_revenue_workweek":week_revenue.get("revenue",0.0),
+               "highest_revenue_my_month":month_revenue.get("revenue",0.0),"repeat_clients":repeats,"one_time_clients":one_time,
+               "repeat_client_rate":repeat_rate,"largest_client_by_events":largest.get("client",""),"largest_client_events":largest.get("events",0),
+               "career_mvp_client":mvp.get("client",""),"career_mvp_revenue":mvp.get("confirmed_revenue",0.0),
+               "fastest_growing_client":fastest.get("client",""),"fastest_growing_events_30d":fastest.get("events",0),
+               "most_visited_city":city_best.get("city",""),"most_visited_city_events":int(city_best.get("events",0)),
+               "most_visited_jurisdiction":juris_best.get("jurisdiction",""),"most_visited_jurisdiction_events":int(juris_best.get("events",0)),
+               "average_jobs_per_dispatch_day":career_events/worked_days,"iron_man_index":business["longest"]/15}
+    mismatches = []
+    for key, workbook_value in (workbook_validation or {}).items():
+        if key not in metrics: continue
+        engine_value = metrics[key]
+        if isinstance(engine_value,(int,float)):
+            parsed = number(workbook_value); tolerance = 0 if isinstance(engine_value,int) else (0.0001 if 0<=engine_value<=1 else 0.01)
+            if abs(float(engine_value)-parsed)>tolerance: mismatches.append({"metric_id":key,"engine_value":engine_value,"workbook_value":workbook_value,"difference":float(engine_value)-parsed,"severity":"WARNING"})
+        elif clean(engine_value)!=clean(workbook_value): mismatches.append({"metric_id":key,"engine_value":engine_value,"workbook_value":workbook_value,"difference":None,"severity":"WARNING"})
+
+    mapping = ledger.mapping_status.map(clean).str.casefold()
+    financial = {"breakdowns_confirmed":int(ledger.breakdown_confirmed.map(truthy).sum()),
+                 "breakdowns_pending":int((~ledger.breakdown_confirmed.map(truthy)&ledger.work_order.ne("")).sum()),
+                 "ach_confirmed":int(ledger.ach_confirmed.map(truthy).sum()),
+                 "ach_pending":int((~ledger.ach_confirmed.map(truthy)&ledger.work_order.ne("")).sum()),
+                 "confirmed_revenue":career_revenue,"confirmed_ach_amount":float(ledger.ach_amount.sum()),
+                 "deductions_total":abs(float(ledger.loc[ledger.variance<0,"variance"].sum())),
+                 "unresolved_mapping_count":int(mapping.isin({"ambiguous","unresolved","missing"}).sum())}
+    warnings = (["Sector fallback used for: "+", ".join(sorted(unknown))] if unknown else [])
+    return {"metadata":{"as_of_date":as_of,"latest_completed_service_date":latest_date,"highest_completed_event":int(completed.event_number.max())},
+            "summary":summary,"career_records":career_records,"record_board":record_board,"weekly_series":weekly,"monthly_series":monthly,
+            "weekday_series":weekdays,"client_analytics":{"total_clients":int(unique_clients),"repeat_clients":repeats,"one_time_clients":one_time,
+            "repeat_client_rate":repeat_rate,"average_visits_per_client":career_events/unique_clients,"largest_client_by_events":largest,
+            "highest_paying_client":mvp,"fastest_growing_client":fastest,"ranked_clients":clients},
+            "territory_analytics":{"jurisdictions":int(jurisdiction_count),"jurisdiction_set":sorted(completed.jurisdiction.replace("",pd.NA).dropna().unique()),
+            "cities":int(city_count),"most_visited_city":city_best,"most_visited_jurisdiction":juris_best,
+            "average_jobs_per_dispatch_day":career_events/worked_days,"sector_distribution":sector_distribution,"unknown_sector_clients":sorted(unknown)},
+            "hall_of_fame":hall,"scorecard":{"dimensions":dimensions,"overall_score":overall,"grade":grade},"financial_status":financial,
+            "validation":{"validation_status":"PASSED" if not mismatches else "MISMATCH","validation_mismatches":mismatches,
+            "validated_at":datetime.now().isoformat(timespec="seconds"),"workbook_snapshot_event_number":(workbook_validation or {}).get("highest_completed_event"),"warnings":warnings},
+            "validation_metrics":metrics}
+
+
+def build_career_analytics_from_workbook(workbook_path: str | Path, *, as_of_date: date | None = None,
+                                         sector_map_path: str | Path | None = None) -> dict[str, Any]:
+    path = Path(workbook_path)
+    if not path.exists(): raise FileNotFoundError(path)
+    excel = pd.ExcelFile(path)
+    missing = [sheet for sheet in REQUIRED_SHEETS if sheet not in excel.sheet_names]
+    if missing: raise ValueError(f"Workbook missing required sheets: {missing}. Available: {excel.sheet_names}")
+    service = normalize(pd.read_excel(path,sheet_name="Service Events"), SERVICE_MAP, "Service Events")
+    ledger = normalize(pd.read_excel(path,sheet_name="Work Orders & Ledger"), LEDGER_MAP, "Work Orders & Ledger")
+    validation_frame = pd.read_excel(path,sheet_name=VALIDATION_SHEET,header=None) if VALIDATION_SHEET in excel.sheet_names else None
+    sectors = json.loads(Path(sector_map_path).read_text()) if sector_map_path and Path(sector_map_path).exists() else None
+    result = build_career_analytics(service.to_dict("records"),ledger.to_dict("records"),extract_validation(validation_frame),as_of_date,sectors)
+    result["metadata"].update({"workbook_path":str(path.resolve()),"workbook_name":path.name,"workbook_modified_ns":path.stat().st_mtime_ns,
+                               "validation_sheet_present":VALIDATION_SHEET in excel.sheet_names})
+    if VALIDATION_SHEET not in excel.sheet_names: result["validation"]["warnings"].append("Career Analytics validation sheet is absent.")
+    return result
+
+def _live_frame(data: Any, *names: str) -> pd.DataFrame:
+    for name in names:
+        value = getattr(data, name, None)
+        if isinstance(value, pd.DataFrame):
+            return value.copy()
+    return pd.DataFrame()
+
+
+def _live_column(frame: pd.DataFrame, *aliases: str) -> str | None:
+    normalized = {
+        re.sub(r"[^a-z0-9]+", "", str(column).casefold()): column
+        for column in frame.columns
+    }
+    for alias in aliases:
+        key = re.sub(r"[^a-z0-9]+", "", alias.casefold())
+        if key in normalized:
+            return normalized[key]
+    return None
+
+
+def _live_value(row: pd.Series, column: str | None, default: Any = "") -> Any:
+    if column is None:
+        return default
+    value = row.get(column, default)
+    return default if pd.isna(value) else value
+
+
+def build_career_analytics_from_workbook_data(
+    data: Any,
+    *,
+    sector_map: dict[str, str] | None = None,
+) -> dict[str, Any]:
+    """Build Career Analytics from the dashboard's already-loaded WorkbookData."""
+    timeline = _live_frame(data, "timeline")
+    financial = _live_frame(data, "financial_status", "financial")
+
+    if timeline.empty:
+        raise ValueError("WorkbookData.timeline is empty")
+
+    event_col = _live_column(
+        timeline, "Event #", "Event Number", "Visit Number", "event_number"
+    )
+    date_col = _live_column(
+        timeline, "Service Date", "Date", "Visit Date", "service_date", "visit_date", "event_date"
+    )
+    status_col = _live_column(timeline, "Status", "status")
+    client_col = _live_column(timeline, "Client", "Client Name")
+    client_id_col = _live_column(timeline, "Client ID", "Client", "Client Name")
+    city_col = _live_column(timeline, "City")
+    state_col = _live_column(
+        timeline, "State", "Jurisdiction", "State / Jurisdiction"
+    )
+    location_col = _live_column(
+        timeline, "Location", "Location Key", "Site", "Site Name"
+    )
+    work_order_col = _live_column(
+        timeline, "Work Order #", "Work Order", "WO", "WO #", "Work Orders"
+    )
+    revenue_col = _live_column(
+        timeline,
+        "Confirmed Revenue",
+        "Revenue",
+        "Confirmed Amount",
+        "Paid Amount",
+        "Earned Revenue",
+    )
+
+    required = {
+        "Event #": event_col,
+        "Status": status_col,
+        "Client": client_col,
+    }
+    missing = [label for label, column in required.items() if column is None]
+    if missing:
+        raise ValueError(
+            f"Timeline missing required columns {missing}; "
+            f"available={list(timeline.columns)}"
+        )
+
+    date_lookup: dict[int, date] = {}
+
+    if date_col is not None:
+        for _, source_row in timeline.iterrows():
+            source_event = _integer(_live_value(source_row, event_col, 0))
+            source_date = _date(_live_value(source_row, date_col, None))
+            if source_event and source_date:
+                date_lookup[source_event] = source_date
+
+    if not date_lookup:
+        for attribute_name, frame in vars(data).items():
+            if not isinstance(frame, pd.DataFrame) or frame.empty:
+                continue
+            candidate_event = _live_column(
+                frame, "Event #", "Event Number", "Visit Number", "event_number"
+            )
+            candidate_date = _live_column(
+                frame, "Service Date", "Date", "Visit Date", "service_date", "visit_date", "event_date"
+            )
+            if candidate_event is None or candidate_date is None:
+                continue
+            for _, source_row in frame.iterrows():
+                source_event = _integer(_live_value(source_row, candidate_event, 0))
+                source_date = _date(_live_value(source_row, candidate_date, None))
+                if source_event and source_date:
+                    date_lookup[source_event] = source_date
+
+    if not date_lookup:
+        raise ValueError(
+            "No WorkbookData frame contains both an Event Number and a service-date column. "
+            + "Available DataFrames: "
+            + ", ".join(
+                f"{name}={list(frame.columns)}"
+                for name, frame in vars(data).items()
+                if isinstance(frame, pd.DataFrame)
+            )
+        )
+
+    valid_dates = sorted(set(date_lookup.values()))
+    first_date = min(valid_dates)
+
+    events: list[dict[str, Any]] = []
+
+    for _, row in timeline.iterrows():
+        event_number = _integer(_live_value(row, event_col, 0))
+        service_date = (
+            _date(_live_value(row, date_col, None))
+            if date_col is not None
+            else date_lookup.get(event_number)
+        )
+        if service_date is None:
+            service_date = date_lookup.get(event_number)
+        client = _clean(_live_value(row, client_col, ""))
+        client_id = _clean(_live_value(row, client_id_col, client)) or client
+        city = _clean(_live_value(row, city_col, ""))
+        jurisdiction = _clean(_live_value(row, state_col, ""))
+        location = _clean(_live_value(row, location_col, ""))
+        work_order = _clean(_live_value(row, work_order_col, ""))
+        revenue = _money(_live_value(row, revenue_col, 0))
+
+        if not location:
+            location = ", ".join(
+                part for part in (city, jurisdiction) if part
+            )
+
+        events.append({
+            "event_number": event_number,
+            "physical_visit_id": str(event_number),
+            "service_date": service_date,
+            "weekday": service_date.strftime("%A") if service_date else "",
+            "workweek_number": (
+                ((service_date - first_date).days // 7) + 1
+                if service_date and first_date else 0
+            ),
+            "my_month": service_date.strftime("%Y-%m") if service_date else "",
+            "client_id": client_id,
+            "client": client,
+            "site_name": location,
+            "city": city,
+            "state": jurisdiction,
+            "jurisdiction": jurisdiction,
+            "location_key": location,
+            "status": _clean(_live_value(row, status_col, "")),
+            "visit_type": "",
+            "work_order_count": 1 if work_order else 0,
+            "work_orders": work_order,
+            "confirmed_revenue": revenue,
+            "revenue_eligibility": "Eligible" if revenue > 0 else "",
+            "financial_scope": "Yes",
+            "breakdown_expected": "",
+        })
+
+    ledger: list[dict[str, Any]] = []
+    f_work_order = _live_column(
+        financial, "Work Order #", "Work Order", "WO", "WO #"
+    )
+    f_event = _live_column(financial, "Event #", "Event Number")
+    f_client = _live_column(financial, "Client", "Client Name")
+    f_date = _live_column(financial, "Service Date", "Date")
+    f_amount = _live_column(
+        financial,
+        "Breakdown Amount",
+        "Confirmed Amount",
+        "Revenue",
+        "Amount",
+    )
+    f_breakdown = _live_column(
+        financial, "Breakdown Confirmed", "Payment Confirmation"
+    )
+    f_ach = _live_column(financial, "ACH Confirmed", "Deposit Confirmed")
+    f_ach_amount = _live_column(
+        financial, "ACH Amount", "Deposit Amount"
+    )
+    f_variance = _live_column(financial, "Variance", "Deduction")
+    f_mapping = _live_column(financial, "Mapping Status")
+
+    if not financial.empty and f_work_order is not None:
+        for index, row in financial.iterrows():
+            work_order = _clean(_live_value(row, f_work_order, ""))
+            if not work_order:
+                continue
+
+            client = _clean(_live_value(row, f_client, ""))
+            amount = _money(_live_value(row, f_amount, 0))
+
+            ledger.append({
+                "ledger_record_id": str(index + 1),
+                "work_order": work_order,
+                "event_number": _integer(_live_value(row, f_event, 0)),
+                "client_id": client,
+                "client": client,
+                "service_date": _date(_live_value(row, f_date, None)),
+                "agreed_amount": amount,
+                "breakdown_confirmed": _live_value(
+                    row, f_breakdown, ""
+                ),
+                "breakdown_amount": amount,
+                "breakdown_date": None,
+                "expected_payment_date": None,
+                "ach_confirmed": _live_value(row, f_ach, ""),
+                "ach_amount": _money(
+                    _live_value(row, f_ach_amount, 0)
+                ),
+                "ach_date": None,
+                "variance": _money(_live_value(row, f_variance, 0)),
+                "reconciliation_status": "",
+                "mapping_status": _live_value(row, f_mapping, ""),
+                "alias_related_wo": "",
+            })
+
+    if not ledger:
+        seen: set[str] = set()
+
+        for event in events:
+            work_orders = re.split(r"[,;/|]+", event["work_orders"])
+
+            for work_order in work_orders:
+                work_order = _clean(work_order)
+
+                if not work_order or work_order in seen:
+                    continue
+
+                seen.add(work_order)
+                revenue = event["confirmed_revenue"]
+
+                ledger.append({
+                    "ledger_record_id": work_order,
+                    "work_order": work_order,
+                    "event_number": event["event_number"],
+                    "client_id": event["client_id"],
+                    "client": event["client"],
+                    "service_date": event["service_date"],
+                    "agreed_amount": revenue,
+                    "breakdown_confirmed": "Yes" if revenue > 0 else "No",
+                    "breakdown_amount": revenue,
+                    "breakdown_date": None,
+                    "expected_payment_date": None,
+                    "ach_confirmed": "",
+                    "ach_amount": 0.0,
+                    "ach_date": None,
+                    "variance": 0.0,
+                    "reconciliation_status": "",
+                    "mapping_status": "",
+                    "alias_related_wo": "",
+                })
+
+    result = build_career_analytics(
+        events,
+        ledger,
+        workbook_validation=None,
+        sector_map=sector_map,
+    )
+
+    result["metadata"].update({
+        "source_type": "WorkbookData",
+        "source_name": "Barrister_Master.xlsx",
+    })
+
+    return result

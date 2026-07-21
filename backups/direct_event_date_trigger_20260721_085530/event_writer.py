@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
-import json
 from posixpath import join, normpath
 import re
 import tempfile
@@ -83,43 +82,6 @@ class SavedServiceEvent:
     notes: str
     existing_client: bool
     completed_visits: int | None
-
-
-EVENT_DATE_REGISTRY_FILENAME = "event_date_registry.json"
-
-
-def event_date_registry_path(workbook_path: Path) -> Path:
-    return Path(workbook_path).resolve().parent / EVENT_DATE_REGISTRY_FILENAME
-
-
-def record_event_date(
-    workbook_path: Path,
-    event_number: int | None,
-    event_date: date,
-) -> None:
-    if event_number is None:
-        return
-
-    registry_path = event_date_registry_path(workbook_path)
-    registry_path.parent.mkdir(parents=True, exist_ok=True)
-
-    if registry_path.exists():
-        try:
-            payload = json.loads(registry_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            payload = {}
-    else:
-        payload = {}
-
-    dates = payload.setdefault("event_dates", {})
-    dates[str(int(event_number))] = event_date.isoformat()
-
-    temporary = registry_path.with_suffix(registry_path.suffix + ".tmp")
-    temporary.write_text(
-        json.dumps(payload, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
-    temporary.replace(registry_path)
 
 
 def parse_location(value: str) -> ParsedLocation:
@@ -944,12 +906,6 @@ def update_existing_event(
         if match:
             completed_visits = int(clients_after.loc[match[0], "completed_visits"])
         editor.save()
-        if normalized_status == "Completed":
-            record_event_date(
-                workbook_path,
-                event_number,
-                draft.event_date,
-            )
         return SavedServiceEvent(
             event_number=event_number if normalized_status == "Completed" else None,
             client=draft.client,
@@ -1007,11 +963,6 @@ def update_existing_event(
         if match:
             completed_visits = int(clients_after.loc[match[0], "completed_visits"])
         editor.save()
-        record_event_date(
-            workbook_path,
-            draft.event_number,
-            draft.event_date,
-        )
         return SavedServiceEvent(
             event_number=int(draft.event_number) if draft.event_number is not None else None,
             client=draft.client,
@@ -1129,11 +1080,6 @@ def append_service_event(workbook_path: Path, draft: ServiceEventDraft) -> Saved
     match = clients_after.index[clients_after["client"].astype(str).str.casefold().eq(draft.client.casefold())].tolist()
     completed_visits = int(clients_after.loc[match[0], "completed_visits"]) if match else None
     editor.save()
-    record_event_date(
-        workbook_path,
-        draft.event_number,
-        draft.event_date,
-    )
 
     return SavedServiceEvent(
         event_number=int(draft.event_number) if draft.event_number is not None else None,
@@ -1220,11 +1166,6 @@ def complete_scheduled_assignment(workbook_path: Path, pipeline_index: int, comp
     match = clients_after.index[clients_after["client"].astype(str).str.casefold().eq(draft.client.casefold())].tolist()
     completed_visits = int(clients_after.loc[match[0], "completed_visits"]) if match else None
     editor.save()
-    record_event_date(
-        workbook_path,
-        draft.event_number,
-        draft.event_date,
-    )
 
     return SavedServiceEvent(
         event_number=int(draft.event_number) if draft.event_number is not None else None,

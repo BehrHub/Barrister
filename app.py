@@ -495,6 +495,8 @@ def configure_page() -> None:
         .journey-right-meta { width: max-content; min-width: 84px; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; justify-self: end; gap: .24rem; white-space: nowrap; text-align: right; }
         .journey-status { padding: .12rem .38rem; border: 1px solid #35516f; border-radius: 999px; background: #14243a; color: #b9c9dc; font-size: .58rem; font-weight: 800; text-transform: uppercase; }
         .journey-date { color: #c2cddd; font-size: .68rem; font-weight: 650; line-height: 1.2; text-align: right; opacity: .86; white-space: nowrap; }
+        .journey-month-chip { display: inline-flex; align-items: center; gap: .28rem; padding: .1rem .38rem; border-radius: 999px; font-size: .5rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #f7f2ea; background: color-mix(in srgb, var(--month-accent, #a9a29a) 30%, rgba(23,22,26,.6)); border: 1px solid color-mix(in srgb, var(--month-accent, #a9a29a) 55%, transparent); }
+        .journey-month-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--month-accent, #a9a29a); flex: 0 0 auto; }
         .logo-ribbon { display: flex; gap: .65rem; overflow-x: auto; overscroll-behavior-inline: contain; padding: .2rem .05rem .75rem; margin: .25rem 0 .55rem; scrollbar-width: thin; scrollbar-color: #38506f transparent; scroll-snap-type: inline proximity; }
         .logo-ribbon::-webkit-scrollbar { height: 6px; }
         .logo-ribbon::-webkit-scrollbar-thumb { background: #38506f; border-radius: 999px; }
@@ -1057,6 +1059,15 @@ def configure_page() -> None:
     --kith-charcoal: #17161a;
     --kith-charcoal-soft: #211f26;
     --kith-warm-gray: #a9a29a;
+    --kith-month-apr: var(--kith-sand);
+    --kith-month-may: var(--kith-sage);
+    --kith-month-jun: var(--kith-blue);
+    --kith-month-jul: var(--kith-mauve);
+    --kith-month-aug: var(--kith-blush);
+    --kith-month-sep: var(--kith-sand-deep);
+    --kith-month-oct: var(--kith-blue-deep);
+    --kith-month-nov: var(--kith-mauve-deep);
+    --kith-month-dec: var(--kith-blush-deep);
 }
 .page-nav { display: flex; gap: .5rem; margin-bottom: .8rem; }
 .page-nav a { color: var(--text-muted) !important; text-decoration: none !important; font-size: .68rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; padding: .4rem .8rem; border-radius: 999px; border: 1px solid rgba(var(--slate-border-rgb),.28); }
@@ -1069,19 +1080,29 @@ def configure_page() -> None:
 .main-hero-glow-2 { position: absolute; bottom: -35%; left: -15%; width: 60%; height: 140%; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(124,147,179,.24), transparent 70%); animation: mainGlowPulse 6s ease-in-out infinite 1.2s; }
 .main-hero-inner { position: relative; z-index: 2; }
 .main-hero-radio { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.main-hero-row { display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem; }
+.main-hero-primary { flex: 1 1 auto; min-width: 0; }
 .main-hero-eyebrow { display: inline-flex; align-items: center; gap: .4rem; font-size: .58rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--kith-warm-gray); margin-bottom: .5rem; }
 .main-hero-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--kith-blush); box-shadow: 0 0 10px rgba(211,163,168,.8); }
 .main-hero-figure { display: none; }
 #mainFigEvents { display: block; }
-#mainEvents:checked ~ .main-hero-body #mainFigEvents { display: block; }
-#mainRevenue:checked ~ .main-hero-body #mainFigRevenue { display: block; }
-#mainClients:checked ~ .main-hero-body #mainFigClients { display: block; }
-#mainRevenue:checked ~ .main-hero-body #mainFigEvents, #mainClients:checked ~ .main-hero-body #mainFigEvents { display: none; }
-.main-hero-number { display: block; font-family: "Inter", "SF Pro Display", "Segoe UI", Arial, sans-serif; font-size: clamp(3.2rem, 19vw, 5.6rem); font-weight: 900; line-height: .85; letter-spacing: -.05em; color: #f7f2ea; text-shadow: 0 0 40px rgba(211,163,168,.35), 0 18px 34px rgba(0,0,0,.4); }
-.main-hero-unit { margin-top: .3rem; font-size: .8rem; font-weight: 700; color: var(--kith-sand); }
-.main-hero-seg { display: flex; gap: .4rem; margin-top: 1.1rem; }
-.main-hero-seg-btn { padding: .4rem .95rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; font-size: .58rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--kith-warm-gray); border: 1px solid rgba(169,162,154,.25); transition: background .22s ease, color .22s ease, border-color .22s ease; }
-#mainEvents:checked ~ .main-hero-seg label[for="mainEvents"], #mainRevenue:checked ~ .main-hero-seg label[for="mainRevenue"], #mainClients:checked ~ .main-hero-seg label[for="mainClients"] { background: linear-gradient(135deg, rgba(211,163,168,.35), rgba(124,147,179,.25)); color: #f7f2ea; border-color: rgba(211,163,168,.5); }
+#mainEvents:checked ~ .main-hero-row #mainFigEvents { display: block; }
+#mainRevenue:checked ~ .main-hero-row #mainFigRevenue { display: block; }
+#mainClients:checked ~ .main-hero-row #mainFigClients { display: block; }
+#mainRevenue:checked ~ .main-hero-row #mainFigEvents, #mainClients:checked ~ .main-hero-row #mainFigEvents { display: none; }
+.main-hero-number { display: block; font-family: "Inter", "SF Pro Display", "Segoe UI", Arial, sans-serif; font-size: clamp(2.5rem, 13.5vw, 4.6rem); font-weight: 900; line-height: .85; letter-spacing: -.045em; color: #f7f2ea; text-shadow: 0 0 40px rgba(211,163,168,.35), 0 18px 34px rgba(0,0,0,.4); }
+.main-hero-unit { margin-top: .3rem; font-size: .74rem; font-weight: 700; color: var(--kith-sand); }
+.main-hero-seg { display: flex; gap: .35rem; margin-top: 1.1rem; }
+.main-hero-seg-btn { padding: .38rem .7rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; font-size: .55rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--kith-warm-gray); border: 1px solid rgba(169,162,154,.25); transition: background .22s ease, color .22s ease, border-color .22s ease; white-space: nowrap; }
+#mainEvents:checked ~ .main-hero-row label[for="mainEvents"], #mainRevenue:checked ~ .main-hero-row label[for="mainRevenue"], #mainClients:checked ~ .main-hero-row label[for="mainClients"] { background: linear-gradient(135deg, rgba(211,163,168,.35), rgba(124,147,179,.25)); color: #f7f2ea; border-color: rgba(211,163,168,.5); }
+.main-hero-upcoming { flex: 0 0 auto; width: clamp(92px, 30vw, 126px); padding: .6rem .55rem; border-radius: 14px; border: 1px solid rgba(169,162,154,.22); background: rgba(23,22,26,.5); }
+.main-hero-upcoming-title { font-size: .5rem; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; color: var(--kith-sand); margin-bottom: .38rem; line-height: 1.3; }
+.main-hero-upcoming-row { display: flex; align-items: baseline; gap: .28rem; font-size: .58rem; font-weight: 650; color: #f7f2ea; margin-bottom: .28rem; line-height: 1.25; }
+.main-hero-upcoming-row:last-child { margin-bottom: 0; }
+.main-hero-upcoming-dash { color: var(--kith-blush); flex: 0 0 auto; }
+.main-hero-upcoming-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.main-hero-upcoming-empty { font-size: .55rem; color: var(--kith-warm-gray); }
+@media (max-width: 480px) { .main-hero-upcoming-row, .main-hero-upcoming-empty { font-size: .52rem; } .main-hero-number { font-size: clamp(2.1rem, 12vw, 3.4rem); } }
 .main-ticker { position: relative; overflow: hidden; height: 38px; display: flex; align-items: center; margin: 0 0 1rem; border-radius: 12px; border: 1px solid rgba(169,162,154,.2); background: linear-gradient(90deg, var(--kith-charcoal), var(--kith-charcoal-soft)); }
 .main-ticker::before, .main-ticker::after { content: ""; position: absolute; top: 0; bottom: 0; width: 26px; z-index: 1; pointer-events: none; }
 .main-ticker::before { left: 0; background: linear-gradient(90deg, var(--kith-charcoal), transparent); }
@@ -2048,6 +2069,18 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
     donut = f"conic-gradient(from -90deg, {', '.join(stops)})" if stops else "conic-gradient(rgba(169,162,154,.25) 0% 100%)"
 
     top_client = clients[0] if clients else {"name": "\u2014", "events": 0, "revenue": 0}
+
+    pipeline = data.pipeline.copy() if getattr(data, "pipeline", None) is not None else pd.DataFrame()
+    upcoming_count = len(pipeline)
+    upcoming_names: list[str] = []
+    if not pipeline.empty and "client" in pipeline:
+        display_pipeline = pipeline.copy()
+        if "event_date" in display_pipeline:
+            display_pipeline = display_pipeline.sort_values("event_date", na_position="last")
+        upcoming_names = [
+            name.strip() or "Unnamed"
+            for name in display_pipeline["client"].fillna("").astype(str).tolist()
+        ][:3]
     best_month = max(monthly, key=lambda row: row["events"]) if monthly else {"label": "\u2014", "events": 0, "revenue": 0}
 
     plot_h, bar_max, bar_min = 128, 108, 5
@@ -2105,12 +2138,20 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
     ]
     ticker = "".join(f'<span class="main-ticker-item">{item}</span>' for item in ticker_items * 2)
 
+    upcoming_items = "".join(
+        f'<div class="main-hero-upcoming-row"><span class="main-hero-upcoming-dash">&ndash;</span>'
+        f'<span class="main-hero-upcoming-name">{esc(name)}</span></div>'
+        for name in upcoming_names
+    ) if upcoming_names else '<div class="main-hero-upcoming-empty">None scheduled</div>'
+
     hero = (
         '<div class="main-hero"><div class="main-hero-glow"></div><div class="main-hero-glow-2"></div>'
         '<div class="main-hero-inner">'
         '<input type="radio" name="mainMetric" id="mainEvents" class="main-hero-radio" checked>'
         '<input type="radio" name="mainMetric" id="mainRevenue" class="main-hero-radio">'
         '<input type="radio" name="mainMetric" id="mainClients" class="main-hero-radio">'
+        '<div class="main-hero-row">'
+        '<div class="main-hero-primary">'
         '<div class="main-hero-eyebrow"><span class="main-hero-dot"></span>Career to date</div>'
         '<div class="main-hero-body">'
         f'<div class="main-hero-figure" id="mainFigEvents"><span class="main-hero-number">{career_events}</span>'
@@ -2124,6 +2165,12 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         '<label for="mainEvents" class="main-hero-seg-btn">Events</label>'
         '<label for="mainRevenue" class="main-hero-seg-btn">Revenue</label>'
         '<label for="mainClients" class="main-hero-seg-btn">Clients</label></div>'
+        '</div>'
+        '<div class="main-hero-upcoming">'
+        f'<div class="main-hero-upcoming-title">Upcoming: {upcoming_count}</div>'
+        f'{upcoming_items}'
+        '</div>'
+        '</div>'
         "</div></div>"
     )
 
@@ -2255,10 +2302,8 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
 
     st.markdown(
         compact(
-            '<div class="section-kicker">LIVE DATA</div>'
-            '<div class="section-title">MAIN</div>'
+            f'<div class="main-ticker"><div class="main-ticker-track">{ticker}</div></div>'
             + hero
-            + f'<div class="main-ticker"><div class="main-ticker-track">{ticker}</div></div>'
             + f'<div class="main-kpi-grid">{kpi_html}</div>'
             + trends
             + leaderboard
@@ -2321,6 +2366,16 @@ def render_barrister_journey(data: WorkbookData, timeline: pd.DataFrame) -> None
         event_date = row.get("event_date")
         date_label = pd.Timestamp(event_date).strftime("%b %d, %Y") if pd.notna(event_date) else ""
         date_markup = f'<div class="journey-date">{escape(date_label)}</div>' if date_label else ""
+        month_chip = ""
+        if pd.notna(event_date):
+            month_num = pd.Timestamp(event_date).month
+            month_names = {4: "Apr", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec", 1: "Jan", 2: "Feb", 3: "Mar"}
+            month_var = {4: "apr", 5: "may", 6: "jun", 7: "jul", 8: "aug", 9: "sep", 10: "oct", 11: "nov", 12: "dec", 1: "apr", 2: "apr", 3: "apr"}
+            month_accent = f"var(--kith-month-{month_var.get(month_num, 'apr')})"
+            month_chip = (
+                f'<span class="journey-month-chip" style="--month-accent:{escape(month_accent, quote=True)}">'
+                f'<span class="journey-month-dot"></span>{escape(month_names.get(month_num, ""))}</span>'
+            )
         stop_accent = JURISDICTION_COLORS.get(state_key, JURISDICTION_COLORS["Pennsylvania / Other"])
         pieces.append(
             '<div class="journey-stop" '
@@ -2334,7 +2389,7 @@ def render_barrister_journey(data: WorkbookData, timeline: pd.DataFrame) -> None
             f'<div class="journey-client">{escape(client)}</div>'
             f'<div class="journey-location">{escape(location or "Location not provided")}</div>'
             '</div>'
-            f'<div class="journey-right-meta"><span class="journey-status">{escape(status)}</span>{date_markup}</div>'
+            f'<div class="journey-right-meta"><span class="journey-status">{escape(status)}</span>{month_chip}{date_markup}</div>'
             '</div></div>'
         )
         seen_clients.add(client_key)

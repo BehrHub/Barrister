@@ -129,6 +129,7 @@ PAGE_ROUTE_ALIASES = {
     "finance": "Finance",
     "financial-status": "Finance",
     "ledger": "Ledger",
+    "test-tube": "Test Tube",
 }
 LOCATIONS_PATH = Path(__file__).parent / "data" / "locations.csv"
 LOGOS_DIR = Path(__file__).parent / "assets" / "logos"
@@ -1095,14 +1096,16 @@ def configure_page() -> None:
 .main-hero-seg { display: flex; gap: .35rem; margin-top: 1.1rem; }
 .main-hero-seg-btn { padding: .38rem .7rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; font-size: .55rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--kith-warm-gray); border: 1px solid rgba(169,162,154,.25); transition: background .22s ease, color .22s ease, border-color .22s ease; white-space: nowrap; }
 #mainEvents:checked ~ .main-hero-row label[for="mainEvents"], #mainRevenue:checked ~ .main-hero-row label[for="mainRevenue"], #mainClients:checked ~ .main-hero-row label[for="mainClients"] { background: linear-gradient(135deg, rgba(211,163,168,.35), rgba(124,147,179,.25)); color: #f7f2ea; border-color: rgba(211,163,168,.5); }
-.main-hero-upcoming { flex: 0 0 auto; width: clamp(92px, 30vw, 126px); padding: .6rem .55rem; border-radius: 14px; border: 1px solid rgba(169,162,154,.22); background: rgba(23,22,26,.5); }
-.main-hero-upcoming-title { font-size: .5rem; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; color: var(--kith-sand); margin-bottom: .38rem; line-height: 1.3; }
-.main-hero-upcoming-row { display: flex; align-items: baseline; gap: .28rem; font-size: .58rem; font-weight: 650; color: #f7f2ea; margin-bottom: .28rem; line-height: 1.25; }
+.main-hero-upcoming { flex: 0 0 auto; width: clamp(108px, 34vw, 150px); padding: .6rem .55rem; border-radius: 14px; border: 1px solid rgba(169,162,154,.22); background: rgba(23,22,26,.5); }
+.main-hero-upcoming-title { font-size: .5rem; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; color: var(--kith-sand); margin-bottom: .4rem; line-height: 1.3; }
+.main-hero-upcoming-row { display: flex; align-items: baseline; justify-content: space-between; gap: .35rem; font-size: .56rem; font-weight: 650; color: #f7f2ea; margin-bottom: .3rem; line-height: 1.25; }
 .main-hero-upcoming-row:last-child { margin-bottom: 0; }
+.main-hero-upcoming-left { display: flex; align-items: baseline; gap: .24rem; min-width: 0; overflow: hidden; }
 .main-hero-upcoming-dash { color: var(--kith-blush); flex: 0 0 auto; }
 .main-hero-upcoming-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.main-hero-upcoming-when { flex: 0 0 auto; font-size: .5rem; font-weight: 800; letter-spacing: .02em; text-transform: uppercase; color: var(--kith-blush); }
 .main-hero-upcoming-empty { font-size: .55rem; color: var(--kith-warm-gray); }
-@media (max-width: 480px) { .main-hero-upcoming-row, .main-hero-upcoming-empty { font-size: .52rem; } .main-hero-number { font-size: clamp(2.1rem, 12vw, 3.4rem); } }
+@media (max-width: 480px) { .main-hero-upcoming-row, .main-hero-upcoming-empty { font-size: .5rem; } .main-hero-upcoming-when { font-size: .46rem; } .main-hero-number { font-size: clamp(2.1rem, 12vw, 3.4rem); } }
 .main-ticker { position: relative; overflow: hidden; height: 38px; display: flex; align-items: center; margin: 0 0 1rem; border-radius: 12px; border: 1px solid rgba(169,162,154,.2); background: linear-gradient(90deg, var(--kith-charcoal), var(--kith-charcoal-soft)); }
 .main-ticker::before, .main-ticker::after { content: ""; position: absolute; top: 0; bottom: 0; width: 26px; z-index: 1; pointer-events: none; }
 .main-ticker::before { left: 0; background: linear-gradient(90deg, var(--kith-charcoal), transparent); }
@@ -2072,15 +2075,26 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
 
     pipeline = data.pipeline.copy() if getattr(data, "pipeline", None) is not None else pd.DataFrame()
     upcoming_count = len(pipeline)
-    upcoming_names: list[str] = []
+    upcoming_rows: list[dict] = []
     if not pipeline.empty and "client" in pipeline:
         display_pipeline = pipeline.copy()
         if "event_date" in display_pipeline:
             display_pipeline = display_pipeline.sort_values("event_date", na_position="last")
-        upcoming_names = [
-            name.strip() or "Unnamed"
-            for name in display_pipeline["client"].fillna("").astype(str).tolist()
-        ][:3]
+        today = date.today()
+        for record in display_pipeline.head(5).to_dict("records"):
+            name = str(record.get("client", "") or "").strip() or "Unnamed"
+            raw_date = record.get("event_date")
+            when = ""
+            if pd.notna(raw_date):
+                event_day = pd.Timestamp(raw_date).date()
+                delta = (event_day - today).days
+                if delta == 0:
+                    when = "TODAY"
+                elif delta == 1:
+                    when = "TOM"
+                else:
+                    when = f"{event_day.month}/{event_day.day}"
+            upcoming_rows.append({"name": name, "when": when})
     best_month = max(monthly, key=lambda row: row["events"]) if monthly else {"label": "\u2014", "events": 0, "revenue": 0}
 
     plot_h, bar_max, bar_min = 128, 108, 5
@@ -2139,10 +2153,12 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
     ticker = "".join(f'<span class="main-ticker-item">{item}</span>' for item in ticker_items * 2)
 
     upcoming_items = "".join(
-        f'<div class="main-hero-upcoming-row"><span class="main-hero-upcoming-dash">&ndash;</span>'
-        f'<span class="main-hero-upcoming-name">{esc(name)}</span></div>'
-        for name in upcoming_names
-    ) if upcoming_names else '<div class="main-hero-upcoming-empty">None scheduled</div>'
+        f'<div class="main-hero-upcoming-row">'
+        f'<span class="main-hero-upcoming-left"><span class="main-hero-upcoming-dash">&ndash;</span>'
+        f'<span class="main-hero-upcoming-name">{esc(row["name"])}</span></span>'
+        f'<span class="main-hero-upcoming-when">{esc(row["when"])}</span></div>'
+        for row in upcoming_rows
+    ) if upcoming_rows else '<div class="main-hero-upcoming-empty">None scheduled</div>'
 
     hero = (
         '<div class="main-hero"><div class="main-hero-glow"></div><div class="main-hero-glow-2"></div>'
@@ -2163,8 +2179,8 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         '</div>'
         '<div class="main-hero-seg">'
         '<label for="mainEvents" class="main-hero-seg-btn">Events</label>'
-        '<label for="mainRevenue" class="main-hero-seg-btn">Revenue</label>'
-        '<label for="mainClients" class="main-hero-seg-btn">Clients</label></div>'
+        '<label for="mainClients" class="main-hero-seg-btn">Clients</label>'
+        '<label for="mainRevenue" class="main-hero-seg-btn">Revenue</label></div>'
         '</div>'
         '<div class="main-hero-upcoming">'
         f'<div class="main-hero-upcoming-title">Upcoming: {upcoming_count}</div>'
@@ -5457,6 +5473,32 @@ def main() -> None:
         render_financial_analytics(data)
     elif section == "Ledger":
         render_ledger_editor(data)
+    elif section == "Test Tube":
+        render_test_tube_page()
+
+def render_test_tube_page() -> None:
+    st.markdown("### Test Tube \U0001F9EA — KITH month colors")
+    st.caption("Temporary reference page. Not linked in nav, safe to delete later.")
+    swatches = [
+        ("April", "--kith-month-apr"),
+        ("May", "--kith-month-may"),
+        ("June", "--kith-month-jun"),
+        ("July", "--kith-month-jul"),
+        ("August", "--kith-month-aug"),
+        ("September", "--kith-month-sep"),
+        ("October", "--kith-month-oct"),
+        ("November", "--kith-month-nov"),
+        ("December", "--kith-month-dec"),
+    ]
+    rows = "".join(
+        f'<div style="display:flex;align-items:center;gap:.75rem;padding:.6rem .8rem;border:1px solid rgba(169,162,154,.25);border-radius:10px;margin-bottom:.5rem;background:rgba(23,22,26,.5);">'
+        f'<div style="width:34px;height:34px;border-radius:8px;flex:0 0 auto;background:var({token});border:1px solid rgba(255,255,255,.15);"></div>'
+        f'<div style="color:#f7f2ea;font-family:monospace;font-size:.85rem;">{escape(month)} <span style="color:#a9a29a;">&mdash; var({token})</span></div>'
+        f'</div>'
+        for month, token in swatches
+    )
+    st.markdown(rows, unsafe_allow_html=True)
+
 
 if __name__ == "__main__":
     main()

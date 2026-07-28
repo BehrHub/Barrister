@@ -486,7 +486,7 @@ def configure_page() -> None:
         .journey-start { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
         .journey-checkpoint { position: relative; z-index: 1; margin-left: .2rem; padding: .48rem .7rem; border: 1px solid rgba(245,158,11,.36); border-radius: 999px; background: rgba(42,36,27,.9); color: #f7d38d; font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; width: fit-content; max-width: 100%; }
         .journey-milestone { position: relative; z-index: 1; margin-left: .2rem; padding: .56rem .78rem; border: 1px solid rgba(245, 197, 66, .46); border-radius: 12px; background: linear-gradient(135deg, rgba(91,64,16,.92), rgba(27,37,56,.9)); color: #ffe8a3; font-size: .74rem; font-weight: 850; letter-spacing: .07em; text-transform: uppercase; width: fit-content; max-width: 100%; box-shadow: 0 10px 22px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.06); }
-        .journey-stop { position: relative; z-index: 1; display: grid; grid-template-columns: 54px 1fr; gap: .72rem; align-items: stretch; margin-left: .2rem; padding: .62rem .72rem; border: 1px solid #243751; border-radius: 16px; background: linear-gradient(145deg, rgba(20,34,55,.96), rgba(13,25,43,.96)); box-shadow: 0 9px 22px rgba(0,0,0,.16); }
+        .journey-stop { position: relative; z-index: 1; display: grid; grid-template-columns: 54px 1fr; gap: .72rem; align-items: stretch; margin-left: .2rem; padding: .62rem .72rem; border: 1px solid color-mix(in srgb, var(--month-accent, #243751) 45%, #243751); border-radius: 16px; background: linear-gradient(145deg, color-mix(in srgb, var(--month-accent, #14243a) 14%, rgba(20,34,55,.96)), rgba(13,25,43,.96)); box-shadow: 0 9px 22px rgba(0,0,0,.16), 0 0 0 1px color-mix(in srgb, var(--month-accent, transparent) 18%, transparent); }
         .journey-stop::before { content: ""; position: absolute; left: -1.02rem; top: 50%; width: 13px; height: 13px; transform: translateY(-50%); border: 2px solid #07101c; border-radius: 999px; background: #2dd4bf; box-shadow: 0 0 0 3px rgba(45,212,191,.18); }
         .journey-number { display: flex; align-items: center; justify-content: center; border-radius: 12px; background: linear-gradient(180deg, #101d31, #0b1627); border: 1px solid #2a405d; color: #77e1d5; font-size: .72rem; font-weight: 850; text-transform: uppercase; text-align: center; line-height: 1.05; }
         .journey-content { position: relative; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) max-content; gap: .9rem; align-items: start; }
@@ -496,8 +496,6 @@ def configure_page() -> None:
         .journey-right-meta { width: max-content; min-width: 84px; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; justify-self: end; gap: .24rem; white-space: nowrap; text-align: right; }
         .journey-status { padding: .12rem .38rem; border: 1px solid #35516f; border-radius: 999px; background: #14243a; color: #b9c9dc; font-size: .58rem; font-weight: 800; text-transform: uppercase; }
         .journey-date { color: #c2cddd; font-size: .68rem; font-weight: 650; line-height: 1.2; text-align: right; opacity: .86; white-space: nowrap; }
-        .journey-month-chip { display: inline-flex; align-items: center; gap: .28rem; padding: .1rem .38rem; border-radius: 999px; font-size: .5rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #f7f2ea; background: color-mix(in srgb, var(--month-accent, #a9a29a) 30%, rgba(23,22,26,.6)); border: 1px solid color-mix(in srgb, var(--month-accent, #a9a29a) 55%, transparent); }
-        .journey-month-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--month-accent, #a9a29a); flex: 0 0 auto; }
         .logo-ribbon { display: flex; gap: .65rem; overflow-x: auto; overscroll-behavior-inline: contain; padding: .2rem .05rem .75rem; margin: .25rem 0 .55rem; scrollbar-width: thin; scrollbar-color: #38506f transparent; scroll-snap-type: inline proximity; }
         .logo-ribbon::-webkit-scrollbar { height: 6px; }
         .logo-ribbon::-webkit-scrollbar-thumb { background: #38506f; border-radius: 999px; }
@@ -2382,20 +2380,13 @@ def render_barrister_journey(data: WorkbookData, timeline: pd.DataFrame) -> None
         event_date = row.get("event_date")
         date_label = pd.Timestamp(event_date).strftime("%b %d, %Y") if pd.notna(event_date) else ""
         date_markup = f'<div class="journey-date">{escape(date_label)}</div>' if date_label else ""
-        month_chip = ""
-        if pd.notna(event_date):
-            month_num = pd.Timestamp(event_date).month
-            month_names = {4: "Apr", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec", 1: "Jan", 2: "Feb", 3: "Mar"}
-            month_var = {4: "apr", 5: "may", 6: "jun", 7: "jul", 8: "aug", 9: "sep", 10: "oct", 11: "nov", 12: "dec", 1: "apr", 2: "apr", 3: "apr"}
-            month_accent = f"var(--kith-month-{month_var.get(month_num, 'apr')})"
-            month_chip = (
-                f'<span class="journey-month-chip" style="--month-accent:{escape(month_accent, quote=True)}">'
-                f'<span class="journey-month-dot"></span>{escape(month_names.get(month_num, ""))}</span>'
-            )
+        month_var_map = {4: "apr", 5: "may", 6: "jun", 7: "jul", 8: "aug", 9: "sep", 10: "oct", 11: "nov", 12: "dec", 1: "apr", 2: "apr", 3: "apr"}
+        month_token = month_var_map.get(pd.Timestamp(event_date).month, "apr") if pd.notna(event_date) else "apr"
+        month_accent = f"var(--kith-month-{month_token})"
         stop_accent = JURISDICTION_COLORS.get(state_key, JURISDICTION_COLORS["Pennsylvania / Other"])
         pieces.append(
             '<div class="journey-stop" '
-            f'style="--stop-accent:{escape(stop_accent, quote=True)}" '
+            f'style="--stop-accent:{escape(stop_accent, quote=True)};--month-accent:{escape(month_accent, quote=True)}" '
             f'data-visit="{escape(str(number))}" data-client="{escape(client, quote=True)}" '
             f'data-location="{escape(location or "Location not provided", quote=True)}" '
             f'data-new-client="{"1" if is_new_client else "0"}">'
@@ -2405,7 +2396,7 @@ def render_barrister_journey(data: WorkbookData, timeline: pd.DataFrame) -> None
             f'<div class="journey-client">{escape(client)}</div>'
             f'<div class="journey-location">{escape(location or "Location not provided")}</div>'
             '</div>'
-            f'<div class="journey-right-meta"><span class="journey-status">{escape(status)}</span>{month_chip}{date_markup}</div>'
+            f'<div class="journey-right-meta"><span class="journey-status">{escape(status)}</span>{date_markup}</div>'
             '</div></div>'
         )
         seen_clients.add(client_key)
@@ -4659,6 +4650,38 @@ def render_canonical_project_registry() -> None:
 
 def render_ledger_editor(data: WorkbookData) -> None:
     st.subheader("Ledger Editor")
+
+    with st.container(border=True):
+        st.markdown("**\U0001F4E5 Backup the live workbook**")
+        st.caption("Download this before pushing any code change — a redeploy rebuilds from GitHub and will discard anything added here since the last commit.")
+        col_a, col_b = st.columns(2)
+        try:
+            master_bytes = data.path.read_bytes()
+            col_a.download_button(
+                "Download Barrister_Master.xlsx",
+                data=master_bytes,
+                file_name="Barrister_Master.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True,
+            )
+        except OSError as error:
+            col_a.error(f"Could not read Barrister_Master.xlsx: {error}")
+        current_master_path = data.path.parent / "current_master.xlsx"
+        if current_master_path.exists():
+            try:
+                current_bytes = current_master_path.read_bytes()
+                col_b.download_button(
+                    "Download current_master.xlsx",
+                    data=current_bytes,
+                    file_name="current_master.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    use_container_width=True,
+                )
+            except OSError as error:
+                col_b.error(f"Could not read current_master.xlsx: {error}")
+        else:
+            col_b.caption("current_master.xlsx not found alongside the active workbook.")
+
     last_save_message = st.session_state.pop("ledger_editor_last_save", None)
 
     try:

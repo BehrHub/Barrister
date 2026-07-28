@@ -2327,10 +2327,10 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         f'<div class="exec-section-body-wrap"><div class="exec-section-body">{milestone_rows}</div></div></div>'
     )
 
+    st.markdown(css, unsafe_allow_html=True)
     st.markdown(
         compact(
-            css
-            + '<div class="section-kicker">LIVE DATA</div>'
+            '<div class="section-kicker">LIVE DATA</div>'
             '<div class="section-title">MAIN</div>'
             + hero
             + f'<div class="exec-ticker"><div class="exec-ticker-track">{ticker}</div></div>'

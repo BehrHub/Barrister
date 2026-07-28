@@ -2063,7 +2063,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
 .exec-kpi-back-title { font-size: .49rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-teal); }
 .exec-kpi-back-row { font-size: .8rem; font-weight: 800; color: var(--text-primary); }
 .exec-kpi-back-row span { display: block; font-size: .53rem; font-weight: 600; color: var(--text-secondary-dim); }
-.exec-suit-hint { position: absolute; bottom: 6px; right: 7px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .64rem; line-height: 1; color: var(--text-muted); background: rgba(var(--slate-border-rgb),.14); border: 1px solid rgba(var(--slate-border-rgb),.22); }
+.exec-suit-hint { position: absolute; bottom: 5px; right: 6px; width: 21px; height: 21px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .8rem; line-height: 1; color: var(--text-muted); background: rgba(var(--slate-border-rgb),.14); border: 1px solid rgba(var(--slate-border-rgb),.22); }
 .exec-section { position: relative; overflow: hidden; border: 1px solid rgba(var(--slate-border-rgb),.22); border-radius: var(--radius-lg); background: var(--surface-card-gradient); margin-bottom: .65rem; animation: execRiseIn .5s var(--ease-emphasized) both; }
 .exec-section-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
 .exec-section-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: .8rem .95rem; cursor: pointer; -webkit-tap-highlight-color: transparent; }

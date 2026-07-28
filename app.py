@@ -674,21 +674,6 @@ def configure_page() -> None:
             .preview-row { grid-template-columns: 1fr; gap: .12rem; }
         }
         
-<style>
-.mini-tile-icon {
-    width: 54px !important;
-    height: 54px !important;
-    min-width: 54px !important;
-    border-radius: 13px !important;
-    overflow: hidden !important;
-}
-.mini-tile-icon img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    padding: 0 !important;
-    background: transparent !important;
-}
 .record-icon-line {
     display: flex;
     align-items: center;
@@ -1009,7 +994,6 @@ def configure_page() -> None:
     margin: .1rem 0 1.1rem;
 }
 
-<style>
 .mini-tile-icon {
     width: 58px !important;
     height: 58px !important;
@@ -1058,12 +1042,140 @@ def configure_page() -> None:
             flex: 0 0 3px;
         }
 
-</style>
-
-</style>
-
+/* === MAIN PAGE - KITH-inspired palette === */
+:root {
+    --kith-sand: #d9c7a8;
+    --kith-sand-deep: #b89f79;
+    --kith-blue: #7c93b3;
+    --kith-blue-deep: #536280;
+    --kith-mauve: #a893ab;
+    --kith-mauve-deep: #7e6884;
+    --kith-blush: #d3a3a8;
+    --kith-blush-deep: #a9767c;
+    --kith-sage: #94997d;
+    --kith-sage-deep: #6c715a;
+    --kith-charcoal: #17161a;
+    --kith-charcoal-soft: #211f26;
+    --kith-warm-gray: #a9a29a;
+}
+.page-nav { display: flex; gap: .5rem; margin-bottom: .8rem; }
+.page-nav a { color: var(--text-muted) !important; text-decoration: none !important; font-size: .68rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; padding: .4rem .8rem; border-radius: 999px; border: 1px solid rgba(var(--slate-border-rgb),.28); }
+.page-nav a.active { color: var(--kith-blush) !important; border-color: rgba(211,163,168,.5); }
+@keyframes mainRiseIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes mainGlowPulse { 0%, 100% { opacity: .55; } 50% { opacity: .95; } }
+@keyframes mainTickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.main-hero { position: relative; overflow: hidden; border-radius: 24px; margin: 0 0 .9rem; padding: 1.4rem 1.2rem 1.3rem; background: linear-gradient(155deg, var(--kith-charcoal) 0%, var(--kith-charcoal-soft) 45%, #2a2230 100%); box-shadow: 0 30px 64px rgba(0,0,0,.5); animation: mainRiseIn .55s var(--ease-emphasized) both; }
+.main-hero-glow { position: absolute; top: -30%; right: -20%; width: 75%; height: 160%; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(211,163,168,.28), transparent 70%); animation: mainGlowPulse 5s ease-in-out infinite; }
+.main-hero-glow-2 { position: absolute; bottom: -35%; left: -15%; width: 60%; height: 140%; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(124,147,179,.24), transparent 70%); animation: mainGlowPulse 6s ease-in-out infinite 1.2s; }
+.main-hero-inner { position: relative; z-index: 2; }
+.main-hero-radio { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.main-hero-eyebrow { display: inline-flex; align-items: center; gap: .4rem; font-size: .58rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--kith-warm-gray); margin-bottom: .5rem; }
+.main-hero-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--kith-blush); box-shadow: 0 0 10px rgba(211,163,168,.8); }
+.main-hero-figure { display: none; }
+#mainFigEvents { display: block; }
+#mainEvents:checked ~ .main-hero-body #mainFigEvents { display: block; }
+#mainRevenue:checked ~ .main-hero-body #mainFigRevenue { display: block; }
+#mainClients:checked ~ .main-hero-body #mainFigClients { display: block; }
+#mainRevenue:checked ~ .main-hero-body #mainFigEvents, #mainClients:checked ~ .main-hero-body #mainFigEvents { display: none; }
+.main-hero-number { display: block; font-family: "Inter", "SF Pro Display", "Segoe UI", Arial, sans-serif; font-size: clamp(3.2rem, 19vw, 5.6rem); font-weight: 900; line-height: .85; letter-spacing: -.05em; color: #f7f2ea; text-shadow: 0 0 40px rgba(211,163,168,.35), 0 18px 34px rgba(0,0,0,.4); }
+.main-hero-unit { margin-top: .3rem; font-size: .8rem; font-weight: 700; color: var(--kith-sand); }
+.main-hero-seg { display: flex; gap: .4rem; margin-top: 1.1rem; }
+.main-hero-seg-btn { padding: .4rem .95rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; font-size: .58rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--kith-warm-gray); border: 1px solid rgba(169,162,154,.25); transition: background .22s ease, color .22s ease, border-color .22s ease; }
+#mainEvents:checked ~ .main-hero-seg label[for="mainEvents"], #mainRevenue:checked ~ .main-hero-seg label[for="mainRevenue"], #mainClients:checked ~ .main-hero-seg label[for="mainClients"] { background: linear-gradient(135deg, rgba(211,163,168,.35), rgba(124,147,179,.25)); color: #f7f2ea; border-color: rgba(211,163,168,.5); }
+.main-ticker { position: relative; overflow: hidden; height: 38px; display: flex; align-items: center; margin: 0 0 1rem; border-radius: 12px; border: 1px solid rgba(169,162,154,.2); background: linear-gradient(90deg, var(--kith-charcoal), var(--kith-charcoal-soft)); }
+.main-ticker::before, .main-ticker::after { content: ""; position: absolute; top: 0; bottom: 0; width: 26px; z-index: 1; pointer-events: none; }
+.main-ticker::before { left: 0; background: linear-gradient(90deg, var(--kith-charcoal), transparent); }
+.main-ticker::after { right: 0; background: linear-gradient(270deg, var(--kith-charcoal), transparent); }
+.main-ticker-track { display: flex; align-items: center; gap: 1.9rem; width: max-content; padding: 0 1.1rem; animation: mainTickerScroll 24s linear infinite; }
+.main-ticker-item { flex: 0 0 auto; display: flex; align-items: center; gap: .32rem; white-space: nowrap; font-size: .62rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kith-warm-gray); }
+.main-ticker-item strong { color: #f7f2ea; font-weight: 900; }
+.main-kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .55rem; margin: 0 0 1rem; }
+@media (max-width: 700px) { .main-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.main-flip { position: relative; height: 102px; perspective: 900px; -webkit-tap-highlight-color: transparent; animation: mainRiseIn .5s var(--ease-emphasized) both; }
+.main-flip-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.main-flip-label { display: block; width: 100%; height: 100%; cursor: pointer; }
+.main-flip-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transform: rotateY(0deg); transition: transform .55s cubic-bezier(.4,.2,.2,1); }
+.main-flip-toggle:checked ~ .main-flip-label .main-flip-inner { transform: rotateY(180deg); }
+.main-flip-face { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .2rem; text-align: center; border-radius: 14px; padding: .55rem; }
+.main-flip-front { border: 1px solid rgba(169,162,154,.22); background: linear-gradient(150deg, var(--kith-charcoal-soft), var(--kith-charcoal)); }
+.main-flip-face.suit-spade .main-flip-front, .main-flip-front.suit-spade { border-color: rgba(124,147,179,.4); }
+.main-flip-back { transform: rotateY(180deg); border: 1px solid rgba(211,163,168,.35); background: linear-gradient(150deg, #2a2230, var(--kith-charcoal)); }
+.main-kpi-label { font-size: .55rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--kith-warm-gray); }
+.main-kpi-value { font-size: 1.32rem; font-weight: 900; line-height: 1.05; color: #f7f2ea; margin-top: .15rem; }
+.main-kpi-value.is-text { font-size: .9rem; }
+.main-kpi-back-title { font-size: .49rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--kith-blush); }
+.main-kpi-back-row { font-size: .78rem; font-weight: 800; color: #f7f2ea; margin-top: .2rem; }
+.main-kpi-back-row span { display: block; font-size: .52rem; font-weight: 600; color: var(--kith-warm-gray); margin-top: .15rem; }
+.main-suit-hint { position: absolute; bottom: 6px; right: 6px; width: 21px; height: 21px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .8rem; line-height: 1; color: var(--kith-sand); background: rgba(169,162,154,.14); border: 1px solid rgba(169,162,154,.2); }
+.main-section { position: relative; overflow: hidden; border-radius: 18px; border: 1px solid rgba(169,162,154,.2); background: linear-gradient(150deg, var(--kith-charcoal-soft), var(--kith-charcoal)); margin-bottom: .65rem; animation: mainRiseIn .5s var(--ease-emphasized) both; }
+.main-section-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.main-section-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: .8rem .95rem; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.main-section-title-group { display: flex; flex-direction: column; gap: .12rem; min-width: 0; }
+.main-section-name { color: #f7f2ea; font-size: .82rem; font-weight: 800; }
+.main-section-teaser { color: var(--kith-warm-gray); font-size: .63rem; }
+.main-section-chevron { flex: 0 0 auto; color: var(--kith-blush); font-size: .78rem; transform: rotate(0deg); transition: transform .3s var(--ease-standard); }
+.main-section-toggle:checked ~ .main-section-head .main-section-chevron { transform: rotate(180deg); }
+.main-section-body-wrap { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .42s cubic-bezier(.3,.7,.3,1); }
+.main-section-toggle:checked ~ .main-section-body-wrap { grid-template-rows: 1fr; }
+.main-section-body { min-height: 0; overflow: hidden; padding: 0 .95rem .95rem; }
+.main-lever-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.main-lever-row { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .4rem; }
+.main-lever-row.is-metric { margin-bottom: .85rem; }
+.main-lever-label { display: inline-block; padding: .32rem .74rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; border: 1px solid rgba(169,162,154,.25); background: rgba(23,22,26,.5); color: var(--kith-warm-gray); font-size: .58rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+#mainTrendWeekly:checked ~ .main-lever-row label[for="mainTrendWeekly"], #mainTrendMonthly:checked ~ .main-lever-row label[for="mainTrendMonthly"], #mainTrendWeekday:checked ~ .main-lever-row label[for="mainTrendWeekday"], #mainMetEvents:checked ~ .main-lever-row label[for="mainMetEvents"], #mainMetRevenue:checked ~ .main-lever-row label[for="mainMetRevenue"] { background: linear-gradient(135deg, rgba(211,163,168,.3), rgba(124,147,179,.2)); color: #f7f2ea; border-color: rgba(211,163,168,.5); }
+.main-trend-view { display: none; }
+#mainViewWeeklyEvents { display: block; }
+#mainTrendMonthly:checked ~ .main-trend-views #mainViewWeeklyEvents, #mainTrendWeekday:checked ~ .main-trend-views #mainViewWeeklyEvents, #mainMetRevenue:checked ~ .main-trend-views #mainViewWeeklyEvents { display: none; }
+#mainTrendWeekly:checked ~ #mainMetEvents:checked ~ .main-trend-views #mainViewWeeklyEvents, #mainTrendWeekly:checked ~ #mainMetRevenue:checked ~ .main-trend-views #mainViewWeeklyRevenue, #mainTrendMonthly:checked ~ #mainMetEvents:checked ~ .main-trend-views #mainViewMonthlyEvents, #mainTrendMonthly:checked ~ #mainMetRevenue:checked ~ .main-trend-views #mainViewMonthlyRevenue, #mainTrendWeekday:checked ~ #mainMetEvents:checked ~ .main-trend-views #mainViewWeekdayEvents, #mainTrendWeekday:checked ~ #mainMetRevenue:checked ~ .main-trend-views #mainViewWeekdayRevenue { display: block; }
+.main-plot { position: relative; height: 128px; padding-left: 32px; }
+.main-grid-line { position: absolute; left: 32px; right: 0; height: 1px; background: rgba(169,162,154,.14); }
+.main-grid-line.is-base { background: rgba(169,162,154,.32); }
+.main-grid-tag { position: absolute; left: 0; width: 28px; text-align: right; transform: translateY(-50%); font-size: .45rem; font-weight: 800; color: var(--kith-warm-gray); }
+.main-bar-row { position: absolute; left: 32px; right: 0; top: 0; bottom: 0; display: flex; align-items: flex-end; gap: .38rem; }
+.main-bar-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: .2rem; }
+.main-bar-value { font-size: .5rem; font-weight: 900; white-space: nowrap; color: var(--kith-warm-gray); }
+.main-bar-col.is-record .main-bar-value { color: var(--kith-blush); }
+.main-bar-shape { width: 100%; max-width: 28px; border-radius: 6px 6px 2px 2px; background: linear-gradient(180deg, var(--kith-blue), rgba(124,147,179,.35)); }
+.main-bar-shape.is-record { background: linear-gradient(180deg, var(--kith-blush), rgba(211,163,168,.35)); box-shadow: 0 0 14px rgba(211,163,168,.35); }
+.main-axis { display: flex; gap: .38rem; margin-top: .4rem; padding-left: 32px; }
+.main-axis span { flex: 1 1 0; min-width: 0; text-align: center; font-size: .52rem; font-weight: 800; color: var(--kith-warm-gray); }
+.main-trend-foot { display: flex; flex-wrap: wrap; gap: .3rem .9rem; margin-top: .7rem; padding-top: .6rem; border-top: 1px solid rgba(169,162,154,.16); font-size: .57rem; color: var(--kith-warm-gray); }
+.main-trend-foot strong { color: #f7f2ea; font-weight: 800; }
+.main-empty { padding: 1.2rem 0; text-align: center; color: var(--kith-warm-gray); font-size: .68rem; }
+.main-podium { display: flex; align-items: flex-end; gap: .45rem; margin-bottom: .85rem; }
+.main-podium-slot { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: .22rem; padding: .55rem .3rem .5rem; border-radius: 12px 12px 0 0; border: 1px solid rgba(169,162,154,.22); background: linear-gradient(180deg, rgba(38,34,42,.7), var(--kith-charcoal)); }
+.main-podium-slot.rank-1 { border-color: rgba(211,163,168,.4); box-shadow: 0 0 26px rgba(211,163,168,.14); }
+.main-podium-medal { font-size: 1.2rem; }
+.main-podium-name { font-size: .6rem; font-weight: 800; color: #f7f2ea; text-align: center; line-height: 1.2; }
+.main-podium-stat { font-size: .55rem; color: var(--kith-warm-gray); }
+.main-rank-row { display: grid; grid-template-columns: 1.15rem 1fr auto; align-items: center; gap: .55rem; padding: .48rem 0; border-top: 1px solid rgba(169,162,154,.14); }
+.main-rank-num { font-size: .66rem; font-weight: 800; color: var(--kith-warm-gray); }
+.main-rank-name { font-size: .7rem; font-weight: 700; color: #f7f2ea; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.main-rank-track { height: 4px; margin-top: .3rem; border-radius: 999px; overflow: hidden; background: rgba(169,162,154,.16); }
+.main-rank-fill { height: 4px; border-radius: 999px; background: linear-gradient(90deg, var(--kith-blue), var(--kith-mauve)); }
+.main-rank-stat { font-size: .64rem; font-weight: 800; color: var(--kith-blush); white-space: nowrap; }
+.main-donut-wrap { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.main-donut { position: relative; width: 128px; height: 128px; border-radius: 50%; flex: 0 0 auto; }
+.main-donut::after { content: ""; position: absolute; inset: 20px; border-radius: 50%; background: var(--kith-charcoal); }
+.main-donut-core { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.main-donut-core-val { font-size: 1.1rem; font-weight: 900; color: #f7f2ea; }
+.main-donut-core-lab { font-size: .45rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--kith-warm-gray); }
+.main-legend { display: flex; flex-direction: column; gap: .34rem; flex: 1 1 150px; min-width: 150px; }
+.main-legend-row { display: flex; align-items: center; gap: .45rem; font-size: .66rem; color: var(--kith-warm-gray); }
+.main-legend-dot { width: 8px; height: 8px; border-radius: 2px; flex: 0 0 auto; }
+.main-legend-row strong { margin-left: auto; color: #f7f2ea; font-weight: 800; }
+.main-milestone { margin-bottom: .8rem; }
+.main-milestone:last-child { margin-bottom: 0; }
+.main-milestone-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin-bottom: .3rem; }
+.main-milestone-name { font-size: .69rem; font-weight: 800; color: #f7f2ea; }
+.main-milestone-name.is-done::before { content: "\2713  "; color: var(--kith-sage); }
+.main-milestone-detail { font-size: .57rem; color: var(--kith-warm-gray); white-space: nowrap; }
+.main-progress-track { height: 7px; border-radius: 999px; overflow: hidden; background: rgba(169,162,154,.16); }
+.main-progress-fill { height: 7px; border-radius: 999px; background: linear-gradient(90deg, var(--kith-blue), var(--kith-mauve)); }
+.main-progress-fill.is-done { background: linear-gradient(90deg, var(--kith-sage), var(--kith-sage-deep)); }
 </style>
         """,
+
         unsafe_allow_html=True,
     )
 
@@ -1815,7 +1927,6 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
     career_revenue = float(pd.to_numeric(financial.get("revenue_amount", pd.Series(dtype=float)), errors="coerce").fillna(0).sum())
     unique_clients = int(completed["client"].replace("", pd.NA).dropna().nunique()) if "client" in completed else 0
     repeat_clients = repeat_client_count(data)
-    first_time_clients = max(unique_clients - repeat_clients, 0)
     repeat_rate = round(repeat_clients / max(1, unique_clients) * 100)
     avg_per_event = round(career_revenue / max(1, career_events))
 
@@ -1906,7 +2017,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
                 "revenue": round(float(client_revenue.get(name, 0.0))),
             })
 
-    jur_palette = ["var(--accent-coral)", "var(--accent-blue)", "var(--accent-gold)", "var(--accent-purple)", "var(--accent-success)"]
+    jur_palette = ["var(--kith-blush)", "var(--kith-blue)", "var(--kith-sand)", "var(--kith-mauve)", "var(--kith-sage)"]
     territory: list[dict] = []
     if jurisdiction_counts.shape[0] > 0:
         total_jur = int(jurisdiction_counts.sum())
@@ -1930,34 +2041,20 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
     achieved = sum(1 for m in milestones if m["done"])
     in_progress = len(milestones) - achieved
 
-    spark_w, spark_h = 320.0, 44.0
-    spark_source = weekly if weekly else [{"revenue": 0}, {"revenue": 0}]
-    spark_values = [row["revenue"] for row in spark_source]
-    low, high = min(spark_values), max(spark_values)
-    span = (high - low) or 1
-    points = []
-    for index, value in enumerate(spark_values):
-        x = (spark_w * index / (len(spark_values) - 1)) if len(spark_values) > 1 else spark_w / 2
-        y = spark_h - 4 - ((value - low) / span) * (spark_h - 11)
-        points.append((round(x, 1), round(y, 1)))
-    spark_line = " ".join(f"{x},{y}" for x, y in points)
-    spark_area = f"{points[0][0]},{spark_h} {spark_line} {points[-1][0]},{spark_h}"
-    last_x, last_y = points[-1]
-
     stops, running = [], 0
     for sector in territory:
         stops.append(f'{sector["color"]} {running}% {running + sector["pct"]}%')
         running += sector["pct"]
-    donut = f"conic-gradient(from -90deg, {', '.join(stops)})" if stops else "conic-gradient(rgba(148,163,184,.2) 0% 100%)"
+    donut = f"conic-gradient(from -90deg, {', '.join(stops)})" if stops else "conic-gradient(rgba(169,162,154,.25) 0% 100%)"
 
-    top_client = clients[0] if clients else {"name": "—", "events": 0, "revenue": 0}
-    best_month = max(monthly, key=lambda row: row["events"]) if monthly else {"label": "—", "events": 0, "revenue": 0}
+    top_client = clients[0] if clients else {"name": "\u2014", "events": 0, "revenue": 0}
+    best_month = max(monthly, key=lambda row: row["events"]) if monthly else {"label": "\u2014", "events": 0, "revenue": 0}
 
-    plot_h, bar_max, bar_min = 132, 112, 5
+    plot_h, bar_max, bar_min = 128, 108, 5
 
     def chart(series, metric: str, view_id: str) -> str:
         if not series:
-            return f'<div class="exec-trend-view" id="{view_id}"><div class="exec-empty">Not enough dated history yet.</div></div>'
+            return f'<div class="main-trend-view" id="{view_id}"><div class="main-empty">Not enough dated history yet.</div></div>'
         values = [row[metric] for row in series]
         peak = max(values) if values else 0
         step, top = axis_ceiling(peak)
@@ -1965,20 +2062,19 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         for level_index in range(4, -1, -1):
             level = step * level_index
             y = min(plot_h - 1, plot_h - round((level / top) * bar_max))
-            css_class = "exec-grid-line is-base" if level_index == 0 else "exec-grid-line"
+            css_class = "main-grid-line is-base" if level_index == 0 else "main-grid-line"
             grid.append(f'<div class="{css_class}" style="top:{y}px"></div>')
             if level_index in (0, 2, 4):
-                grid.append(f'<span class="exec-grid-tag" style="top:{y}px">{esc(fmt(level, metric))}</span>')
+                grid.append(f'<span class="main-grid-tag" style="top:{y}px">{esc(fmt(level, metric))}</span>')
         bars, axis = [], []
-        for index, row in enumerate(series):
+        for row in series:
             value = row[metric]
             height = max(bar_min, round(value / top * bar_max)) if value > 0 else 3
             record = " is-record" if row["is_record"] else ""
-            delay = f"{0.06 + index * 0.05:.2f}s"
             bars.append(
-                f'<div class="exec-bar-col{record}">'
-                f'<div class="exec-bar-value">{esc(fmt(value, metric))}</div>'
-                f'<div class="exec-bar-shape{record}" style="height:{height}px;animation-delay:{delay}"></div>'
+                f'<div class="main-bar-col{record}">'
+                f'<div class="main-bar-value">{esc(fmt(value, metric))}</div>'
+                f'<div class="main-bar-shape{record}" style="height:{height}px"></div>'
                 f"</div>"
             )
             axis.append(f'<span>{esc(row["label"])}</span>')
@@ -1988,161 +2084,17 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
             total = sum(values)
             average = total / len(values)
             foot = (
-                '<div class="exec-trend-foot">'
+                '<div class="main-trend-foot">'
                 f'<span>Peak <strong>{esc(best["label"])}</strong> &middot; {esc(fmt(best[metric], metric))}</span>'
                 f'<span>Average <strong>{esc(fmt(round(average), metric))}</strong></span>'
                 f'<span>Total <strong>{esc(fmt(total, metric))}</strong></span>'
                 "</div>"
             )
         return (
-            f'<div class="exec-trend-view" id="{view_id}">'
-            f'<div class="exec-plot">{"".join(grid)}<div class="exec-bar-row">{"".join(bars)}</div></div>'
-            f'<div class="exec-axis">{"".join(axis)}</div>{foot}</div>'
+            f'<div class="main-trend-view" id="{view_id}">'
+            f'<div class="main-plot">{"".join(grid)}<div class="main-bar-row">{"".join(bars)}</div></div>'
+            f'<div class="main-axis">{"".join(axis)}</div>{foot}</div>'
         )
-
-    css = """
-<style>
-.page-nav { display: flex; gap: .5rem; margin-bottom: .8rem; }
-.page-nav a { color: var(--text-muted) !important; text-decoration: none !important; font-size: .68rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; padding: .4rem .8rem; border-radius: 999px; border: 1px solid rgba(var(--slate-border-rgb),.28); transition: color .18s ease, border-color .18s ease; }
-.page-nav a.active { color: var(--accent-teal) !important; border-color: rgba(var(--accent-teal-rgb),.5); }
-@keyframes execRiseIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes execAuraDrift { from { transform: translate3d(-7%, 0, 0) scale(1.04); } to { transform: translate3d(7%, 0, 0) scale(1.16); } }
-@keyframes execPulse { 0%, 100% { opacity: .35; transform: scale(1); } 50% { opacity: 1; transform: scale(1.55); } }
-@keyframes execSparkDraw { from { stroke-dashoffset: 900; } to { stroke-dashoffset: 0; } }
-@keyframes execBarGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-@keyframes execTickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.exec-hero { position: relative; overflow: hidden; border-radius: 22px; border: 1px solid rgba(var(--slate-border-rgb),.22); margin: 0 0 .9rem; background: radial-gradient(120% 140% at 10% -15%, rgba(var(--accent-teal-rgb),.17), transparent 55%), radial-gradient(95% 130% at 100% 0%, rgba(var(--accent-blue-rgb),.14), transparent 62%), linear-gradient(165deg, rgba(16,29,49,.96), rgba(6,13,24,.985)); box-shadow: 0 26px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(var(--white-rgb),.06); animation: execRiseIn .55s var(--ease-emphasized) both; }
-.exec-hero-aura { position: absolute; left: -25%; right: -25%; top: -60%; height: 200%; pointer-events: none; opacity: .85; background: radial-gradient(closest-side, rgba(var(--accent-teal-rgb),.2), transparent 72%); animation: execAuraDrift 15s ease-in-out infinite alternate; }
-.exec-hero-mesh { position: absolute; inset: 0; pointer-events: none; opacity: .45; background-image: linear-gradient(rgba(var(--slate-border-rgb),.09) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--slate-border-rgb),.09) 1px, transparent 1px); background-size: 34px 34px; -webkit-mask-image: radial-gradient(125% 95% at 50% 0%, #000 18%, transparent 80%); mask-image: radial-gradient(125% 95% at 50% 0%, #000 18%, transparent 80%); }
-.exec-hero-inner { position: relative; z-index: 2; padding: 1rem 1.05rem 1.1rem; }
-.exec-hero-radio { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
-.exec-hero-top { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
-.exec-hero-eyebrow { display: inline-flex; align-items: center; gap: .42rem; font-size: .56rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--text-tertiary); }
-.exec-hero-pulse { width: 6px; height: 6px; border-radius: 50%; flex: 0 0 auto; background: var(--accent-teal); box-shadow: 0 0 10px rgba(var(--accent-teal-rgb),.9); animation: execPulse 2.4s ease-in-out infinite; }
-.exec-hero-badge { display: inline-flex; align-items: center; gap: .3rem; padding: .26rem .55rem; border-radius: 999px; white-space: nowrap; border: 1px solid rgba(var(--accent-gold-rgb),.45); background: rgba(var(--accent-gold-rgb),.12); color: var(--accent-gold-pale); font-size: .53rem; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
-.exec-hero-stage { position: relative; min-height: 96px; display: flex; align-items: flex-end; margin: .5rem 0 .2rem; }
-.exec-hero-figure { display: none; width: 100%; align-items: flex-end; gap: .55rem; }
-#figEvents { display: flex; }
-#heroRevenue:checked ~ .exec-hero-stage #figEvents, #heroClients:checked ~ .exec-hero-stage #figEvents { display: none; }
-#heroEvents:checked ~ .exec-hero-stage #figEvents { display: flex; }
-#heroRevenue:checked ~ .exec-hero-stage #figRevenue { display: flex; }
-#heroClients:checked ~ .exec-hero-stage #figClients { display: flex; }
-.exec-hero-numwrap { flex: 0 0 auto; filter: drop-shadow(0 12px 26px rgba(var(--accent-teal-rgb),.24)); }
-.exec-hero-number { display: block; font-family: "Inter", "SF Pro Display", "Segoe UI", Arial, sans-serif; font-size: clamp(3.5rem, 21vw, 6.2rem); font-weight: 900; line-height: .8; letter-spacing: -.055em; color: var(--text-primary); }
-.exec-hero-number.is-wide { font-size: clamp(2.5rem, 14vw, 4.6rem); letter-spacing: -.045em; }
-@supports (-webkit-background-clip: text) { .exec-hero-number { background-image: linear-gradient(168deg, #ffffff 4%, var(--accent-teal-hover) 44%, var(--accent-teal) 74%, var(--accent-blue) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; } }
-.exec-hero-meta { display: flex; flex-direction: column; gap: .16rem; padding-bottom: .5rem; min-width: 0; }
-.exec-hero-unit { font-size: .78rem; font-weight: 900; letter-spacing: .01em; color: var(--text-secondary-bright); }
-.exec-hero-seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .28rem; padding: .25rem; margin: .55rem 0 .8rem; border-radius: 12px; border: 1px solid rgba(var(--slate-border-rgb),.2); background: rgba(var(--navy-900-rgb),.55); }
-.exec-hero-seg-btn { display: block; text-align: center; padding: .42rem .2rem; border-radius: 9px; cursor: pointer; -webkit-tap-highlight-color: transparent; font-size: .57rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--text-muted); background: transparent; box-shadow: 0 0 0 0 rgba(var(--accent-teal-rgb),0); transition: background .24s var(--ease-standard), color .24s var(--ease-standard), box-shadow .24s var(--ease-standard); }
-#heroEvents:checked ~ .exec-hero-seg label[for="heroEvents"], #heroRevenue:checked ~ .exec-hero-seg label[for="heroRevenue"], #heroClients:checked ~ .exec-hero-seg label[for="heroClients"] { background: linear-gradient(135deg, rgba(var(--accent-teal-rgb),.3), rgba(var(--accent-teal-rgb),.1)); color: var(--text-primary); box-shadow: 0 0 0 1px rgba(var(--accent-teal-rgb),.45); }
-.exec-hero-spark { display: block; width: 100%; height: 46px; overflow: visible; }
-.exec-spark-line { fill: none; stroke: var(--accent-teal); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; stroke-dasharray: 900; stroke-dashoffset: 0; animation: execSparkDraw 1.4s var(--ease-emphasized) .2s both; }
-.exec-spark-tick { stroke: var(--accent-teal-hover); stroke-width: 2; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-.exec-spark-caption { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin: .1rem 0 .8rem; font-size: .53rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
-.exec-spark-caption strong { color: var(--accent-teal); font-weight: 900; }
-.exec-hero-rail { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid rgba(var(--slate-border-rgb),.18); padding-top: .75rem; }
-.exec-hero-cell { position: relative; display: flex; flex-direction: column; align-items: center; gap: .18rem; padding: 0 .25rem; min-width: 0; }
-.exec-hero-cell + .exec-hero-cell::before { content: ""; position: absolute; left: 0; top: 8%; bottom: 8%; width: 1px; background: rgba(var(--slate-border-rgb),.18); }
-.exec-hero-cell-val { font-size: 1.02rem; font-weight: 900; line-height: 1; color: var(--text-primary); text-align: center; }
-.exec-hero-cell-lab { font-size: .49rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--text-muted); text-align: center; }
-.exec-kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .55rem; margin: 0 0 1rem; }
-@media (max-width: 700px) { .exec-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.exec-flip { position: relative; height: 100px; perspective: 900px; -webkit-tap-highlight-color: transparent; animation: execRiseIn .5s var(--ease-emphasized) both; }
-.exec-flip-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
-.exec-flip-label { display: block; width: 100%; height: 100%; cursor: pointer; }
-.exec-flip-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transform: rotateY(0deg); transition: transform .55s cubic-bezier(.4,.2,.2,1); }
-.exec-flip-toggle:checked ~ .exec-flip-label .exec-flip-inner { transform: rotateY(180deg); }
-.exec-flip-face { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .2rem; text-align: center; border-radius: 12px; padding: .55rem; border: 1px solid rgba(var(--slate-border-rgb),.18); box-shadow: 0 14px 34px rgba(0,0,0,.2); }
-.exec-flip-front { background: radial-gradient(circle at 50% 0%, rgba(var(--white-rgb),.06), transparent 46%), linear-gradient(145deg, rgba(21,36,58,.9), rgba(8,18,32,.94)); }
-.exec-flip-back { transform: rotateY(180deg); border-color: rgba(var(--accent-teal-rgb),.32); background: radial-gradient(circle at 50% 0%, rgba(var(--accent-teal-rgb),.1), transparent 55%), linear-gradient(145deg, rgba(13,25,43,.96), rgba(8,18,32,.98)); }
-.exec-kpi-icon { font-size: 1.1rem; }
-.exec-kpi-label { font-size: .55rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
-.exec-kpi-value { font-size: 1.35rem; font-weight: 900; line-height: 1.05; color: var(--text-primary); }
-.exec-kpi-value.is-text { font-size: .92rem; }
-.exec-kpi-back-title { font-size: .49rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-teal); }
-.exec-kpi-back-row { font-size: .8rem; font-weight: 800; color: var(--text-primary); }
-.exec-kpi-back-row span { display: block; font-size: .53rem; font-weight: 600; color: var(--text-secondary-dim); }
-.exec-suit-hint { position: absolute; bottom: 5px; right: 6px; width: 21px; height: 21px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .8rem; line-height: 1; color: var(--text-muted); background: rgba(var(--slate-border-rgb),.14); border: 1px solid rgba(var(--slate-border-rgb),.22); }
-.exec-section { position: relative; overflow: hidden; border: 1px solid rgba(var(--slate-border-rgb),.22); border-radius: var(--radius-lg); background: var(--surface-card-gradient); margin-bottom: .65rem; animation: execRiseIn .5s var(--ease-emphasized) both; }
-.exec-section-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
-.exec-section-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: .8rem .95rem; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.exec-section-title-group { display: flex; flex-direction: column; gap: .12rem; min-width: 0; }
-.exec-section-name { color: var(--text-primary); font-size: .82rem; font-weight: 800; }
-.exec-section-teaser { color: var(--text-muted); font-size: .63rem; }
-.exec-section-chevron { flex: 0 0 auto; color: var(--accent-teal); font-size: .78rem; transform: rotate(0deg); transition: transform .3s var(--ease-standard); }
-.exec-section-toggle:checked ~ .exec-section-head .exec-section-chevron { transform: rotate(180deg); }
-.exec-section-body-wrap { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .42s cubic-bezier(.3,.7,.3,1); }
-.exec-section-toggle:checked ~ .exec-section-body-wrap { grid-template-rows: 1fr; }
-.exec-section-body { min-height: 0; overflow: hidden; padding: 0 .95rem .95rem; }
-.exec-empty { padding: 1.2rem 0; text-align: center; color: var(--text-muted); font-size: .68rem; }
-.exec-trend-panel { position: relative; }
-.exec-lever-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
-.exec-lever-row { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .4rem; }
-.exec-lever-row.is-metric { margin-bottom: .85rem; }
-.exec-lever-label { display: inline-block; padding: .32rem .74rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; border: 1px solid rgba(var(--slate-border-rgb),.3); background: rgba(var(--surface-rgb),.4); color: var(--text-muted); font-size: .58rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; transition: background .22s var(--ease-standard), color .22s var(--ease-standard), border-color .22s var(--ease-standard); }
-#trendWeekly:checked ~ .exec-lever-row label[for="trendWeekly"], #trendMonthly:checked ~ .exec-lever-row label[for="trendMonthly"], #trendWeekday:checked ~ .exec-lever-row label[for="trendWeekday"], #metEvents:checked ~ .exec-lever-row label[for="metEvents"], #metRevenue:checked ~ .exec-lever-row label[for="metRevenue"] { background: linear-gradient(135deg, rgba(var(--accent-teal-rgb),.28), rgba(var(--accent-teal-rgb),.1)); color: var(--text-primary); border-color: rgba(var(--accent-teal-rgb),.55); }
-.exec-trend-view { display: none; }
-#viewWeeklyEvents { display: block; }
-#trendMonthly:checked ~ .exec-trend-views #viewWeeklyEvents, #trendWeekday:checked ~ .exec-trend-views #viewWeeklyEvents, #metRevenue:checked ~ .exec-trend-views #viewWeeklyEvents { display: none; }
-#trendWeekly:checked ~ #metEvents:checked ~ .exec-trend-views #viewWeeklyEvents, #trendWeekly:checked ~ #metRevenue:checked ~ .exec-trend-views #viewWeeklyRevenue, #trendMonthly:checked ~ #metEvents:checked ~ .exec-trend-views #viewMonthlyEvents, #trendMonthly:checked ~ #metRevenue:checked ~ .exec-trend-views #viewMonthlyRevenue, #trendWeekday:checked ~ #metEvents:checked ~ .exec-trend-views #viewWeekdayEvents, #trendWeekday:checked ~ #metRevenue:checked ~ .exec-trend-views #viewWeekdayRevenue { display: block; }
-.exec-plot { position: relative; height: 132px; padding-left: 32px; }
-.exec-grid-line { position: absolute; left: 32px; right: 0; height: 1px; background: rgba(var(--slate-border-rgb),.13); }
-.exec-grid-line.is-base { background: rgba(var(--slate-border-rgb),.34); }
-.exec-grid-tag { position: absolute; left: 0; width: 28px; text-align: right; transform: translateY(-50%); font-size: .45rem; font-weight: 800; letter-spacing: .02em; color: var(--text-muted-alt2); }
-.exec-bar-row { position: absolute; left: 32px; right: 0; top: 0; bottom: 0; display: flex; align-items: flex-end; gap: .38rem; }
-.exec-bar-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: .2rem; }
-.exec-bar-value { font-size: .5rem; font-weight: 900; line-height: 1.1; white-space: nowrap; color: var(--text-secondary); }
-.exec-bar-col.is-record .exec-bar-value { color: var(--accent-gold-pale); }
-.exec-bar-col.is-record .exec-bar-value::before { content: "\\2605 "; }
-.exec-bar-shape { width: 100%; max-width: 30px; border-radius: 6px 6px 2px 2px; transform-origin: bottom center; transform: scaleY(1); background: linear-gradient(180deg, var(--accent-teal), rgba(var(--accent-teal-rgb),.3)); box-shadow: inset 0 0 0 1px rgba(var(--accent-teal-rgb),.2); animation: execBarGrow .55s var(--ease-emphasized) both; }
-.exec-bar-shape.is-record { background: linear-gradient(180deg, var(--accent-gold), rgba(var(--accent-gold-rgb),.32)); box-shadow: 0 0 14px rgba(var(--accent-gold-rgb),.35); }
-.exec-axis { display: flex; gap: .38rem; margin-top: .4rem; padding-left: 32px; }
-.exec-axis span { flex: 1 1 0; min-width: 0; text-align: center; font-size: .52rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--text-muted); }
-.exec-trend-foot { display: flex; flex-wrap: wrap; gap: .3rem .9rem; margin-top: .7rem; padding-top: .6rem; border-top: 1px solid rgba(var(--slate-border-rgb),.14); font-size: .57rem; color: var(--text-muted); }
-.exec-trend-foot strong { color: var(--text-primary); font-weight: 800; }
-.exec-podium { display: flex; align-items: flex-end; gap: .45rem; margin-bottom: .85rem; }
-.exec-podium-slot { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: .22rem; padding: .55rem .3rem .5rem; border-radius: 12px 12px 0 0; border: 1px solid rgba(var(--slate-border-rgb),.24); border-bottom: 2px solid rgba(var(--slate-border-rgb),.3); background: linear-gradient(180deg, rgba(var(--surface-rgb),.7), rgba(var(--navy-900-rgb),.5)); }
-.exec-podium-slot.rank-1 { border-color: rgba(var(--accent-gold-rgb),.42); border-bottom-color: rgba(var(--accent-gold-rgb),.5); box-shadow: 0 0 26px rgba(var(--accent-gold-rgb),.12); }
-.exec-podium-medal { font-size: 1.25rem; }
-.exec-podium-name { font-size: .61rem; font-weight: 800; color: var(--text-primary); text-align: center; line-height: 1.2; }
-.exec-podium-stat { font-size: .55rem; color: var(--text-muted); text-align: center; }
-.exec-rank-row { display: grid; grid-template-columns: 1.15rem 1fr auto; align-items: center; gap: .55rem; padding: .48rem 0; border-top: 1px solid rgba(var(--slate-border-rgb),.14); }
-.exec-rank-num { font-size: .66rem; font-weight: 800; color: var(--text-muted); }
-.exec-rank-main { min-width: 0; }
-.exec-rank-name { font-size: .7rem; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.exec-rank-track { height: 4px; margin-top: .3rem; border-radius: 999px; overflow: hidden; background: rgba(var(--slate-border-rgb),.18); }
-.exec-rank-fill { height: 4px; border-radius: 999px; background: linear-gradient(90deg, var(--accent-teal), var(--accent-blue)); }
-.exec-rank-stat { font-size: .64rem; font-weight: 800; color: var(--accent-teal); white-space: nowrap; }
-.exec-donut-wrap { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-.exec-donut { position: relative; width: 132px; height: 132px; border-radius: 50%; flex: 0 0 auto; }
-.exec-donut::after { content: ""; position: absolute; inset: 20px; border-radius: 50%; background: linear-gradient(160deg, rgba(16,29,49,.99), rgba(8,17,31,1)); }
-.exec-donut-core { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .05rem; }
-.exec-donut-core-val { font-size: 1.15rem; font-weight: 900; line-height: 1; color: var(--text-primary); }
-.exec-donut-core-lab { font-size: .46rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); }
-.exec-legend { display: flex; flex-direction: column; gap: .34rem; flex: 1 1 150px; min-width: 150px; }
-.exec-legend-row { display: flex; align-items: center; gap: .45rem; font-size: .66rem; color: var(--text-secondary); }
-.exec-legend-dot { width: 8px; height: 8px; border-radius: 2px; flex: 0 0 auto; }
-.exec-legend-row strong { margin-left: auto; color: var(--text-primary); font-weight: 800; }
-.exec-milestone { margin-bottom: .8rem; }
-.exec-milestone:last-child { margin-bottom: 0; }
-.exec-milestone-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin-bottom: .3rem; }
-.exec-milestone-name { font-size: .69rem; font-weight: 800; color: var(--text-primary); }
-.exec-milestone-name.is-done::before { content: "\\2713  "; color: var(--accent-success); }
-.exec-milestone-detail { font-size: .57rem; color: var(--text-muted); white-space: nowrap; }
-.exec-progress-track { height: 7px; border-radius: 999px; overflow: hidden; background: rgba(var(--slate-border-rgb),.2); }
-.exec-progress-fill { height: 7px; border-radius: 999px; background: linear-gradient(90deg, var(--accent-teal), var(--accent-blue)); }
-.exec-progress-fill.is-done { background: linear-gradient(90deg, var(--accent-success), var(--accent-teal)); }
-.exec-ticker { position: relative; overflow: hidden; height: 36px; display: flex; align-items: center; margin: 0 0 1rem; border-radius: var(--radius-md); border: 1px solid rgba(var(--slate-border-rgb),.24); background: linear-gradient(90deg, rgba(var(--navy-900-rgb),.7), rgba(var(--surface-rgb),.5)); }
-.exec-ticker::before, .exec-ticker::after { content: ""; position: absolute; top: 0; bottom: 0; width: 24px; z-index: 1; pointer-events: none; }
-.exec-ticker::before { left: 0; background: linear-gradient(90deg, rgba(var(--navy-900-rgb),.9), transparent); }
-.exec-ticker::after { right: 0; background: linear-gradient(270deg, rgba(var(--navy-900-rgb),.9), transparent); }
-.exec-ticker-track { display: flex; align-items: center; gap: 1.8rem; width: max-content; padding: 0 1rem; animation: execTickerScroll 24s linear infinite; }
-.exec-ticker-item { flex: 0 0 auto; display: flex; align-items: center; gap: .3rem; white-space: nowrap; font-size: .62rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--text-secondary); }
-.exec-ticker-item strong { color: var(--text-primary); font-weight: 900; }
-@media (prefers-reduced-motion: reduce) { .exec-hero, .exec-hero-aura, .exec-hero-pulse, .exec-flip, .exec-section, .exec-bar-shape, .exec-spark-line, .exec-ticker-track { animation: none !important; } }
-</style>
-"""
 
     ticker_items = [
         f'&#127937; <strong>{career_events}</strong> career events',
@@ -2151,190 +2103,163 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         f'&#128293; <strong>{current_streak}</strong>-day streak',
         f'&#127942; best month <strong>{esc(best_month["label"])}</strong> &middot; {best_month["events"]} events',
     ]
-    ticker = "".join(f'<span class="exec-ticker-item">{item}</span>' for item in ticker_items * 2)
-
-    figures = [
-        ("figEvents", f'{career_events}', "", "Events worked"),
-        ("figRevenue", money(career_revenue), " is-wide", "Revenue booked"),
-        ("figClients", f'{unique_clients}', "", "Client roster"),
-    ]
-    figure_html = "".join(
-        f'<div class="exec-hero-figure" id="{fid}">'
-        f'<div class="exec-hero-numwrap"><span class="exec-hero-number{wide}">{value}</span></div>'
-        f'<div class="exec-hero-meta"><div class="exec-hero-unit">{unit}</div></div></div>'
-        for fid, value, wide, unit in figures
-    )
-
-    rail = [
-        (f'{current_streak}', "Day streak"),
-        (esc(best_month["label"]), "Best month"),
-        (money(avg_per_event), "Avg / event"),
-    ]
-    rail_html = "".join(
-        f'<div class="exec-hero-cell"><div class="exec-hero-cell-val">{value}</div>'
-        f'<div class="exec-hero-cell-lab">{label}</div></div>'
-        for value, label in rail
-    )
+    ticker = "".join(f'<span class="main-ticker-item">{item}</span>' for item in ticker_items * 2)
 
     hero = (
-        '<div class="exec-hero"><div class="exec-hero-aura"></div><div class="exec-hero-mesh"></div>'
-        '<div class="exec-hero-inner">'
-        '<input type="radio" name="heroMetric" id="heroEvents" class="exec-hero-radio" checked>'
-        '<input type="radio" name="heroMetric" id="heroRevenue" class="exec-hero-radio">'
-        '<input type="radio" name="heroMetric" id="heroClients" class="exec-hero-radio">'
-        '<div class="exec-hero-top"><div class="exec-hero-eyebrow"><span class="exec-hero-pulse"></span>Career to date</div>'
-        f'<div class="exec-hero-badge">&#9733; {esc(best_month["label"])} record month</div></div>'
-        f'<div class="exec-hero-stage">{figure_html}</div>'
-        '<div class="exec-hero-seg">'
-        '<label for="heroEvents" class="exec-hero-seg-btn">Events</label>'
-        '<label for="heroRevenue" class="exec-hero-seg-btn">Revenue</label>'
-        '<label for="heroClients" class="exec-hero-seg-btn">Clients</label></div>'
-        f'<svg class="exec-hero-spark" viewBox="0 0 {int(spark_w)} {int(spark_h)}" preserveAspectRatio="none" aria-hidden="true">'
-        '<defs><linearGradient id="execSparkFill" x1="0" y1="0" x2="0" y2="1">'
-        '<stop offset="0%" stop-color="rgba(45,212,191,.34)"></stop>'
-        '<stop offset="100%" stop-color="rgba(45,212,191,0)"></stop></linearGradient></defs>'
-        f'<polygon points="{spark_area}" fill="url(#execSparkFill)"></polygon>'
-        f'<polyline class="exec-spark-line" points="{spark_line}"></polyline>'
-        f'<line class="exec-spark-tick" x1="{last_x}" y1="{last_y}" x2="{last_x}" y2="{spark_h}"></line></svg>'
-        f'<div class="exec-spark-caption"><span>Revenue &middot; last {max(1, len(weekly))} weeks</span>'
-        f'<span>Latest <strong>{money(weekly[-1]["revenue"]) if weekly else money(0)}</strong></span></div>'
-        f'<div class="exec-hero-rail">{rail_html}</div>'
+        '<div class="main-hero"><div class="main-hero-glow"></div><div class="main-hero-glow-2"></div>'
+        '<div class="main-hero-inner">'
+        '<input type="radio" name="mainMetric" id="mainEvents" class="main-hero-radio" checked>'
+        '<input type="radio" name="mainMetric" id="mainRevenue" class="main-hero-radio">'
+        '<input type="radio" name="mainMetric" id="mainClients" class="main-hero-radio">'
+        '<div class="main-hero-eyebrow"><span class="main-hero-dot"></span>Career to date</div>'
+        '<div class="main-hero-body">'
+        f'<div class="main-hero-figure" id="mainFigEvents"><span class="main-hero-number">{career_events}</span>'
+        '<div class="main-hero-unit">Events worked</div></div>'
+        f'<div class="main-hero-figure" id="mainFigRevenue"><span class="main-hero-number">{money(career_revenue)}</span>'
+        '<div class="main-hero-unit">Revenue booked</div></div>'
+        f'<div class="main-hero-figure" id="mainFigClients"><span class="main-hero-number">{unique_clients}</span>'
+        '<div class="main-hero-unit">Client roster</div></div>'
+        '</div>'
+        '<div class="main-hero-seg">'
+        '<label for="mainEvents" class="main-hero-seg-btn">Events</label>'
+        '<label for="mainRevenue" class="main-hero-seg-btn">Revenue</label>'
+        '<label for="mainClients" class="main-hero-seg-btn">Clients</label></div>'
         "</div></div>"
     )
 
+    suits = ["\u2660", "\u2666", "\u2665", "\u2663"]
     kpis = [
-        ("k1", "\u2660", "Repeat Rate", f"{repeat_rate}%", "Loyalty",
+        ("mk1", suits[0], "Repeat Rate", f"{repeat_rate}%", "Loyalty",
          f'{repeat_clients}', f'of {unique_clients} clients returned'),
-        ("k2", "\u2666", "Jurisdictions", f'{jurisdictions}', "Widest",
+        ("mk2", suits[1], "Jurisdictions", f'{jurisdictions}', "Widest",
          esc(territory[0]["name"]) if territory else "\u2014", f'{territory[0]["pct"]}% of all events' if territory else "no data yet"),
-        ("k3", "\u2665", "Best Streak", f'{best_streak}', "Current",
+        ("mk3", suits[2], "Best Streak", f'{best_streak}', "Current",
          f'{current_streak} days', "consecutive working days"),
-        ("k4", "\u2663", "Top Client", esc(top_client["name"]), "Booked",
+        ("mk4", suits[3], "Top Client", esc(top_client["name"]), "Booked",
          f'{top_client["events"]}', f'events &middot; {money(top_client["revenue"])}'),
     ]
     kpi_html = "".join(
-        f'<div class="exec-flip" style="animation-delay:{0.04 + index * 0.06:.2f}s">'
-        f'<input type="checkbox" id="{cid}" class="exec-flip-toggle">'
-        f'<label for="{cid}" class="exec-flip-label"><div class="exec-flip-inner">'
-        f'<div class="exec-flip-face exec-flip-front">'
-        f'<div class="exec-kpi-label">{label}</div>'
-        f'<div class="exec-kpi-value{" is-text" if not str(value)[:1].isdigit() and not str(value)[:1] == "$" else ""}">{value}</div>'
-        f'<span class="exec-suit-hint">{suit}</span></div>'
-        f'<div class="exec-flip-face exec-flip-back"><div class="exec-kpi-back-title">{back_title}</div>'
-        f'<div class="exec-kpi-back-row">{back_value}<span>{back_sub}</span></div>'
-        f'<span class="exec-suit-hint">{suit}</span></div></div></label></div>'
-        for index, (cid, suit, label, value, back_title, back_value, back_sub) in enumerate(kpis)
+        f'<div class="main-flip">'
+        f'<input type="checkbox" id="{cid}" class="main-flip-toggle">'
+        f'<label for="{cid}" class="main-flip-label"><div class="main-flip-inner">'
+        f'<div class="main-flip-face main-flip-front">'
+        f'<div class="main-kpi-label">{label}</div>'
+        f'<div class="main-kpi-value{" is-text" if not str(value)[:1].isdigit() and not str(value)[:1] == "$" else ""}">{value}</div>'
+        f'<span class="main-suit-hint">{suit}</span></div>'
+        f'<div class="main-flip-face main-flip-back"><div class="main-kpi-back-title">{back_title}</div>'
+        f'<div class="main-kpi-back-row">{back_value}<span>{back_sub}</span></div>'
+        f'<span class="main-suit-hint">{suit}</span></div></div></label></div>'
+        for cid, suit, label, value, back_title, back_value, back_sub in kpis
     )
 
     charts = "".join([
-        chart(weekly, "events", "viewWeeklyEvents"),
-        chart(weekly, "revenue", "viewWeeklyRevenue"),
-        chart(monthly, "events", "viewMonthlyEvents"),
-        chart(monthly, "revenue", "viewMonthlyRevenue"),
-        chart(weekday, "events", "viewWeekdayEvents"),
-        chart(weekday, "revenue", "viewWeekdayRevenue"),
+        chart(weekly, "events", "mainViewWeeklyEvents"),
+        chart(weekly, "revenue", "mainViewWeeklyRevenue"),
+        chart(monthly, "events", "mainViewMonthlyEvents"),
+        chart(monthly, "revenue", "mainViewMonthlyRevenue"),
+        chart(weekday, "events", "mainViewWeekdayEvents"),
+        chart(weekday, "revenue", "mainViewWeekdayRevenue"),
     ])
     trends = (
-        '<div class="exec-section" style="animation-delay:.26s">'
-        '<input type="checkbox" id="secTrend" class="exec-section-toggle" checked>'
-        '<label for="secTrend" class="exec-section-head"><div class="exec-section-title-group">'
-        '<div class="exec-section-name">Performance Trends</div>'
-        '<div class="exec-section-teaser">Weekly / monthly / weekday &middot; events or revenue</div></div>'
-        '<span class="exec-section-chevron">&#9662;</span></label>'
-        '<div class="exec-section-body-wrap"><div class="exec-section-body"><div class="exec-trend-panel">'
-        '<input type="radio" name="trendview" id="trendWeekly" class="exec-lever-toggle" checked>'
-        '<input type="radio" name="trendview" id="trendMonthly" class="exec-lever-toggle">'
-        '<input type="radio" name="trendview" id="trendWeekday" class="exec-lever-toggle">'
-        '<input type="radio" name="trendmetric" id="metEvents" class="exec-lever-toggle" checked>'
-        '<input type="radio" name="trendmetric" id="metRevenue" class="exec-lever-toggle">'
-        '<div class="exec-lever-row">'
-        '<label for="trendWeekly" class="exec-lever-label">Weekly</label>'
-        '<label for="trendMonthly" class="exec-lever-label">Monthly</label>'
-        '<label for="trendWeekday" class="exec-lever-label">Weekday</label></div>'
-        '<div class="exec-lever-row is-metric">'
-        '<label for="metEvents" class="exec-lever-label">Events</label>'
-        '<label for="metRevenue" class="exec-lever-label">Revenue</label></div>'
-        f'<div class="exec-trend-views">{charts}</div>'
+        '<div class="main-section">'
+        '<input type="checkbox" id="mainSecTrend" class="main-section-toggle" checked>'
+        '<label for="mainSecTrend" class="main-section-head"><div class="main-section-title-group">'
+        '<div class="main-section-name">Performance Trends</div>'
+        '<div class="main-section-teaser">Weekly / monthly / weekday &middot; events or revenue</div></div>'
+        '<span class="main-section-chevron">&#9662;</span></label>'
+        '<div class="main-section-body-wrap"><div class="main-section-body"><div class="main-trend-panel">'
+        '<input type="radio" name="mainTrendView" id="mainTrendWeekly" class="main-lever-toggle" checked>'
+        '<input type="radio" name="mainTrendView" id="mainTrendMonthly" class="main-lever-toggle">'
+        '<input type="radio" name="mainTrendView" id="mainTrendWeekday" class="main-lever-toggle">'
+        '<input type="radio" name="mainTrendMetric" id="mainMetEvents" class="main-lever-toggle" checked>'
+        '<input type="radio" name="mainTrendMetric" id="mainMetRevenue" class="main-lever-toggle">'
+        '<div class="main-lever-row">'
+        '<label for="mainTrendWeekly" class="main-lever-label">Weekly</label>'
+        '<label for="mainTrendMonthly" class="main-lever-label">Monthly</label>'
+        '<label for="mainTrendWeekday" class="main-lever-label">Weekday</label></div>'
+        '<div class="main-lever-row is-metric">'
+        '<label for="mainMetEvents" class="main-lever-label">Events</label>'
+        '<label for="mainMetRevenue" class="main-lever-label">Revenue</label></div>'
+        f'<div class="main-trend-views">{charts}</div>'
         "</div></div></div></div>"
     )
 
     podium_order = [1, 0, 2]
-    podium_heights = {0: 112, 1: 94, 2: 82}
+    podium_heights = {0: 110, 1: 92, 2: 80}
     medals = {0: "&#129351;", 1: "&#129352;", 2: "&#129353;"}
     podium = "".join(
-        f'<div class="exec-podium-slot rank-{position + 1}" style="height:{podium_heights[position]}px">'
-        f'<div class="exec-podium-medal">{medals[position]}</div>'
-        f'<div class="exec-podium-name">{esc(clients[position]["name"])}</div>'
-        f'<div class="exec-podium-stat">{clients[position]["events"]} events</div></div>'
+        f'<div class="main-podium-slot rank-{position + 1}" style="height:{podium_heights[position]}px">'
+        f'<div class="main-podium-medal">{medals[position]}</div>'
+        f'<div class="main-podium-name">{esc(clients[position]["name"])}</div>'
+        f'<div class="main-podium-stat">{clients[position]["events"]} events</div></div>'
         for position in podium_order
         if position < len(clients)
     )
     peak_client_events = max((row["events"] for row in clients), default=0) or 1
     rank_rows = "".join(
-        f'<div class="exec-rank-row"><span class="exec-rank-num">{index + 1}</span>'
-        f'<div class="exec-rank-main"><div class="exec-rank-name">{esc(row["name"])}</div>'
-        f'<div class="exec-rank-track"><div class="exec-rank-fill" style="width:{max(4, round(row["events"] / peak_client_events * 100))}%"></div></div></div>'
-        f'<span class="exec-rank-stat">{row["events"]} &middot; {money(row["revenue"])}</span></div>'
+        f'<div class="main-rank-row"><span class="main-rank-num">{index + 1}</span>'
+        f'<div class="main-rank-main"><div class="main-rank-name">{esc(row["name"])}</div>'
+        f'<div class="main-rank-track"><div class="main-rank-fill" style="width:{max(4, round(row["events"] / peak_client_events * 100))}%"></div></div></div>'
+        f'<span class="main-rank-stat">{row["events"]} &middot; {money(row["revenue"])}</span></div>'
         for index, row in enumerate(clients[3:], start=3)
     )
     leaderboard = (
-        '<div class="exec-section" style="animation-delay:.32s">'
-        '<input type="checkbox" id="secClients" class="exec-section-toggle">'
-        '<label for="secClients" class="exec-section-head"><div class="exec-section-title-group">'
-        '<div class="exec-section-name">Client Leaderboard</div>'
-        f'<div class="exec-section-teaser">{esc(top_client["name"])} leads at {top_client["events"]} events</div></div>'
-        '<span class="exec-section-chevron">&#9662;</span></label>'
-        '<div class="exec-section-body-wrap"><div class="exec-section-body">'
-        f'<div class="exec-podium">{podium}</div>{rank_rows}</div></div></div>'
+        '<div class="main-section">'
+        '<input type="checkbox" id="mainSecClients" class="main-section-toggle">'
+        '<label for="mainSecClients" class="main-section-head"><div class="main-section-title-group">'
+        '<div class="main-section-name">Client Leaderboard</div>'
+        f'<div class="main-section-teaser">{esc(top_client["name"])} leads at {top_client["events"]} events</div></div>'
+        '<span class="main-section-chevron">&#9662;</span></label>'
+        '<div class="main-section-body-wrap"><div class="main-section-body">'
+        f'<div class="main-podium">{podium}</div>{rank_rows}</div></div></div>'
     )
 
     legend = "".join(
-        f'<div class="exec-legend-row"><span class="exec-legend-dot" style="background:{sector["color"]}"></span>'
+        f'<div class="main-legend-row"><span class="main-legend-dot" style="background:{sector["color"]}"></span>'
         f'{esc(sector["name"])}<strong>{sector["pct"]}%</strong></div>'
         for sector in territory
     )
     territory_html = (
-        '<div class="exec-section" style="animation-delay:.38s">'
-        '<input type="checkbox" id="secTerritory" class="exec-section-toggle">'
-        '<label for="secTerritory" class="exec-section-head"><div class="exec-section-title-group">'
-        '<div class="exec-section-name">Territory &amp; Jurisdictions</div>'
-        f'<div class="exec-section-teaser">{jurisdictions} jurisdictions'
+        '<div class="main-section">'
+        '<input type="checkbox" id="mainSecTerritory" class="main-section-toggle">'
+        '<label for="mainSecTerritory" class="main-section-head"><div class="main-section-title-group">'
+        '<div class="main-section-name">Territory &amp; Jurisdictions</div>'
+        f'<div class="main-section-teaser">{jurisdictions} jurisdictions'
         + (f' &middot; {esc(territory[0]["name"])} leads at {territory[0]["pct"]}%' if territory else '')
         + '</div></div>'
-        '<span class="exec-section-chevron">&#9662;</span></label>'
-        '<div class="exec-section-body-wrap"><div class="exec-section-body"><div class="exec-donut-wrap">'
-        f'<div class="exec-donut" style="background:{donut}">'
-        f'<div class="exec-donut-core"><div class="exec-donut-core-val">{career_events}</div>'
-        '<div class="exec-donut-core-lab">Events</div></div></div>'
-        f'<div class="exec-legend">{legend}</div></div></div></div></div>'
+        '<span class="main-section-chevron">&#9662;</span></label>'
+        '<div class="main-section-body-wrap"><div class="main-section-body"><div class="main-donut-wrap">'
+        f'<div class="main-donut" style="background:{donut}">'
+        f'<div class="main-donut-core"><div class="main-donut-core-val">{career_events}</div>'
+        '<div class="main-donut-core-lab">Events</div></div></div>'
+        f'<div class="main-legend">{legend}</div></div></div></div></div>'
     )
 
     milestone_rows = "".join(
-        f'<div class="exec-milestone"><div class="exec-milestone-head">'
-        f'<span class="exec-milestone-name{" is-done" if row["done"] else ""}">{esc(row["name"])}</span>'
-        f'<span class="exec-milestone-detail">{esc(row["detail"])}</span></div>'
-        f'<div class="exec-progress-track"><div class="exec-progress-fill{" is-done" if row["done"] else ""}" '
+        f'<div class="main-milestone"><div class="main-milestone-head">'
+        f'<span class="main-milestone-name{" is-done" if row["done"] else ""}">{esc(row["name"])}</span>'
+        f'<span class="main-milestone-detail">{esc(row["detail"])}</span></div>'
+        f'<div class="main-progress-track"><div class="main-progress-fill{" is-done" if row["done"] else ""}" '
         f'style="width:{max(3, min(100, row["pct"]))}%"></div></div></div>'
         for row in milestones
     )
     fame = (
-        '<div class="exec-section" style="animation-delay:.44s">'
-        '<input type="checkbox" id="secFame" class="exec-section-toggle">'
-        '<label for="secFame" class="exec-section-head"><div class="exec-section-title-group">'
-        '<div class="exec-section-name">Hall of Fame</div>'
-        f'<div class="exec-section-teaser">{achieved} achieved &middot; {in_progress} in progress</div></div>'
-        '<span class="exec-section-chevron">&#9662;</span></label>'
-        f'<div class="exec-section-body-wrap"><div class="exec-section-body">{milestone_rows}</div></div></div>'
+        '<div class="main-section">'
+        '<input type="checkbox" id="mainSecFame" class="main-section-toggle">'
+        '<label for="mainSecFame" class="main-section-head"><div class="main-section-title-group">'
+        '<div class="main-section-name">Hall of Fame</div>'
+        f'<div class="main-section-teaser">{achieved} achieved &middot; {in_progress} in progress</div></div>'
+        '<span class="main-section-chevron">&#9662;</span></label>'
+        f'<div class="main-section-body-wrap"><div class="main-section-body">{milestone_rows}</div></div></div>'
     )
 
-    st.markdown(css, unsafe_allow_html=True)
     st.markdown(
         compact(
             '<div class="section-kicker">LIVE DATA</div>'
             '<div class="section-title">MAIN</div>'
             + hero
-            + f'<div class="exec-ticker"><div class="exec-ticker-track">{ticker}</div></div>'
-            + f'<div class="exec-kpi-grid">{kpi_html}</div>'
+            + f'<div class="main-ticker"><div class="main-ticker-track">{ticker}</div></div>'
+            + f'<div class="main-kpi-grid">{kpi_html}</div>'
             + trends
             + leaderboard
             + territory_html

@@ -161,11 +161,19 @@ def cached_workbook(path: str, modified_ns: int, size: int) -> WorkbookData:
     return load_workbook(Path(path))
 
 
+def compact(markup: str) -> str:
+    """Strip indentation and drop blank lines so indented HTML never gets
+    mis-parsed as a CommonMark indented code block. Safe to use on HTML
+    bodies; <style> blocks don't need it (raw HTML block type-1 already
+    tolerates blank lines) but it doesn't hurt them either."""
+    return "\n".join(line.strip() for line in markup.splitlines() if line.strip())
+
+
 def configure_page() -> None:
     st.set_page_config(page_title=APP_NAME, page_icon="EC", layout="wide", initial_sidebar_state="collapsed")
     st.markdown(
         """
-        <style>
+<style>
         .stApp { background: linear-gradient(145deg, #08111f 0%, #0b1627 55%, #07101c 100%); }
         [data-testid="stHeader"],
         [data-testid="stToolbar"],
@@ -1215,7 +1223,7 @@ def configure_page() -> None:
 .main-progress-fill.is-done { background: linear-gradient(90deg, var(--kith-sage), var(--kith-sage-deep)); }
 .hero-header-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: nowrap; width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
 .hero-title-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; margin-right: -26px; margin-top: -1px; }
+.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-40px) translateY(-1px); }
 .hero-header-links .journey-fuel-button { width: 28px; height: 28px; font-size: .85rem; }
 </style>
         """,
@@ -1243,8 +1251,8 @@ def render_splash_screen() -> None:
 
     enter_url = "?page=executive-summary"
     st.markdown(
-        f"""
-        <style>
+        compact(f"""
+<style>
         [data-testid="stHeader"],
         [data-testid="stToolbar"],
         [data-testid="stSidebar"],
@@ -1370,7 +1378,7 @@ def render_splash_screen() -> None:
                 </div>
             </a>
         </div>
-        """,
+        """),
         unsafe_allow_html=True,
     )
 

@@ -1213,7 +1213,7 @@ def configure_page() -> None:
 .main-milestone:last-child { margin-bottom: 0; }
 .main-milestone-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin-bottom: .3rem; }
 .main-milestone-name { font-size: .69rem; font-weight: 800; color: #f7f2ea; }
-.main-milestone-name.is-done::before { content: "\2713  "; color: var(--kith-sage); }
+.main-milestone-name.is-done { color: var(--kith-sage); }
 .main-milestone-detail { font-size: .57rem; color: var(--kith-warm-gray); white-space: nowrap; }
 .main-progress-track { height: 7px; border-radius: 999px; overflow: hidden; background: rgba(169,162,154,.16); }
 .main-progress-fill { height: 7px; border-radius: 999px; background: linear-gradient(90deg, var(--kith-blue), var(--kith-mauve)); }
@@ -1221,7 +1221,7 @@ def configure_page() -> None:
 .hero-header-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: nowrap; width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
 .hero-title-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-30px) translateY(-4px); }
-.hero-header-links .journey-fuel-button { width: 28px; height: 28px; font-size: .85rem; }
+.hero-header-links .journey-fuel-button { width: 30px; height: 30px; font-size: .85rem; border-radius: 9px; }
 </style>
         """),
 
@@ -2023,12 +2023,14 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         wk = dated.copy()
         iso = wk["event_date"].dt.isocalendar()
         wk["iso_year"], wk["iso_week"] = iso["year"], iso["week"]
-        grouped = wk.groupby(["iso_year", "iso_week"]).agg(
+        wk["week_index"] = wk["iso_year"] * 52 + wk["iso_week"]
+        career_start_index = int(wk["week_index"].min())
+        grouped = wk.groupby("week_index").agg(
             events=("client", "count"),
             revenue=("revenue_amount", lambda s: float(pd.to_numeric(s, errors="coerce").fillna(0).sum())),
-        ).reset_index().sort_values(["iso_year", "iso_week"]).tail(6)
+        ).reset_index().sort_values("week_index").tail(6)
         weekly = build_series([
-            {"label": f"W{int(row['iso_week'])}", "events": int(row["events"]), "revenue": round(row["revenue"])}
+            {"label": f"W{int(row['week_index']) - career_start_index + 1}", "events": int(row["events"]), "revenue": round(row["revenue"])}
             for _, row in grouped.iterrows()
         ])
 
@@ -2062,7 +2064,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         )
     clients: list[dict] = []
     if not directory.empty and "Client" in directory:
-        top_directory = directory.sort_values("# of Visits", ascending=False).head(5)
+        top_directory = directory.sort_values("# of Visits", ascending=False).head(10)
         for _, row in top_directory.iterrows():
             name = str(row["Client"])
             clients.append({
@@ -2092,6 +2094,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         {"name": f"{money(next_tier)} Career Revenue", "detail": f"{money(career_revenue)} of {money(next_tier)}",
          "pct": max(3, min(100, round(career_revenue / next_tier * 100))), "done": False},
     ]
+    milestones.sort(key=lambda m: m["done"])
     achieved = sum(1 for m in milestones if m["done"])
     in_progress = len(milestones) - achieved
 
@@ -2277,24 +2280,13 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         "</div></div></div></div>"
     )
 
-    podium_order = [1, 0, 2]
-    podium_heights = {0: 110, 1: 92, 2: 80}
-    medals = {0: "&#129351;", 1: "&#129352;", 2: "&#129353;"}
-    podium = "".join(
-        f'<div class="main-podium-slot rank-{position + 1}" style="height:{podium_heights[position]}px">'
-        f'<div class="main-podium-medal">{medals[position]}</div>'
-        f'<div class="main-podium-name">{esc(clients[position]["name"])}</div>'
-        f'<div class="main-podium-stat">{clients[position]["events"]} events</div></div>'
-        for position in podium_order
-        if position < len(clients)
-    )
     peak_client_events = max((row["events"] for row in clients), default=0) or 1
     rank_rows = "".join(
         f'<div class="main-rank-row"><span class="main-rank-num">{index + 1}</span>'
         f'<div class="main-rank-main"><div class="main-rank-name">{esc(row["name"])}</div>'
         f'<div class="main-rank-track"><div class="main-rank-fill" style="width:{max(4, round(row["events"] / peak_client_events * 100))}%"></div></div></div>'
         f'<span class="main-rank-stat">{row["events"]} &middot; {money(row["revenue"])}</span></div>'
-        for index, row in enumerate(clients[3:], start=3)
+        for index, row in enumerate(clients)
     )
     leaderboard = (
         '<div class="main-section">'
@@ -2304,7 +2296,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         f'<div class="main-section-teaser">{esc(top_client["name"])} leads at {top_client["events"]} events</div></div>'
         '</label></div>'
         '<div class="main-section-body-wrap"><div class="main-section-body">'
-        f'<div class="main-podium">{podium}</div>{rank_rows}</div></div></div>'
+        f'{rank_rows}</div></div></div>'
     )
 
     legend = "".join(

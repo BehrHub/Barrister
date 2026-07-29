@@ -1223,7 +1223,7 @@ def configure_page() -> None:
 .main-progress-fill.is-done { background: linear-gradient(90deg, var(--kith-sage), var(--kith-sage-deep)); }
 .hero-header-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: nowrap; width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
 .hero-title-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-40px) translateY(-1px); }
+.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-38px) translateY(-3px); }
 .hero-header-links .journey-fuel-button { width: 28px; height: 28px; font-size: .85rem; }
 </style>
         """,
@@ -3205,7 +3205,11 @@ def authoritative_month_label(visit_number: object, event_date: object = None) -
 
 
 def authoritative_month_order(label: str) -> int:
-    return {"Apr 2026": 1, "May 2026": 2, "Jun 2026": 3}.get(label, 99)
+    try:
+        parsed = pd.to_datetime(str(label), format="%b %Y")
+        return parsed.year * 12 + parsed.month
+    except (ValueError, TypeError):
+        return 99
 
 
 def financial_frame(data: WorkbookData) -> pd.DataFrame:

@@ -2355,13 +2355,13 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
             f'<label for="mainTickerPause" class="main-ticker"><div class="main-ticker-track">{ticker}</div></label>'
             + hero
             + f'<div class="main-kpi-grid">{kpi_html}</div>'
-            + trends
-            + leaderboard
-            + territory_html
-            + fame
         ),
         unsafe_allow_html=True,
     )
+    st.markdown(compact(trends), unsafe_allow_html=True)
+    st.markdown(compact(leaderboard), unsafe_allow_html=True)
+    st.markdown(compact(territory_html), unsafe_allow_html=True)
+    st.markdown(compact(fame), unsafe_allow_html=True)
 
 def render_barrister_journey(data: WorkbookData, timeline: pd.DataFrame) -> None:
     st.markdown('<div id="journeyTopAnchor"></div>', unsafe_allow_html=True)

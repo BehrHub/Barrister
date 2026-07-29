@@ -1223,7 +1223,7 @@ def configure_page() -> None:
 .main-progress-fill.is-done { background: linear-gradient(90deg, var(--kith-sage), var(--kith-sage-deep)); }
 .hero-header-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: nowrap; width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
 .hero-title-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-38px) translateY(-3px); }
+.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-35px) translateY(-4px); }
 .hero-header-links .journey-fuel-button { width: 28px; height: 28px; font-size: .85rem; }
 </style>
         """),
@@ -1958,9 +1958,9 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
     def money(value) -> str:
         value = float(value or 0)
         if abs(value) >= 1000:
-            text = f"${value / 1000:.1f}k"
+            text = f"&#36;{value / 1000:.1f}k"
             return text.replace(".0k", "k")
-        return f"${value:,.0f}"
+        return f"&#36;{value:,.0f}"
 
     def fmt(value, metric: str) -> str:
         return money(value) if metric == "revenue" else f"{value:,.0f}"
@@ -2240,7 +2240,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         f'<label for="{cid}" class="main-flip-label"><div class="main-flip-inner">'
         f'<div class="main-flip-face main-flip-front">'
         f'<div><div class="main-kpi-label">{label}</div>'
-        f'<div class="main-kpi-value{" is-text" if not str(value)[:1].isdigit() and not str(value)[:1] == "$" else ""}">{value}</div></div></div>'
+        f'<div class="main-kpi-value{" is-text" if not str(value)[:1].isdigit() and not str(value).startswith("&#36;") else ""}">{value}</div></div></div>'
         f'<div class="main-flip-face main-flip-back">'
         f'<div><div class="main-kpi-back-title">{back_title}</div>'
         f'<div class="main-kpi-back-row">{back_value}<span>{back_sub}</span></div></div></div></div></label></div>'
@@ -3170,7 +3170,7 @@ def format_currency(value: object) -> str:
         return "Incomplete"
     if math.isnan(amount):
         return "Incomplete"
-    return f"${amount:,.0f}"
+    return f"&#36;{amount:,.0f}"
 
 
 def format_currency_precise(value: object) -> str:
@@ -3180,7 +3180,7 @@ def format_currency_precise(value: object) -> str:
         return "Incomplete"
     if math.isnan(amount):
         return "Incomplete"
-    return f"${amount:,.2f}"
+    return f"&#36;{amount:,.2f}"
 
 
 def format_percent(value: float) -> str:
@@ -3700,8 +3700,8 @@ def compact_currency(value: object) -> str:
     if math.isnan(amount):
         return "N/A"
     if abs(amount) >= 1000:
-        return f"${amount / 1000:.1f}K"
-    return f"${amount:,.0f}"
+        return f"&#36;{amount / 1000:.1f}K"
+    return f"&#36;{amount:,.0f}"
 
 
 def chart_lab_dataset_options(data: WorkbookData) -> dict[str, pd.DataFrame]:

@@ -1147,8 +1147,8 @@ def configure_page() -> None:
 .main-section-teaser { color: var(--kith-warm-gray); font-size: .63rem; }
 .main-section-chevron { flex: 0 0 auto; color: var(--kith-blush); font-size: .78rem; transform: rotate(0deg); transition: transform .3s var(--ease-standard); }
 .main-section-toggle:checked ~ .main-section-head-row .main-section-chevron { transform: rotate(180deg); }
-.main-section-body-wrap { display: grid; grid-template-rows: 0fr; overflow: hidden; transition: grid-template-rows .42s cubic-bezier(.3,.7,.3,1); }
-.main-section-toggle:checked ~ .main-section-body-wrap { grid-template-rows: 1fr; }
+.main-section-body-wrap { display: grid; grid-template-rows: 0fr; max-height: 0; overflow: hidden; transition: grid-template-rows .42s cubic-bezier(.3,.7,.3,1), max-height .42s cubic-bezier(.3,.7,.3,1); }
+.main-section-toggle:checked ~ .main-section-body-wrap { grid-template-rows: 1fr; max-height: 3000px; }
 .main-section-body { min-height: 0; overflow: hidden; padding: 0 .95rem .95rem; }
 .main-trend-header-toggle { display: flex; gap: .3rem; flex: 0 0 auto; }
 .main-trend-header-toggle .main-lever-label { padding: .26rem .55rem; font-size: .5rem; }
@@ -1156,12 +1156,12 @@ def configure_page() -> None:
 .main-lever-row { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .4rem; }
 .main-lever-row.is-metric { margin-bottom: .85rem; }
 .main-lever-label { display: inline-block; padding: .32rem .74rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; border: 1px solid rgba(169,162,154,.25); background: rgba(23,22,26,.5); color: var(--kith-warm-gray); font-size: .58rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
-#mainTrendWeeklyHead:checked ~ .main-section-head-row label[for="mainTrendWeeklyHead"], #mainTrendMonthlyHead:checked ~ .main-section-head-row label[for="mainTrendMonthlyHead"], #mainTrendWeekdayHead:checked ~ .main-section-head-row label[for="mainTrendWeekdayHead"] { background: linear-gradient(135deg, rgba(211,163,168,.3), rgba(124,147,179,.2)); color: #f7f2ea; border-color: rgba(211,163,168,.5); }
-#mainMetEvents:checked ~ .main-lever-row label[for="mainMetEvents"], #mainMetRevenue:checked ~ .main-lever-row label[for="mainMetRevenue"] { background: linear-gradient(135deg, rgba(211,163,168,.3), rgba(124,147,179,.2)); color: #f7f2ea; border-color: rgba(211,163,168,.5); }
+#mainTrendWeekly:checked ~ .main-section-head-row label[for="mainTrendWeekly"], #mainTrendMonthly:checked ~ .main-section-head-row label[for="mainTrendMonthly"], #mainTrendWeekday:checked ~ .main-section-head-row label[for="mainTrendWeekday"] { background: linear-gradient(135deg, rgba(211,163,168,.3), rgba(124,147,179,.2)); color: #f7f2ea; border-color: rgba(211,163,168,.5); }
+#mainMetEvents:checked ~ .main-section-body-wrap .main-lever-row label[for="mainMetEvents"], #mainMetRevenue:checked ~ .main-section-body-wrap .main-lever-row label[for="mainMetRevenue"] { background: linear-gradient(135deg, rgba(211,163,168,.3), rgba(124,147,179,.2)); color: #f7f2ea; border-color: rgba(211,163,168,.5); }
 .main-trend-view { display: none; }
 #mainViewWeeklyEvents { display: block; }
-#mainTrendMonthly:checked ~ .main-trend-views #mainViewWeeklyEvents, #mainTrendWeekday:checked ~ .main-trend-views #mainViewWeeklyEvents, #mainMetRevenue:checked ~ .main-trend-views #mainViewWeeklyEvents { display: none; }
-#mainTrendWeekly:checked ~ #mainMetEvents:checked ~ .main-trend-views #mainViewWeeklyEvents, #mainTrendWeekly:checked ~ #mainMetRevenue:checked ~ .main-trend-views #mainViewWeeklyRevenue, #mainTrendMonthly:checked ~ #mainMetEvents:checked ~ .main-trend-views #mainViewMonthlyEvents, #mainTrendMonthly:checked ~ #mainMetRevenue:checked ~ .main-trend-views #mainViewMonthlyRevenue, #mainTrendWeekday:checked ~ #mainMetEvents:checked ~ .main-trend-views #mainViewWeekdayEvents, #mainTrendWeekday:checked ~ #mainMetRevenue:checked ~ .main-trend-views #mainViewWeekdayRevenue { display: block; }
+#mainTrendMonthly:checked ~ .main-section-body-wrap .main-trend-views #mainViewWeeklyEvents, #mainTrendWeekday:checked ~ .main-section-body-wrap .main-trend-views #mainViewWeeklyEvents, #mainMetRevenue:checked ~ .main-section-body-wrap .main-trend-views #mainViewWeeklyEvents { display: none; }
+#mainTrendWeekly:checked ~ #mainMetEvents:checked ~ .main-section-body-wrap .main-trend-views #mainViewWeeklyEvents, #mainTrendWeekly:checked ~ #mainMetRevenue:checked ~ .main-section-body-wrap .main-trend-views #mainViewWeeklyRevenue, #mainTrendMonthly:checked ~ #mainMetEvents:checked ~ .main-section-body-wrap .main-trend-views #mainViewMonthlyEvents, #mainTrendMonthly:checked ~ #mainMetRevenue:checked ~ .main-section-body-wrap .main-trend-views #mainViewMonthlyRevenue, #mainTrendWeekday:checked ~ #mainMetEvents:checked ~ .main-section-body-wrap .main-trend-views #mainViewWeekdayEvents, #mainTrendWeekday:checked ~ #mainMetRevenue:checked ~ .main-section-body-wrap .main-trend-views #mainViewWeekdayRevenue { display: block; }
 .main-plot { position: relative; height: 128px; padding-left: 32px; }
 .main-grid-line { position: absolute; left: 32px; right: 0; height: 1px; background: rgba(169,162,154,.14); }
 .main-grid-line.is-base { background: rgba(169,162,154,.32); }
@@ -1210,7 +1210,7 @@ def configure_page() -> None:
 .main-progress-fill.is-done { background: linear-gradient(90deg, var(--kith-sage), var(--kith-sage-deep)); }
 .hero-header-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: nowrap; width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
 .hero-title-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; }
+.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; margin-right: -4px; margin-top: -1px; }
 .hero-header-links .journey-fuel-button { width: 28px; height: 28px; font-size: .85rem; }
 </style>
         """,
@@ -2247,24 +2247,21 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
     trends = (
         '<div class="main-section">'
         '<input type="checkbox" id="mainSecTrend" class="main-section-toggle" checked>'
-        '<input type="radio" name="mainTrendView" id="mainTrendWeeklyHead" class="main-lever-toggle" checked>'
-        '<input type="radio" name="mainTrendView" id="mainTrendMonthlyHead" class="main-lever-toggle">'
-        '<input type="radio" name="mainTrendView" id="mainTrendWeekdayHead" class="main-lever-toggle">'
-        '<div class="main-section-head-row">'
-        '<label for="mainSecTrend" class="main-section-head"><div class="main-section-title-group">'
-        '<div class="main-section-name">Performance Trends</div></div>'
-        '<span class="main-section-chevron">&#9662;</span></label>'
-        '<div class="main-trend-header-toggle">'
-        '<label for="mainTrendWeeklyHead" class="main-lever-label">Weekly</label>'
-        '<label for="mainTrendMonthlyHead" class="main-lever-label">Monthly</label>'
-        '<label for="mainTrendWeekdayHead" class="main-lever-label">Weekday</label></div>'
-        '</div>'
-        '<div class="main-section-body-wrap"><div class="main-section-body"><div class="main-trend-panel">'
         '<input type="radio" name="mainTrendView" id="mainTrendWeekly" class="main-lever-toggle" checked>'
         '<input type="radio" name="mainTrendView" id="mainTrendMonthly" class="main-lever-toggle">'
         '<input type="radio" name="mainTrendView" id="mainTrendWeekday" class="main-lever-toggle">'
         '<input type="radio" name="mainTrendMetric" id="mainMetEvents" class="main-lever-toggle" checked>'
         '<input type="radio" name="mainTrendMetric" id="mainMetRevenue" class="main-lever-toggle">'
+        '<div class="main-section-head-row">'
+        '<label for="mainSecTrend" class="main-section-head"><div class="main-section-title-group">'
+        '<div class="main-section-name">Performance Trends</div></div>'
+        '<span class="main-section-chevron">&#9662;</span></label>'
+        '<div class="main-trend-header-toggle">'
+        '<label for="mainTrendWeekly" class="main-lever-label">Weekly</label>'
+        '<label for="mainTrendMonthly" class="main-lever-label">Monthly</label>'
+        '<label for="mainTrendWeekday" class="main-lever-label">Weekday</label></div>'
+        '</div>'
+        '<div class="main-section-body-wrap"><div class="main-section-body"><div class="main-trend-panel">'
         '<div class="main-lever-row is-metric">'
         '<label for="mainMetEvents" class="main-lever-label">Events</label>'
         '<label for="mainMetRevenue" class="main-lever-label">Revenue</label></div>'

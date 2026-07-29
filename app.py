@@ -1216,13 +1216,14 @@ def configure_page() -> None:
 .main-milestone:last-child { margin-bottom: 0; }
 .main-milestone-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin-bottom: .3rem; }
 .main-milestone-name { font-size: .69rem; font-weight: 800; color: #f7f2ea; }
+.main-milestone-name.is-done::before { content: "\2713  "; color: var(--kith-sage); }
 .main-milestone-detail { font-size: .57rem; color: var(--kith-warm-gray); white-space: nowrap; }
 .main-progress-track { height: 7px; border-radius: 999px; overflow: hidden; background: rgba(169,162,154,.16); }
 .main-progress-fill { height: 7px; border-radius: 999px; background: linear-gradient(90deg, var(--kith-blue), var(--kith-mauve)); }
 .main-progress-fill.is-done { background: linear-gradient(90deg, var(--kith-sage), var(--kith-sage-deep)); }
 .hero-header-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: nowrap; width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
 .hero-title-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-28px) translateY(-4px); }
+.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-35px) translateY(-4px); }
 .hero-header-links .journey-fuel-button { width: 28px; height: 28px; font-size: .85rem; }
 </style>
         """),
@@ -1957,9 +1958,9 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
     def money(value) -> str:
         value = float(value or 0)
         if abs(value) >= 1000:
-            text = f"\\${value / 1000:.1f}k"
+            text = f"&#36;{value / 1000:.1f}k"
             return text.replace(".0k", "k")
-        return f"\\${value:,.0f}"
+        return f"&#36;{value:,.0f}"
 
     def fmt(value, metric: str) -> str:
         return money(value) if metric == "revenue" else f"{value:,.0f}"
@@ -1987,7 +1988,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
     avg_per_event = round(career_revenue / max(1, career_events))
 
     jurisdiction_series = (
-        completed["state_region"].replace("", pd.NA).dropna().map(jurisdiction_group)
+        completed["state_region"].replace("", pd.NA).dropna()
         if "state_region" in completed else pd.Series(dtype=str)
     )
     jurisdiction_counts = jurisdiction_series.value_counts()
@@ -3169,7 +3170,7 @@ def format_currency(value: object) -> str:
         return "Incomplete"
     if math.isnan(amount):
         return "Incomplete"
-    return f"\\${amount:,.0f}"
+    return f"&#36;{amount:,.0f}"
 
 
 def format_currency_precise(value: object) -> str:
@@ -3179,7 +3180,7 @@ def format_currency_precise(value: object) -> str:
         return "Incomplete"
     if math.isnan(amount):
         return "Incomplete"
-    return f"\\${amount:,.2f}"
+    return f"&#36;{amount:,.2f}"
 
 
 def format_percent(value: float) -> str:
@@ -3699,8 +3700,8 @@ def compact_currency(value: object) -> str:
     if math.isnan(amount):
         return "N/A"
     if abs(amount) >= 1000:
-        return f"\\${amount / 1000:.1f}K"
-    return f"\\${amount:,.0f}"
+        return f"&#36;{amount / 1000:.1f}K"
+    return f"&#36;{amount:,.0f}"
 
 
 def chart_lab_dataset_options(data: WorkbookData) -> dict[str, pd.DataFrame]:

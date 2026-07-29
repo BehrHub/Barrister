@@ -172,7 +172,7 @@ def compact(markup: str) -> str:
 def configure_page() -> None:
     st.set_page_config(page_title=APP_NAME, page_icon="EC", layout="wide", initial_sidebar_state="collapsed")
     st.markdown(
-        """
+        compact("""
 <style>
         .stApp { background: linear-gradient(145deg, #08111f 0%, #0b1627 55%, #07101c 100%); }
         [data-testid="stHeader"],
@@ -1226,7 +1226,7 @@ def configure_page() -> None:
 .hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-38px) translateY(-3px); }
 .hero-header-links .journey-fuel-button { width: 28px; height: 28px; font-size: .85rem; }
 </style>
-        """,
+        """),
 
         unsafe_allow_html=True,
     )

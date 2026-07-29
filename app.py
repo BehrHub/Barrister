@@ -1120,40 +1120,44 @@ def configure_page() -> None:
 .main-ticker-track { display: flex; align-items: center; gap: 1.9rem; width: max-content; padding: 0 1.1rem; animation: mainTickerScroll 24s linear infinite; }
 .main-ticker-item { flex: 0 0 auto; display: flex; align-items: center; gap: .32rem; white-space: nowrap; font-size: .62rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kith-warm-gray); }
 .main-ticker-item strong { color: #f7f2ea; font-weight: 900; }
-.main-kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .55rem; margin: 0 0 1rem; }
+.main-kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .4rem; margin: 0 0 .7rem; }
 @media (max-width: 700px) { .main-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.main-flip { position: relative; height: 102px; perspective: 900px; -webkit-tap-highlight-color: transparent; animation: mainRiseIn .5s var(--ease-emphasized) both; }
+.main-flip { position: relative; height: 52px; perspective: 900px; -webkit-tap-highlight-color: transparent; animation: mainRiseIn .5s var(--ease-emphasized) both; }
 .main-flip-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
 .main-flip-label { display: block; width: 100%; height: 100%; cursor: pointer; }
-.main-flip-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transform: rotateY(0deg); transition: transform .55s cubic-bezier(.4,.2,.2,1); }
+.main-flip-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transform: rotateY(0deg); transition: transform .5s cubic-bezier(.4,.2,.2,1); }
 .main-flip-toggle:checked ~ .main-flip-label .main-flip-inner { transform: rotateY(180deg); }
-.main-flip-face { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .2rem; text-align: center; border-radius: 14px; padding: .55rem; }
+.main-flip-face { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: .3rem; text-align: center; border-radius: 10px; padding: .3rem .35rem; }
 .main-flip-front { border: 1px solid rgba(169,162,154,.22); background: linear-gradient(150deg, var(--kith-charcoal-soft), var(--kith-charcoal)); }
 .main-flip-face.suit-spade .main-flip-front, .main-flip-front.suit-spade { border-color: rgba(124,147,179,.4); }
 .main-flip-back { transform: rotateY(180deg); border: 1px solid rgba(211,163,168,.35); background: linear-gradient(150deg, #2a2230, var(--kith-charcoal)); }
-.main-kpi-label { font-size: .55rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--kith-warm-gray); }
-.main-kpi-value { font-size: 1.32rem; font-weight: 900; line-height: 1.05; color: #f7f2ea; margin-top: .15rem; }
-.main-kpi-value.is-text { font-size: .9rem; }
-.main-kpi-back-title { font-size: .49rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--kith-blush); }
-.main-kpi-back-row { font-size: .78rem; font-weight: 800; color: #f7f2ea; margin-top: .2rem; }
-.main-kpi-back-row span { display: block; font-size: .52rem; font-weight: 600; color: var(--kith-warm-gray); margin-top: .15rem; }
-.main-suit-hint { position: absolute; bottom: 6px; right: 6px; width: 21px; height: 21px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .8rem; line-height: 1; color: var(--kith-sand); background: rgba(169,162,154,.14); border: 1px solid rgba(169,162,154,.2); }
+.main-kpi-label { font-size: .43rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kith-warm-gray); line-height: 1.1; }
+.main-kpi-value { font-size: .92rem; font-weight: 900; line-height: 1; color: #f7f2ea; }
+.main-kpi-value.is-text { font-size: .62rem; }
+.main-kpi-back-title { font-size: .4rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kith-blush); }
+.main-kpi-back-row { font-size: .58rem; font-weight: 800; color: #f7f2ea; }
+.main-kpi-back-row span { display: block; font-size: .4rem; font-weight: 600; color: var(--kith-warm-gray); }
+.main-suit-hint { position: static; width: 15px; height: 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .55rem; line-height: 1; color: var(--kith-sand); background: rgba(169,162,154,.14); border: 1px solid rgba(169,162,154,.2); flex: 0 0 auto; }
 .main-section { position: relative; overflow: hidden; border-radius: 18px; border: 1px solid rgba(169,162,154,.2); background: linear-gradient(150deg, var(--kith-charcoal-soft), var(--kith-charcoal)); margin-bottom: .65rem; animation: mainRiseIn .5s var(--ease-emphasized) both; }
 .main-section-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
-.main-section-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: .8rem .95rem; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.main-section-head-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: .8rem .95rem; }
+.main-section-head { display: flex; align-items: center; gap: .6rem; cursor: pointer; -webkit-tap-highlight-color: transparent; min-width: 0; }
 .main-section-title-group { display: flex; flex-direction: column; gap: .12rem; min-width: 0; }
-.main-section-name { color: #f7f2ea; font-size: .82rem; font-weight: 800; }
+.main-section-name { color: #f7f2ea; font-size: .82rem; font-weight: 800; white-space: nowrap; }
 .main-section-teaser { color: var(--kith-warm-gray); font-size: .63rem; }
 .main-section-chevron { flex: 0 0 auto; color: var(--kith-blush); font-size: .78rem; transform: rotate(0deg); transition: transform .3s var(--ease-standard); }
-.main-section-toggle:checked ~ .main-section-head .main-section-chevron { transform: rotate(180deg); }
-.main-section-body-wrap { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .42s cubic-bezier(.3,.7,.3,1); }
+.main-section-toggle:checked ~ .main-section-head-row .main-section-chevron { transform: rotate(180deg); }
+.main-section-body-wrap { display: grid; grid-template-rows: 0fr; overflow: hidden; transition: grid-template-rows .42s cubic-bezier(.3,.7,.3,1); }
 .main-section-toggle:checked ~ .main-section-body-wrap { grid-template-rows: 1fr; }
 .main-section-body { min-height: 0; overflow: hidden; padding: 0 .95rem .95rem; }
+.main-trend-header-toggle { display: flex; gap: .3rem; flex: 0 0 auto; }
+.main-trend-header-toggle .main-lever-label { padding: .26rem .55rem; font-size: .5rem; }
 .main-lever-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
 .main-lever-row { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .4rem; }
 .main-lever-row.is-metric { margin-bottom: .85rem; }
 .main-lever-label { display: inline-block; padding: .32rem .74rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; border: 1px solid rgba(169,162,154,.25); background: rgba(23,22,26,.5); color: var(--kith-warm-gray); font-size: .58rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
-#mainTrendWeekly:checked ~ .main-lever-row label[for="mainTrendWeekly"], #mainTrendMonthly:checked ~ .main-lever-row label[for="mainTrendMonthly"], #mainTrendWeekday:checked ~ .main-lever-row label[for="mainTrendWeekday"], #mainMetEvents:checked ~ .main-lever-row label[for="mainMetEvents"], #mainMetRevenue:checked ~ .main-lever-row label[for="mainMetRevenue"] { background: linear-gradient(135deg, rgba(211,163,168,.3), rgba(124,147,179,.2)); color: #f7f2ea; border-color: rgba(211,163,168,.5); }
+#mainTrendWeeklyHead:checked ~ .main-section-head-row label[for="mainTrendWeeklyHead"], #mainTrendMonthlyHead:checked ~ .main-section-head-row label[for="mainTrendMonthlyHead"], #mainTrendWeekdayHead:checked ~ .main-section-head-row label[for="mainTrendWeekdayHead"] { background: linear-gradient(135deg, rgba(211,163,168,.3), rgba(124,147,179,.2)); color: #f7f2ea; border-color: rgba(211,163,168,.5); }
+#mainMetEvents:checked ~ .main-lever-row label[for="mainMetEvents"], #mainMetRevenue:checked ~ .main-lever-row label[for="mainMetRevenue"] { background: linear-gradient(135deg, rgba(211,163,168,.3), rgba(124,147,179,.2)); color: #f7f2ea; border-color: rgba(211,163,168,.5); }
 .main-trend-view { display: none; }
 #mainViewWeeklyEvents { display: block; }
 #mainTrendMonthly:checked ~ .main-trend-views #mainViewWeeklyEvents, #mainTrendWeekday:checked ~ .main-trend-views #mainViewWeeklyEvents, #mainMetRevenue:checked ~ .main-trend-views #mainViewWeeklyEvents { display: none; }
@@ -1204,8 +1208,10 @@ def configure_page() -> None:
 .main-progress-track { height: 7px; border-radius: 999px; overflow: hidden; background: rgba(169,162,154,.16); }
 .main-progress-fill { height: 7px; border-radius: 999px; background: linear-gradient(90deg, var(--kith-blue), var(--kith-mauve)); }
 .main-progress-fill.is-done { background: linear-gradient(90deg, var(--kith-sage), var(--kith-sage-deep)); }
-.hero-header-row { display: flex; align-items: center; justify-content: space-between; gap: .6rem; flex-wrap: wrap; }
-.hero-header-links { display: flex; align-items: center; gap: .4rem; }
+.hero-header-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: nowrap; width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
+.hero-title-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; }
+.hero-header-links .journey-fuel-button { width: 28px; height: 28px; font-size: .85rem; }
 </style>
         """,
 
@@ -2220,12 +2226,13 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         f'<input type="checkbox" id="{cid}" class="main-flip-toggle">'
         f'<label for="{cid}" class="main-flip-label"><div class="main-flip-inner">'
         f'<div class="main-flip-face main-flip-front">'
-        f'<div class="main-kpi-label">{label}</div>'
-        f'<div class="main-kpi-value{" is-text" if not str(value)[:1].isdigit() and not str(value)[:1] == "$" else ""}">{value}</div>'
-        f'<span class="main-suit-hint">{suit}</span></div>'
-        f'<div class="main-flip-face main-flip-back"><div class="main-kpi-back-title">{back_title}</div>'
-        f'<div class="main-kpi-back-row">{back_value}<span>{back_sub}</span></div>'
-        f'<span class="main-suit-hint">{suit}</span></div></div></label></div>'
+        f'<span class="main-suit-hint">{suit}</span>'
+        f'<div><div class="main-kpi-label">{label}</div>'
+        f'<div class="main-kpi-value{" is-text" if not str(value)[:1].isdigit() and not str(value)[:1] == "$" else ""}">{value}</div></div></div>'
+        f'<div class="main-flip-face main-flip-back">'
+        f'<span class="main-suit-hint">{suit}</span>'
+        f'<div><div class="main-kpi-back-title">{back_title}</div>'
+        f'<div class="main-kpi-back-row">{back_value}<span>{back_sub}</span></div></div></div></div></label></div>'
         for cid, suit, label, value, back_title, back_value, back_sub in kpis
     )
 
@@ -2240,20 +2247,24 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
     trends = (
         '<div class="main-section">'
         '<input type="checkbox" id="mainSecTrend" class="main-section-toggle" checked>'
+        '<input type="radio" name="mainTrendView" id="mainTrendWeeklyHead" class="main-lever-toggle" checked>'
+        '<input type="radio" name="mainTrendView" id="mainTrendMonthlyHead" class="main-lever-toggle">'
+        '<input type="radio" name="mainTrendView" id="mainTrendWeekdayHead" class="main-lever-toggle">'
+        '<div class="main-section-head-row">'
         '<label for="mainSecTrend" class="main-section-head"><div class="main-section-title-group">'
-        '<div class="main-section-name">Performance Trends</div>'
-        '<div class="main-section-teaser">Weekly / monthly / weekday &middot; events or revenue</div></div>'
+        '<div class="main-section-name">Performance Trends</div></div>'
         '<span class="main-section-chevron">&#9662;</span></label>'
+        '<div class="main-trend-header-toggle">'
+        '<label for="mainTrendWeeklyHead" class="main-lever-label">Weekly</label>'
+        '<label for="mainTrendMonthlyHead" class="main-lever-label">Monthly</label>'
+        '<label for="mainTrendWeekdayHead" class="main-lever-label">Weekday</label></div>'
+        '</div>'
         '<div class="main-section-body-wrap"><div class="main-section-body"><div class="main-trend-panel">'
         '<input type="radio" name="mainTrendView" id="mainTrendWeekly" class="main-lever-toggle" checked>'
         '<input type="radio" name="mainTrendView" id="mainTrendMonthly" class="main-lever-toggle">'
         '<input type="radio" name="mainTrendView" id="mainTrendWeekday" class="main-lever-toggle">'
         '<input type="radio" name="mainTrendMetric" id="mainMetEvents" class="main-lever-toggle" checked>'
         '<input type="radio" name="mainTrendMetric" id="mainMetRevenue" class="main-lever-toggle">'
-        '<div class="main-lever-row">'
-        '<label for="mainTrendWeekly" class="main-lever-label">Weekly</label>'
-        '<label for="mainTrendMonthly" class="main-lever-label">Monthly</label>'
-        '<label for="mainTrendWeekday" class="main-lever-label">Weekday</label></div>'
         '<div class="main-lever-row is-metric">'
         '<label for="mainMetEvents" class="main-lever-label">Events</label>'
         '<label for="mainMetRevenue" class="main-lever-label">Revenue</label></div>'
@@ -2283,10 +2294,10 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
     leaderboard = (
         '<div class="main-section">'
         '<input type="checkbox" id="mainSecClients" class="main-section-toggle">'
-        '<label for="mainSecClients" class="main-section-head"><div class="main-section-title-group">'
+        '<div class="main-section-head-row"><label for="mainSecClients" class="main-section-head"><div class="main-section-title-group">'
         '<div class="main-section-name">Client Leaderboard</div>'
         f'<div class="main-section-teaser">{esc(top_client["name"])} leads at {top_client["events"]} events</div></div>'
-        '<span class="main-section-chevron">&#9662;</span></label>'
+        '<span class="main-section-chevron">&#9662;</span></label></div>'
         '<div class="main-section-body-wrap"><div class="main-section-body">'
         f'<div class="main-podium">{podium}</div>{rank_rows}</div></div></div>'
     )
@@ -2299,12 +2310,12 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
     territory_html = (
         '<div class="main-section">'
         '<input type="checkbox" id="mainSecTerritory" class="main-section-toggle">'
-        '<label for="mainSecTerritory" class="main-section-head"><div class="main-section-title-group">'
+        '<div class="main-section-head-row"><label for="mainSecTerritory" class="main-section-head"><div class="main-section-title-group">'
         '<div class="main-section-name">Territory &amp; Jurisdictions</div>'
         f'<div class="main-section-teaser">{jurisdictions} jurisdictions'
         + (f' &middot; {esc(territory[0]["name"])} leads at {territory[0]["pct"]}%' if territory else '')
         + '</div></div>'
-        '<span class="main-section-chevron">&#9662;</span></label>'
+        '<span class="main-section-chevron">&#9662;</span></label></div>'
         '<div class="main-section-body-wrap"><div class="main-section-body"><div class="main-donut-wrap">'
         f'<div class="main-donut" style="background:{donut}">'
         f'<div class="main-donut-core"><div class="main-donut-core-val">{career_events}</div>'
@@ -2323,10 +2334,10 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
     fame = (
         '<div class="main-section">'
         '<input type="checkbox" id="mainSecFame" class="main-section-toggle">'
-        '<label for="mainSecFame" class="main-section-head"><div class="main-section-title-group">'
+        '<div class="main-section-head-row"><label for="mainSecFame" class="main-section-head"><div class="main-section-title-group">'
         '<div class="main-section-name">Hall of Fame</div>'
         f'<div class="main-section-teaser">{achieved} achieved &middot; {in_progress} in progress</div></div>'
-        '<span class="main-section-chevron">&#9662;</span></label>'
+        '<span class="main-section-chevron">&#9662;</span></label></div>'
         f'<div class="main-section-body-wrap"><div class="main-section-body">{milestone_rows}</div></div></div>'
     )
 

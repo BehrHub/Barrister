@@ -486,7 +486,7 @@ def configure_page() -> None:
         .journey-start { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
         .journey-checkpoint { position: relative; z-index: 1; margin-left: .2rem; padding: .48rem .7rem; border: 1px solid rgba(245,158,11,.36); border-radius: 999px; background: rgba(42,36,27,.9); color: #f7d38d; font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; width: fit-content; max-width: 100%; }
         .journey-milestone { position: relative; z-index: 1; margin-left: .2rem; padding: .56rem .78rem; border: 1px solid rgba(245, 197, 66, .46); border-radius: 12px; background: linear-gradient(135deg, rgba(91,64,16,.92), rgba(27,37,56,.9)); color: #ffe8a3; font-size: .74rem; font-weight: 850; letter-spacing: .07em; text-transform: uppercase; width: fit-content; max-width: 100%; box-shadow: 0 10px 22px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.06); }
-        .journey-stop { position: relative; z-index: 1; display: grid; grid-template-columns: 54px 1fr; gap: .72rem; align-items: stretch; margin-left: .2rem; padding: .62rem .72rem; border: 1px solid color-mix(in srgb, var(--month-accent, #243751) 45%, #243751); border-radius: 16px; background: linear-gradient(145deg, color-mix(in srgb, var(--month-accent, #14243a) 14%, rgba(20,34,55,.96)), rgba(13,25,43,.96)); box-shadow: 0 9px 22px rgba(0,0,0,.16), 0 0 0 1px color-mix(in srgb, var(--month-accent, transparent) 18%, transparent); }
+        .journey-stop { position: relative; z-index: 1; display: grid; grid-template-columns: 54px 1fr; gap: .72rem; align-items: stretch; margin-left: .2rem; padding: .62rem .72rem; border: 1px solid rgba(var(--month-accent-rgb, 36,55,81), .65); border-radius: 16px; background: linear-gradient(145deg, rgba(var(--month-accent-rgb, 20,34,55), .38), rgba(13,25,43,.97)); box-shadow: 0 9px 22px rgba(0,0,0,.16), inset 0 0 0 1px rgba(var(--month-accent-rgb, 36,55,81), .2); }
         .journey-stop::before { content: ""; position: absolute; left: -1.02rem; top: 50%; width: 13px; height: 13px; transform: translateY(-50%); border: 2px solid #07101c; border-radius: 999px; background: #2dd4bf; box-shadow: 0 0 0 3px rgba(45,212,191,.18); }
         .journey-number { display: flex; align-items: center; justify-content: center; border-radius: 12px; background: linear-gradient(180deg, #101d31, #0b1627); border: 1px solid #2a405d; color: #77e1d5; font-size: .72rem; font-weight: 850; text-transform: uppercase; text-align: center; line-height: 1.05; }
         .journey-content { position: relative; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) max-content; gap: .9rem; align-items: start; }
@@ -1067,6 +1067,15 @@ def configure_page() -> None:
     --kith-month-oct: var(--kith-blue-deep);
     --kith-month-nov: var(--kith-mauve-deep);
     --kith-month-dec: var(--kith-blush-deep);
+    --kith-month-apr-rgb: 217,199,168;
+    --kith-month-may-rgb: 148,153,125;
+    --kith-month-jun-rgb: 124,147,179;
+    --kith-month-jul-rgb: 168,147,171;
+    --kith-month-aug-rgb: 211,163,168;
+    --kith-month-sep-rgb: 184,159,121;
+    --kith-month-oct-rgb: 83,98,128;
+    --kith-month-nov-rgb: 126,104,132;
+    --kith-month-dec-rgb: 169,118,124;
 }
 .page-nav { display: flex; gap: .5rem; margin-bottom: .8rem; }
 .page-nav a { color: var(--text-muted) !important; text-decoration: none !important; font-size: .68rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; padding: .4rem .8rem; border-radius: 999px; border: 1px solid rgba(var(--slate-border-rgb),.28); }
@@ -1195,6 +1204,8 @@ def configure_page() -> None:
 .main-progress-track { height: 7px; border-radius: 999px; overflow: hidden; background: rgba(169,162,154,.16); }
 .main-progress-fill { height: 7px; border-radius: 999px; background: linear-gradient(90deg, var(--kith-blue), var(--kith-mauve)); }
 .main-progress-fill.is-done { background: linear-gradient(90deg, var(--kith-sage), var(--kith-sage-deep)); }
+.hero-header-row { display: flex; align-items: center; justify-content: space-between; gap: .6rem; flex-wrap: wrap; }
+.hero-header-links { display: flex; align-items: center; gap: .4rem; }
 </style>
         """,
 
@@ -1204,7 +1215,12 @@ def configure_page() -> None:
 
 def render_header() -> None:
     st.markdown(
-        f'<a class="hero-title-link" href="./" target="_self"><div class="hero-title hero-title-ascii">{escape(APP_NAME)}</div></a>',
+        f'<div class="hero-header-row"><a class="hero-title-link" href="./" target="_self"><div class="hero-title hero-title-ascii">{escape(APP_NAME)}</div></a>'
+        '<div class="hero-header-links">'
+        '<a href="http://100.70.235.51:8000/" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Bronx Bombers Daily">\u26be\ufe0f</a>'
+        '<a href="http://100.70.235.51:8011" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Heroes and Muses">\U0001F4DA</a>'
+        '<a href="http://100.70.235.51:9000" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Showcase">\U0001F9F8</a>'
+        '</div></div>',
         unsafe_allow_html=True,
     )
 
@@ -2357,7 +2373,7 @@ def render_barrister_journey(data: WorkbookData, timeline: pd.DataFrame) -> None
         f'data-known-revenue="{escape(format_currency(known_revenue))}">'
         '<button id="journeyReplayCar" class="journey-replay-car" type="button" aria-label="Pause or resume career replay"><span class="journey-car-icon">🏎️</span><span id="journeyAchievementBadge" class="journey-achievement-badge">+CLIENT</span></button>'
         '<div id="journeyReplaySummary" class="journey-replay-summary" aria-live="polite"></div>'
-        '<div class="journey-start"><span>START 🏁</span><div class="journey-start-actions"><a href="http://100.70.235.51:8000/" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Bronx Bombers Daily">⚾️</a><span class="journey-two-space-gap"></span><a href="http://100.70.235.51:8011" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Heroes and Muses">📚</a><span class="journey-two-space-gap"></span><a href="http://100.70.235.51:9000" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Showcase">🧸</a><span class="journey-two-space-gap"></span><button id="journeyFuelButton" class="journey-fuel-button" type="button" aria-label="Start or restart career replay" title="Start or restart career replay">⛽</button></div></div>' 
+        '<div class="journey-start"><span>START \U0001F3C1</span><div class="journey-start-actions"><button id="journeyFuelButton" class="journey-fuel-button" type="button" aria-label="Start or restart career replay" title="Start or restart career replay">\u26fd</button></div></div>' 
     ]
     for row in chronological.to_dict("records"):
         state_key = jurisdiction_group(row.get("state_region", row.get("region_code", "")))
@@ -2383,10 +2399,11 @@ def render_barrister_journey(data: WorkbookData, timeline: pd.DataFrame) -> None
         month_var_map = {4: "apr", 5: "may", 6: "jun", 7: "jul", 8: "aug", 9: "sep", 10: "oct", 11: "nov", 12: "dec", 1: "apr", 2: "apr", 3: "apr"}
         month_token = month_var_map.get(pd.Timestamp(event_date).month, "apr") if pd.notna(event_date) else "apr"
         month_accent = f"var(--kith-month-{month_token})"
+        month_accent_rgb = f"var(--kith-month-{month_token}-rgb)"
         stop_accent = JURISDICTION_COLORS.get(state_key, JURISDICTION_COLORS["Pennsylvania / Other"])
         pieces.append(
             '<div class="journey-stop" '
-            f'style="--stop-accent:{escape(stop_accent, quote=True)};--month-accent:{escape(month_accent, quote=True)}" '
+            f'style="--stop-accent:{escape(stop_accent, quote=True)};--month-accent:{escape(month_accent, quote=True)};--month-accent-rgb:{escape(month_accent_rgb, quote=True)}" '
             f'data-visit="{escape(str(number))}" data-client="{escape(client, quote=True)}" '
             f'data-location="{escape(location or "Location not provided", quote=True)}" '
             f'data-new-client="{"1" if is_new_client else "0"}">'
@@ -5470,7 +5487,7 @@ def main() -> None:
     if data is None:
         section = requested_page or "Add Service Event"
     else:
-        section = requested_page or "Executive Summary"
+        section = requested_page or "Main"
     render_header()
     render_navigation(section)
 

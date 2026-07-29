@@ -1126,9 +1126,6 @@ def configure_page() -> None:
 .main-ticker::before { left: 0; background: linear-gradient(90deg, var(--kith-charcoal), transparent); }
 .main-ticker::after { right: 0; background: linear-gradient(270deg, var(--kith-charcoal), transparent); }
 .main-ticker-track { display: flex; align-items: center; gap: 1.9rem; width: max-content; padding: 0 1.1rem; animation: mainTickerScroll 24s linear infinite; }
-.main-ticker-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
-.main-ticker-toggle:checked ~ .main-ticker .main-ticker-track { animation-play-state: paused; }
-.main-ticker { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .main-ticker-item { flex: 0 0 auto; display: flex; align-items: center; gap: .32rem; white-space: nowrap; font-size: .62rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kith-warm-gray); }
 .main-ticker-item strong { color: #f7f2ea; font-weight: 900; }
 .main-kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .4rem; margin: 0 0 .7rem; }
@@ -1223,7 +1220,7 @@ def configure_page() -> None:
 .main-progress-fill.is-done { background: linear-gradient(90deg, var(--kith-sage), var(--kith-sage-deep)); }
 .hero-header-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: nowrap; width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
 .hero-title-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-35px) translateY(-4px); }
+.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-30px) translateY(-4px); }
 .hero-header-links .journey-fuel-button { width: 28px; height: 28px; font-size: .85rem; }
 </style>
         """),
@@ -1958,9 +1955,9 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
     def money(value) -> str:
         value = float(value or 0)
         if abs(value) >= 1000:
-            text = f"&#36;{value / 1000:.1f}k"
+            text = f"＄{value / 1000:.1f}k"
             return text.replace(".0k", "k")
-        return f"&#36;{value:,.0f}"
+        return f"＄{value:,.0f}"
 
     def fmt(value, metric: str) -> str:
         return money(value) if metric == "revenue" else f"{value:,.0f}"
@@ -2240,7 +2237,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         f'<label for="{cid}" class="main-flip-label"><div class="main-flip-inner">'
         f'<div class="main-flip-face main-flip-front">'
         f'<div><div class="main-kpi-label">{label}</div>'
-        f'<div class="main-kpi-value{" is-text" if not str(value)[:1].isdigit() and not str(value).startswith("&#36;") else ""}">{value}</div></div></div>'
+        f'<div class="main-kpi-value{" is-text" if not str(value)[:1].isdigit() and not str(value).startswith("＄") else ""}">{value}</div></div></div>'
         f'<div class="main-flip-face main-flip-back">'
         f'<div><div class="main-kpi-back-title">{back_title}</div>'
         f'<div class="main-kpi-back-row">{back_value}<span>{back_sub}</span></div></div></div></div></label></div>'
@@ -2351,8 +2348,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
 
     st.markdown(
         compact(
-            f'<input type="checkbox" id="mainTickerPause" class="main-ticker-toggle">'
-            f'<label for="mainTickerPause" class="main-ticker"><div class="main-ticker-track">{ticker}</div></label>'
+            f'<div class="main-ticker"><div class="main-ticker-track">{ticker}</div></div>'
             + hero
             + f'<div class="main-kpi-grid">{kpi_html}</div>'
         ),
@@ -3170,7 +3166,7 @@ def format_currency(value: object) -> str:
         return "Incomplete"
     if math.isnan(amount):
         return "Incomplete"
-    return f"&#36;{amount:,.0f}"
+    return f"＄{amount:,.0f}"
 
 
 def format_currency_precise(value: object) -> str:
@@ -3180,7 +3176,7 @@ def format_currency_precise(value: object) -> str:
         return "Incomplete"
     if math.isnan(amount):
         return "Incomplete"
-    return f"&#36;{amount:,.2f}"
+    return f"＄{amount:,.2f}"
 
 
 def format_percent(value: float) -> str:
@@ -3700,8 +3696,8 @@ def compact_currency(value: object) -> str:
     if math.isnan(amount):
         return "N/A"
     if abs(amount) >= 1000:
-        return f"&#36;{amount / 1000:.1f}K"
-    return f"&#36;{amount:,.0f}"
+        return f"＄{amount / 1000:.1f}K"
+    return f"＄{amount:,.0f}"
 
 
 def chart_lab_dataset_options(data: WorkbookData) -> dict[str, pd.DataFrame]:

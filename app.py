@@ -1118,6 +1118,9 @@ def configure_page() -> None:
 .main-ticker::before { left: 0; background: linear-gradient(90deg, var(--kith-charcoal), transparent); }
 .main-ticker::after { right: 0; background: linear-gradient(270deg, var(--kith-charcoal), transparent); }
 .main-ticker-track { display: flex; align-items: center; gap: 1.9rem; width: max-content; padding: 0 1.1rem; animation: mainTickerScroll 24s linear infinite; }
+.main-ticker-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.main-ticker-toggle:checked ~ .main-ticker .main-ticker-track { animation-play-state: paused; }
+.main-ticker { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .main-ticker-item { flex: 0 0 auto; display: flex; align-items: center; gap: .32rem; white-space: nowrap; font-size: .62rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kith-warm-gray); }
 .main-ticker-item strong { color: #f7f2ea; font-weight: 900; }
 .main-kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .4rem; margin: 0 0 .7rem; }
@@ -1138,6 +1141,8 @@ def configure_page() -> None:
 .main-kpi-back-row { font-size: .58rem; font-weight: 800; color: #f7f2ea; }
 .main-kpi-back-row span { display: block; font-size: .4rem; font-weight: 600; color: var(--kith-warm-gray); }
 .main-suit-hint { position: static; width: 15px; height: 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .55rem; line-height: 1; color: var(--kith-sand); background: rgba(169,162,154,.14); border: 1px solid rgba(169,162,154,.2); flex: 0 0 auto; }
+.main-flip.is-month-oct .main-flip-front { border-color: rgba(var(--kith-month-oct-rgb),.4); background: linear-gradient(150deg, rgba(var(--kith-month-oct-rgb),.22), var(--kith-charcoal)); }
+.main-section.is-month-jun { border-color: rgba(var(--kith-month-jun-rgb),.4); background: linear-gradient(150deg, rgba(var(--kith-month-jun-rgb),.16), var(--kith-charcoal)); }
 .main-section { position: relative; overflow: hidden; border-radius: 18px; border: 1px solid rgba(169,162,154,.2); background: linear-gradient(150deg, var(--kith-charcoal-soft), var(--kith-charcoal)); margin-bottom: .65rem; animation: mainRiseIn .5s var(--ease-emphasized) both; }
 .main-section-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
 .main-section-head-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: .8rem .95rem; }
@@ -1210,7 +1215,7 @@ def configure_page() -> None:
 .main-progress-fill.is-done { background: linear-gradient(90deg, var(--kith-sage), var(--kith-sage-deep)); }
 .hero-header-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: nowrap; width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
 .hero-title-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; margin-right: -4px; margin-top: -1px; }
+.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; margin-right: -26px; margin-top: -1px; }
 .hero-header-links .journey-fuel-button { width: 28px; height: 28px; font-size: .85rem; }
 </style>
         """,
@@ -2222,15 +2227,13 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
          f'{top_client["events"]}', f'events &middot; {money(top_client["revenue"])}'),
     ]
     kpi_html = "".join(
-        f'<div class="main-flip">'
+        f'<div class="main-flip is-month-oct">'
         f'<input type="checkbox" id="{cid}" class="main-flip-toggle">'
         f'<label for="{cid}" class="main-flip-label"><div class="main-flip-inner">'
         f'<div class="main-flip-face main-flip-front">'
-        f'<span class="main-suit-hint">{suit}</span>'
         f'<div><div class="main-kpi-label">{label}</div>'
         f'<div class="main-kpi-value{" is-text" if not str(value)[:1].isdigit() and not str(value)[:1] == "$" else ""}">{value}</div></div></div>'
         f'<div class="main-flip-face main-flip-back">'
-        f'<span class="main-suit-hint">{suit}</span>'
         f'<div><div class="main-kpi-back-title">{back_title}</div>'
         f'<div class="main-kpi-back-row">{back_value}<span>{back_sub}</span></div></div></div></div></label></div>'
         for cid, suit, label, value, back_title, back_value, back_sub in kpis
@@ -2245,7 +2248,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         chart(weekday, "revenue", "mainViewWeekdayRevenue"),
     ])
     trends = (
-        '<div class="main-section">'
+        '<div class="main-section is-month-jun">'
         '<input type="checkbox" id="mainSecTrend" class="main-section-toggle" checked>'
         '<input type="radio" name="mainTrendView" id="mainTrendWeekly" class="main-lever-toggle" checked>'
         '<input type="radio" name="mainTrendView" id="mainTrendMonthly" class="main-lever-toggle">'
@@ -2255,7 +2258,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         '<div class="main-section-head-row">'
         '<label for="mainSecTrend" class="main-section-head"><div class="main-section-title-group">'
         '<div class="main-section-name">Performance Trends</div></div>'
-        '<span class="main-section-chevron">&#9662;</span></label>'
+        '</label>'
         '<div class="main-trend-header-toggle">'
         '<label for="mainTrendWeekly" class="main-lever-label">Weekly</label>'
         '<label for="mainTrendMonthly" class="main-lever-label">Monthly</label>'
@@ -2294,7 +2297,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         '<div class="main-section-head-row"><label for="mainSecClients" class="main-section-head"><div class="main-section-title-group">'
         '<div class="main-section-name">Client Leaderboard</div>'
         f'<div class="main-section-teaser">{esc(top_client["name"])} leads at {top_client["events"]} events</div></div>'
-        '<span class="main-section-chevron">&#9662;</span></label></div>'
+        '</label></div>'
         '<div class="main-section-body-wrap"><div class="main-section-body">'
         f'<div class="main-podium">{podium}</div>{rank_rows}</div></div></div>'
     )
@@ -2312,7 +2315,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         f'<div class="main-section-teaser">{jurisdictions} jurisdictions'
         + (f' &middot; {esc(territory[0]["name"])} leads at {territory[0]["pct"]}%' if territory else '')
         + '</div></div>'
-        '<span class="main-section-chevron">&#9662;</span></label></div>'
+        '</label></div>'
         '<div class="main-section-body-wrap"><div class="main-section-body"><div class="main-donut-wrap">'
         f'<div class="main-donut" style="background:{donut}">'
         f'<div class="main-donut-core"><div class="main-donut-core-val">{career_events}</div>'
@@ -2334,13 +2337,14 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         '<div class="main-section-head-row"><label for="mainSecFame" class="main-section-head"><div class="main-section-title-group">'
         '<div class="main-section-name">Hall of Fame</div>'
         f'<div class="main-section-teaser">{achieved} achieved &middot; {in_progress} in progress</div></div>'
-        '<span class="main-section-chevron">&#9662;</span></label></div>'
+        '</label></div>'
         f'<div class="main-section-body-wrap"><div class="main-section-body">{milestone_rows}</div></div></div>'
     )
 
     st.markdown(
         compact(
-            f'<div class="main-ticker"><div class="main-ticker-track">{ticker}</div></div>'
+            f'<input type="checkbox" id="mainTickerPause" class="main-ticker-toggle">'
+            f'<label for="mainTickerPause" class="main-ticker"><div class="main-ticker-track">{ticker}</div></label>'
             + hero
             + f'<div class="main-kpi-grid">{kpi_html}</div>'
             + trends

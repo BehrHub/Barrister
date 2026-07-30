@@ -220,7 +220,7 @@ def configure_page() -> None:
             }
         }
 
-        .hero-title { color: var(--kith-leaf-green); font-family: "Inter", "SF Pro Display", "Aptos Display", "Segoe UI", Arial, sans-serif; font-size: clamp(2.45rem, 5vw, 3.95rem); font-weight: 850; margin: .08rem 0 .78rem; line-height: .94; letter-spacing: -.058em; text-shadow: 0 14px 28px rgba(0,0,0,.3); }
+        .hero-title { color: var(--kith-rococo-red); font-family: "Inter", "SF Pro Display", "Aptos Display", "Segoe UI", Arial, sans-serif; font-size: clamp(2.45rem, 5vw, 3.95rem); font-weight: 850; margin: .08rem 0 .78rem; line-height: .94; letter-spacing: -.058em; text-shadow: 0 0 9px rgba(178,34,52,.16), 0 0 17px rgba(178,34,52,.09), 0 14px 28px rgba(0,0,0,.3); }
         .hero-title-link, .hero-title-link:visited, .hero-title-link:hover, .hero-title-link:active { color: inherit !important; text-decoration: none !important; cursor: pointer; }
         .executive-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .65rem; margin: .2rem 0 .8rem; }
         .metric-card { min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .38rem; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(255,255,255,.055), transparent 46%), linear-gradient(145deg, rgba(21,36,58,.9), rgba(8,18,32,.94)); border: 1px solid rgba(148,163,184,.18); border-radius: 12px; padding: .78rem .82rem; min-height: 94px; box-shadow: 0 14px 34px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.055); backdrop-filter: blur(10px); }
@@ -1109,21 +1109,21 @@ def configure_page() -> None:
 @keyframes mainRiseIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes mainGlowPulse { 0%, 100% { opacity: .55; } 50% { opacity: .95; } }
 @keyframes mainTickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.main-hero { position: relative; overflow: hidden; border-radius: 24px; margin: 0 0 .9rem; padding: .9rem 1.1rem .85rem; background: var(--kith-dusty-quartz); box-shadow: 0 30px 64px rgba(0,0,0,.5); animation: mainRiseIn .55s var(--ease-emphasized) both; }
+.main-hero { position: relative; overflow: hidden; border-radius: 24px; margin: 0 0 .9rem; padding: 1.6rem 1.3rem 1.5rem; background: var(--kith-dusty-quartz); box-shadow: 0 30px 64px rgba(0,0,0,.5); animation: mainRiseIn .55s var(--ease-emphasized) both; }
 .main-hero-inner { position: relative; z-index: 2; }
 .main-hero-radio { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
 .main-hero-row { display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem; }
 .main-hero-primary { flex: 1 1 auto; min-width: 0; }
 .main-hero-eyebrow { display: inline-flex; align-items: center; gap: .4rem; font-size: .58rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--kith-warm-gray); margin-bottom: .3rem; }
 .main-hero-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--kith-blush); box-shadow: 0 0 10px rgba(211,163,168,.8); }
-.main-hero-figure { display: none; }
-#mainFigEvents { display: block; }
-#mainEvents:checked ~ .main-hero-row #mainFigEvents { display: block; }
-#mainRevenue:checked ~ .main-hero-row #mainFigRevenue { display: block; }
-#mainClients:checked ~ .main-hero-row #mainFigClients { display: block; }
+.main-hero-figure { display: none; align-items: baseline; gap: .55rem; flex-wrap: wrap; }
+#mainFigEvents { display: flex; }
+#mainEvents:checked ~ .main-hero-row #mainFigEvents { display: flex; }
+#mainRevenue:checked ~ .main-hero-row #mainFigRevenue { display: flex; }
+#mainClients:checked ~ .main-hero-row #mainFigClients { display: flex; }
 #mainRevenue:checked ~ .main-hero-row #mainFigEvents, #mainClients:checked ~ .main-hero-row #mainFigEvents { display: none; }
-.main-hero-number { display: block; font-family: "Inter", "SF Pro Display", "Segoe UI", Arial, sans-serif; font-size: clamp(3.6rem, 20vw, 6.4rem); font-weight: 900; line-height: .82; letter-spacing: -.045em; color: var(--kith-saddle); text-shadow: 0 18px 34px rgba(0,0,0,.4); }
-.main-hero-unit { margin-top: .3rem; margin-left: 22%; font-size: .74rem; font-weight: 700; color: var(--kith-sand); }
+.main-hero-number { display: block; font-family: "Inter", "SF Pro Display", "Segoe UI", Arial, sans-serif; font-size: clamp(4.4rem, 25vw, 8rem); font-weight: 900; line-height: .82; letter-spacing: -.045em; color: var(--kith-saddle); text-shadow: 0 18px 34px rgba(0,0,0,.4); }
+.main-hero-unit { font-size: .84rem; font-weight: 700; color: var(--kith-sand); }
 .main-hero-seg { display: flex; gap: .35rem; margin-top: .6rem; }
 .main-hero-seg-btn { padding: .38rem .7rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; font-size: .55rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--kith-warm-gray); border: 1px solid rgba(169,162,154,.25); transition: background .22s ease, color .22s ease, border-color .22s ease; white-space: nowrap; }
 #mainEvents:checked ~ .main-hero-row label[for="mainEvents"], #mainRevenue:checked ~ .main-hero-row label[for="mainRevenue"], #mainClients:checked ~ .main-hero-row label[for="mainClients"] { background: linear-gradient(135deg, rgba(211,163,168,.35), rgba(124,147,179,.25)); color: var(--kith-saddle); border-color: rgba(211,163,168,.5); }
@@ -1236,8 +1236,8 @@ def configure_page() -> None:
 .main-progress-fill.is-done { background: linear-gradient(90deg, var(--kith-sage), var(--kith-sage-deep)); }
 .hero-header-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: nowrap; width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
 .hero-title-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-30px) translateY(-4px); }
-.hero-header-links .journey-fuel-button { width: 30px; height: 30px; font-size: .85rem; border-radius: 9px; }
+.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-26px) translateY(-4px); }
+.hero-header-links .journey-fuel-button { width: 45px; height: 45px; font-size: 1.28rem; border-radius: 12px; animation: none; }
 </style>
         """),
 
@@ -5545,8 +5545,7 @@ def main() -> None:
         render_test_tube_page()
 
 def render_test_tube_page() -> None:
-    st.markdown("### Test Tube \U0001F9EA — KITH month colors")
-    st.caption("Temporary reference page. Not linked in nav, safe to delete later.")
+    st.markdown("### Test Tube \U0001F9EA \u2014 My Month Colors")
     swatches = [
         ("January", "--kith-month-jan"),
         ("February", "--kith-month-feb"),
@@ -5561,14 +5560,13 @@ def render_test_tube_page() -> None:
         ("November", "--kith-month-nov"),
         ("December", "--kith-month-dec"),
     ]
-    rows = "".join(
-        f'<div style="display:flex;align-items:center;gap:.75rem;padding:.6rem .8rem;border:1px solid rgba(169,162,154,.25);border-radius:10px;margin-bottom:.5rem;background:rgba(23,22,26,.5);">'
-        f'<div style="width:34px;height:34px;border-radius:8px;flex:0 0 auto;background:var({token});border:1px solid rgba(255,255,255,.15);"></div>'
-        f'<div style="color:#f7f2ea;font-family:monospace;font-size:.85rem;">{escape(month)} <span style="color:#a9a29a;">&mdash; var({token})</span></div>'
+    grid = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:1.5rem;">' + "".join(
+        f'<div style="aspect-ratio:1;border-radius:14px;background:var({token});display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.15);">'
+        f'<span style="color:#fff;font-weight:800;font-size:.95rem;text-align:center;text-shadow:0 1px 4px rgba(0,0,0,.7), 0 0 8px rgba(0,0,0,.4);">{escape(month)}</span>'
         f'</div>'
         for month, token in swatches
-    )
-    st.markdown(rows, unsafe_allow_html=True)
+    ) + '</div>'
+    st.markdown(grid, unsafe_allow_html=True)
 
     st.markdown("### 5 Tonal Pillars \U0001F3DB\uFE0F — candidates for Jan / Feb / Mar")
     st.caption("Pick freely from any pillar for the missing months, or swap any existing month token too.")

@@ -1123,31 +1123,31 @@ def configure_page() -> None:
 .main-hero { position: relative; overflow: hidden; border-radius: 24px; margin: 0 0 .9rem; padding: 1.4rem 1.2rem 1.3rem; background: var(--kith-dusty-quartz); box-shadow: 0 30px 64px rgba(0,0,0,.5); animation: mainRiseIn .55s var(--ease-emphasized) both; }
 .main-hero-inner { position: relative; z-index: 2; }
 .main-hero-radio { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
-.main-hero-row { display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem; }
-.main-hero-primary { flex: 1 1 auto; min-width: 0; }
-.main-hero-eyebrow { display: inline-flex; align-items: center; gap: .4rem; font-size: .58rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--kith-genesis); margin-bottom: .3rem; }
+.main-hero-eyebrow { display: inline-flex; align-items: center; gap: .4rem; font-size: .58rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--kith-genesis); margin-bottom: .55rem; }
 .main-hero-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--kith-blush); box-shadow: 0 0 10px rgba(211,163,168,.8); }
+.main-hero-toprow { display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem; margin-bottom: .9rem; }
+.main-hero-seg { display: flex; gap: .35rem; flex: 1 1 auto; }
+.main-hero-seg-btn { padding: .38rem .7rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; font-size: .55rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--kith-warm-gray); border: 1px solid rgba(169,162,154,.25); transition: background .22s ease, color .22s ease, border-color .22s ease; white-space: nowrap; }
+#mainEvents:checked ~ .main-hero-toprow label[for="mainEvents"], #mainRevenue:checked ~ .main-hero-toprow label[for="mainRevenue"], #mainClients:checked ~ .main-hero-toprow label[for="mainClients"] { background: linear-gradient(135deg, rgba(211,163,168,.35), rgba(124,147,179,.25)); color: var(--kith-saddle); border-color: rgba(211,163,168,.5); }
+.main-hero-next { flex: 0 0 auto; max-width: 46%; text-align: right; }
+.main-hero-next-label { font-size: .5rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--kith-genesis); opacity: .65; }
+.main-hero-next-name { font-size: .72rem; font-weight: 800; color: var(--kith-genesis); margin-top: .18rem; line-height: 1.22; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.main-hero-next-when { font-size: .6rem; font-weight: 800; letter-spacing: .02em; text-transform: uppercase; color: var(--kith-blush); margin-top: .1rem; }
+.main-hero-body { position: relative; }
 .main-hero-figure { display: none; align-items: baseline; gap: .55rem; flex-wrap: wrap; }
 #mainFigEvents { display: flex; }
-#mainEvents:checked ~ .main-hero-row #mainFigEvents { display: flex; }
-#mainRevenue:checked ~ .main-hero-row #mainFigRevenue { display: flex; }
-#mainClients:checked ~ .main-hero-row #mainFigClients { display: flex; }
-#mainRevenue:checked ~ .main-hero-row #mainFigEvents, #mainClients:checked ~ .main-hero-row #mainFigEvents { display: none; }
+#mainEvents:checked ~ .main-hero-body #mainFigEvents { display: flex; }
+#mainRevenue:checked ~ .main-hero-body #mainFigRevenue { display: flex; }
+#mainClients:checked ~ .main-hero-body #mainFigClients { display: flex; }
+#mainRevenue:checked ~ .main-hero-body #mainFigEvents, #mainClients:checked ~ .main-hero-body #mainFigEvents { display: none; }
 .main-hero-number { display: block; font-family: "Inter", "SF Pro Display", "Segoe UI", Arial, sans-serif; font-size: clamp(4.4rem, 25vw, 8rem); font-weight: 900; line-height: .82; letter-spacing: -.045em; color: var(--kith-saddle); text-shadow: 0 18px 34px rgba(0,0,0,.4); }
-.main-hero-unit { font-size: .84rem; font-weight: 700; color: var(--kith-genesis); }
-.main-hero-seg { display: flex; gap: .35rem; margin-top: .6rem; }
-.main-hero-seg-btn { padding: .38rem .7rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; font-size: .55rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--kith-warm-gray); border: 1px solid rgba(169,162,154,.25); transition: background .22s ease, color .22s ease, border-color .22s ease; white-space: nowrap; }
-#mainEvents:checked ~ .main-hero-row label[for="mainEvents"], #mainRevenue:checked ~ .main-hero-row label[for="mainRevenue"], #mainClients:checked ~ .main-hero-row label[for="mainClients"] { background: linear-gradient(135deg, rgba(211,163,168,.35), rgba(124,147,179,.25)); color: var(--kith-saddle); border-color: rgba(211,163,168,.5); }
-.main-hero-upcoming { flex: 0 0 auto; width: clamp(126px, 38vw, 172px); padding: .65rem .6rem; border-radius: 14px; border: 1px solid rgba(169,162,154,.22); background: rgba(23,22,26,.5); }
-.main-hero-upcoming-title { font-size: .68rem; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; color: var(--kith-sand); margin-bottom: .45rem; line-height: 1.3; }
-.main-hero-upcoming-row { display: flex; align-items: baseline; justify-content: space-between; gap: .35rem; font-size: .78rem; font-weight: 650; color: var(--kith-saddle); margin-bottom: .38rem; line-height: 1.25; }
-.main-hero-upcoming-row:last-child { margin-bottom: 0; }
-.main-hero-upcoming-left { display: flex; align-items: baseline; gap: .24rem; min-width: 0; overflow: hidden; }
-.main-hero-upcoming-dash { color: var(--kith-blush); flex: 0 0 auto; }
-.main-hero-upcoming-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
-.main-hero-upcoming-when { flex: 0 0 auto; font-size: .66rem; font-weight: 800; letter-spacing: .02em; text-transform: uppercase; color: var(--kith-blush); }
+.main-hero-tag { font-size: 1.2rem; font-weight: 800; letter-spacing: .01em; text-transform: uppercase; color: var(--kith-genesis); }
+.main-hero-mini-row { display: flex; justify-content: space-between; margin-top: 1rem; padding-top: .8rem; border-top: 1px solid rgba(23,22,26,.18); }
+.main-hero-mini { text-align: center; }
+.main-hero-mini-val { font-size: .92rem; font-weight: 900; color: var(--kith-genesis); }
+.main-hero-mini-lab { font-size: .5rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kith-genesis); opacity: .6; margin-top: .1rem; }
 .main-hero-upcoming-empty { font-size: .68rem; color: var(--kith-warm-gray); }
-@media (max-width: 480px) { .main-hero-upcoming-row, .main-hero-upcoming-empty { font-size: .64rem; } .main-hero-upcoming-when { font-size: .58rem; } .main-hero-number { font-size: clamp(2.6rem, 16vw, 4.2rem); } }
+@media (max-width: 480px) { .main-hero-next-name, .main-hero-next-when { font-size: .6rem; } .main-hero-number { font-size: clamp(2.6rem, 16vw, 4.2rem); } .main-hero-tag { font-size: .85rem; } }
 .main-ticker { position: relative; overflow: hidden; height: 38px; display: flex; align-items: center; margin: 0 0 1rem; border-radius: 12px; border: 1px solid rgba(169,162,154,.2); background: linear-gradient(90deg, var(--kith-charcoal), var(--kith-charcoal-soft)); }
 .main-ticker::before, .main-ticker::after { content: ""; position: absolute; top: 0; bottom: 0; width: 26px; z-index: 1; pointer-events: none; }
 .main-ticker::before { left: 0; background: linear-gradient(90deg, var(--kith-charcoal), transparent); }
@@ -2212,13 +2212,8 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
     ]
     ticker = "".join(f'<span class="main-ticker-item">{item}</span>' for item in ticker_items * 2)
 
-    upcoming_items = "".join(
-        f'<div class="main-hero-upcoming-row">'
-        f'<span class="main-hero-upcoming-left"><span class="main-hero-upcoming-dash">&ndash;</span>'
-        f'<span class="main-hero-upcoming-name">{esc(row["name"])}</span></span>'
-        f'<span class="main-hero-upcoming-when">{esc(row["when"])}</span></div>'
-        for row in upcoming_rows
-    ) if upcoming_rows else '<div class="main-hero-upcoming-empty">None scheduled</div>'
+    next_up_name = esc(upcoming_rows[0]["name"]) if upcoming_rows else "Nothing scheduled"
+    next_up_when = esc(upcoming_rows[0]["when"]) if upcoming_rows else ""
 
     hero = (
         '<div class="main-hero">'
@@ -2226,26 +2221,27 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         '<input type="radio" name="mainMetric" id="mainEvents" class="main-hero-radio" checked>'
         '<input type="radio" name="mainMetric" id="mainRevenue" class="main-hero-radio">'
         '<input type="radio" name="mainMetric" id="mainClients" class="main-hero-radio">'
-        '<div class="main-hero-row">'
-        '<div class="main-hero-primary">'
         '<div class="main-hero-eyebrow"><span class="main-hero-dot"></span>Career to date</div>'
-        '<div class="main-hero-body">'
-        f'<div class="main-hero-figure" id="mainFigEvents"><span class="main-hero-number">{career_events}</span>'
-        '<div class="main-hero-unit">Events worked</div></div>'
-        f'<div class="main-hero-figure" id="mainFigRevenue"><span class="main-hero-number">{money(career_revenue)}</span>'
-        '<div class="main-hero-unit">Revenue booked</div></div>'
-        f'<div class="main-hero-figure" id="mainFigClients"><span class="main-hero-number">{unique_clients}</span>'
-        '<div class="main-hero-unit">Client roster</div></div>'
-        '</div>'
+        '<div class="main-hero-toprow">'
         '<div class="main-hero-seg">'
         '<label for="mainEvents" class="main-hero-seg-btn">Events</label>'
         '<label for="mainClients" class="main-hero-seg-btn">Clients</label>'
         '<label for="mainRevenue" class="main-hero-seg-btn">Revenue</label></div>'
+        '<div class="main-hero-next">'
+        '<div class="main-hero-next-label">Next up</div>'
+        f'<div class="main-hero-next-name">{next_up_name}</div>'
+        f'<div class="main-hero-next-when">{next_up_when}</div>'
+        '</div></div>'
+        '<div class="main-hero-body">'
+        f'<div class="main-hero-figure" id="mainFigEvents"><span class="main-hero-number">{career_events}</span><span class="main-hero-tag">Events</span></div>'
+        f'<div class="main-hero-figure" id="mainFigRevenue"><span class="main-hero-number">{money(career_revenue)}</span><span class="main-hero-tag">Revenue</span></div>'
+        f'<div class="main-hero-figure" id="mainFigClients"><span class="main-hero-number">{unique_clients}</span><span class="main-hero-tag">Clients</span></div>'
         '</div>'
-        '<div class="main-hero-upcoming">'
-        f'<div class="main-hero-upcoming-title">Upcoming: {upcoming_count}</div>'
-        f'{upcoming_items}'
-        '</div>'
+        '<div class="main-hero-mini-row">'
+        f'<div class="main-hero-mini"><div class="main-hero-mini-val">{best_streak}</div><div class="main-hero-mini-lab">Streak</div></div>'
+        f'<div class="main-hero-mini"><div class="main-hero-mini-val">{jurisdictions}</div><div class="main-hero-mini-lab">Jurisd.</div></div>'
+        f'<div class="main-hero-mini"><div class="main-hero-mini-val">{esc(best_month["label"])}</div><div class="main-hero-mini-lab">Best Mo.</div></div>'
+        f'<div class="main-hero-mini"><div class="main-hero-mini-val">{upcoming_count}</div><div class="main-hero-mini-lab">Upcoming</div></div>'
         '</div>'
         "</div></div>"
     )

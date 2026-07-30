@@ -5551,6 +5551,59 @@ def render_test_tube_page() -> None:
     )
     st.markdown(rows, unsafe_allow_html=True)
 
+    st.markdown("### 5 Tonal Pillars \U0001F3DB\uFE0F — candidates for Jan / Feb / Mar")
+    st.caption("Pick freely from any pillar for the missing months, or swap any existing month token too.")
+    pillars = [
+        ("1. The Monochromatic Grays", [
+            ("Genesis", "#22252A", "34, 37, 42"),
+            ("Battleship", "#434A54", "67, 74, 84"),
+            ("Mantle", "#656D78", "101, 109, 120"),
+            ("Mercury", "#AAB2BD", "170, 178, 189"),
+            ("Chalk", "#E6E9ED", "230, 233, 237"),
+        ]),
+        ("2. The Slate Blues", [
+            ("Anchor", "#2B3E50", "43, 62, 80"),
+            ("Wave", "#4A6572", "74, 101, 114"),
+            ("Echo", "#7D94A1", "125, 148, 161"),
+            ("Voyage", "#A3B8C4", "163, 184, 196"),
+            ("Helium", "#D1DCE2", "209, 220, 226"),
+        ]),
+        ("3. The Desert Earths", [
+            ("Bark", "#3E2723", "62, 39, 35"),
+            ("Redwood", "#5D4037", "93, 64, 55"),
+            ("Molecule", "#8D6E63", "141, 110, 99"),
+            ("Saddle", "#D7CCC8", "215, 204, 200"),
+            ("Hallow", "#F5F5F5", "245, 245, 245"),
+        ]),
+        ("4. The Dusty Roses & Earthy Pinks", [
+            ("Rogue", "#4A2E35", "74, 46, 53"),
+            ("Aster", "#78515B", "120, 81, 91"),
+            ("Dusty Quartz", "#A37B85", "163, 123, 133"),
+            ("Sakura Flower", "#D4B2BA", "212, 178, 186"),
+            ("Plaster", "#EFE5E7", "239, 229, 231"),
+        ]),
+        ("5. The Muted Sage & Olives", [
+            ("Canyon", "#2E3D30", "46, 61, 48"),
+            ("Leaf Green", "#4D6451", "77, 100, 81"),
+            ("Plume", "#7D9480", "125, 148, 128"),
+            ("Dusty Sage", "#B3C2B5", "179, 194, 181"),
+            ("Alabaster", "#E6ECE7", "230, 236, 231"),
+        ]),
+    ]
+    for pillar_name, colors in pillars:
+        st.markdown(f"**{escape(pillar_name)}**", unsafe_allow_html=True)
+        swatch_row = '<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;">' + "".join(
+            f'<div style="width:108px;border:1px solid rgba(169,162,154,.25);border-radius:10px;overflow:hidden;background:rgba(23,22,26,.5);">'
+            f'<div style="height:54px;background:{hex_val};"></div>'
+            f'<div style="padding:.4rem .5rem;">'
+            f'<div style="color:#f7f2ea;font-size:.72rem;font-weight:700;">{escape(name)}</div>'
+            f'<div style="color:#a9a29a;font-family:monospace;font-size:.62rem;">{hex_val}</div>'
+            f'<div style="color:#a9a29a;font-family:monospace;font-size:.6rem;">{rgb_val}</div>'
+            f'</div></div>'
+            for name, hex_val, rgb_val in colors
+        ) + '</div>'
+        st.markdown(swatch_row, unsafe_allow_html=True)
+
 
 if __name__ == "__main__":
     main()

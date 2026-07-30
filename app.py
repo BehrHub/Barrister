@@ -220,13 +220,7 @@ def configure_page() -> None:
             }
         }
 
-        .hero-title { color: #f8fafc; font-family: "Inter", "SF Pro Display", "Aptos Display", "Segoe UI", Arial, sans-serif; font-size: clamp(2.45rem, 5vw, 3.95rem); font-weight: 850; margin: .08rem 0 .78rem; line-height: .94; letter-spacing: -.058em; text-shadow: 
-                0 0 1px rgba(255,255,255,.22),
-                0 0 10px rgba(255,255,255,.08),
-                0 0 18px rgba(244,114,182,.22),
-                0 0 34px rgba(244,114,182,.18),
-                0 0 56px rgba(244,114,182,.10),
-                0 14px 28px rgba(0,0,0,.30); }
+        .hero-title { color: var(--kith-leaf-green); font-family: "Inter", "SF Pro Display", "Aptos Display", "Segoe UI", Arial, sans-serif; font-size: clamp(2.45rem, 5vw, 3.95rem); font-weight: 850; margin: .08rem 0 .78rem; line-height: .94; letter-spacing: -.058em; text-shadow: 0 14px 28px rgba(0,0,0,.3); }
         .hero-title-link, .hero-title-link:visited, .hero-title-link:hover, .hero-title-link:active { color: inherit !important; text-decoration: none !important; cursor: pointer; }
         .executive-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .65rem; margin: .2rem 0 .8rem; }
         .metric-card { min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .38rem; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(255,255,255,.055), transparent 46%), linear-gradient(145deg, rgba(21,36,58,.9), rgba(8,18,32,.94)); border: 1px solid rgba(148,163,184,.18); border-radius: 12px; padding: .78rem .82rem; min-height: 94px; box-shadow: 0 14px 34px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.055); backdrop-filter: blur(10px); }
@@ -1115,14 +1109,12 @@ def configure_page() -> None:
 @keyframes mainRiseIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes mainGlowPulse { 0%, 100% { opacity: .55; } 50% { opacity: .95; } }
 @keyframes mainTickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.main-hero { position: relative; overflow: hidden; border-radius: 24px; margin: 0 0 .9rem; padding: 1.4rem 1.2rem 1.3rem; background: var(--kith-dusty-quartz); box-shadow: 0 30px 64px rgba(0,0,0,.5); animation: mainRiseIn .55s var(--ease-emphasized) both; }
-.main-hero-glow { position: absolute; top: -30%; right: -20%; width: 75%; height: 160%; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(211,163,168,.28), transparent 70%); animation: mainGlowPulse 5s ease-in-out infinite; }
-.main-hero-glow-2 { position: absolute; bottom: -35%; left: -15%; width: 60%; height: 140%; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(124,147,179,.24), transparent 70%); animation: mainGlowPulse 6s ease-in-out infinite 1.2s; }
+.main-hero { position: relative; overflow: hidden; border-radius: 24px; margin: 0 0 .9rem; padding: .9rem 1.1rem .85rem; background: var(--kith-dusty-quartz); box-shadow: 0 30px 64px rgba(0,0,0,.5); animation: mainRiseIn .55s var(--ease-emphasized) both; }
 .main-hero-inner { position: relative; z-index: 2; }
 .main-hero-radio { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
 .main-hero-row { display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem; }
 .main-hero-primary { flex: 1 1 auto; min-width: 0; }
-.main-hero-eyebrow { display: inline-flex; align-items: center; gap: .4rem; font-size: .58rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--kith-warm-gray); margin-bottom: .5rem; }
+.main-hero-eyebrow { display: inline-flex; align-items: center; gap: .4rem; font-size: .58rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--kith-warm-gray); margin-bottom: .3rem; }
 .main-hero-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--kith-blush); box-shadow: 0 0 10px rgba(211,163,168,.8); }
 .main-hero-figure { display: none; }
 #mainFigEvents { display: block; }
@@ -1130,21 +1122,21 @@ def configure_page() -> None:
 #mainRevenue:checked ~ .main-hero-row #mainFigRevenue { display: block; }
 #mainClients:checked ~ .main-hero-row #mainFigClients { display: block; }
 #mainRevenue:checked ~ .main-hero-row #mainFigEvents, #mainClients:checked ~ .main-hero-row #mainFigEvents { display: none; }
-.main-hero-number { display: block; font-family: "Inter", "SF Pro Display", "Segoe UI", Arial, sans-serif; font-size: clamp(2.5rem, 13.5vw, 4.6rem); font-weight: 900; line-height: .85; letter-spacing: -.045em; color: var(--kith-saddle); text-shadow: 0 0 40px rgba(211,163,168,.35), 0 18px 34px rgba(0,0,0,.4); }
-.main-hero-unit { margin-top: .3rem; font-size: .74rem; font-weight: 700; color: var(--kith-sand); }
-.main-hero-seg { display: flex; gap: .35rem; margin-top: 1.1rem; }
+.main-hero-number { display: block; font-family: "Inter", "SF Pro Display", "Segoe UI", Arial, sans-serif; font-size: clamp(3.6rem, 20vw, 6.4rem); font-weight: 900; line-height: .82; letter-spacing: -.045em; color: var(--kith-saddle); text-shadow: 0 18px 34px rgba(0,0,0,.4); }
+.main-hero-unit { margin-top: .3rem; margin-left: 22%; font-size: .74rem; font-weight: 700; color: var(--kith-sand); }
+.main-hero-seg { display: flex; gap: .35rem; margin-top: .6rem; }
 .main-hero-seg-btn { padding: .38rem .7rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; font-size: .55rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--kith-warm-gray); border: 1px solid rgba(169,162,154,.25); transition: background .22s ease, color .22s ease, border-color .22s ease; white-space: nowrap; }
 #mainEvents:checked ~ .main-hero-row label[for="mainEvents"], #mainRevenue:checked ~ .main-hero-row label[for="mainRevenue"], #mainClients:checked ~ .main-hero-row label[for="mainClients"] { background: linear-gradient(135deg, rgba(211,163,168,.35), rgba(124,147,179,.25)); color: var(--kith-saddle); border-color: rgba(211,163,168,.5); }
-.main-hero-upcoming { flex: 0 0 auto; width: clamp(108px, 34vw, 150px); padding: .6rem .55rem; border-radius: 14px; border: 1px solid rgba(169,162,154,.22); background: rgba(23,22,26,.5); }
-.main-hero-upcoming-title { font-size: .5rem; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; color: var(--kith-sand); margin-bottom: .4rem; line-height: 1.3; }
-.main-hero-upcoming-row { display: flex; align-items: baseline; justify-content: space-between; gap: .35rem; font-size: .56rem; font-weight: 650; color: var(--kith-saddle); margin-bottom: .3rem; line-height: 1.25; }
+.main-hero-upcoming { flex: 0 0 auto; width: clamp(126px, 38vw, 172px); padding: .65rem .6rem; border-radius: 14px; border: 1px solid rgba(169,162,154,.22); background: rgba(23,22,26,.5); }
+.main-hero-upcoming-title { font-size: .68rem; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; color: var(--kith-sand); margin-bottom: .45rem; line-height: 1.3; }
+.main-hero-upcoming-row { display: flex; align-items: baseline; justify-content: space-between; gap: .35rem; font-size: .78rem; font-weight: 650; color: var(--kith-saddle); margin-bottom: .38rem; line-height: 1.25; }
 .main-hero-upcoming-row:last-child { margin-bottom: 0; }
 .main-hero-upcoming-left { display: flex; align-items: baseline; gap: .24rem; min-width: 0; overflow: hidden; }
 .main-hero-upcoming-dash { color: var(--kith-blush); flex: 0 0 auto; }
 .main-hero-upcoming-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
-.main-hero-upcoming-when { flex: 0 0 auto; font-size: .5rem; font-weight: 800; letter-spacing: .02em; text-transform: uppercase; color: var(--kith-blush); }
-.main-hero-upcoming-empty { font-size: .55rem; color: var(--kith-warm-gray); }
-@media (max-width: 480px) { .main-hero-upcoming-row, .main-hero-upcoming-empty { font-size: .5rem; } .main-hero-upcoming-when { font-size: .46rem; } .main-hero-number { font-size: clamp(2.1rem, 12vw, 3.4rem); } }
+.main-hero-upcoming-when { flex: 0 0 auto; font-size: .66rem; font-weight: 800; letter-spacing: .02em; text-transform: uppercase; color: var(--kith-blush); }
+.main-hero-upcoming-empty { font-size: .68rem; color: var(--kith-warm-gray); }
+@media (max-width: 480px) { .main-hero-upcoming-row, .main-hero-upcoming-empty { font-size: .64rem; } .main-hero-upcoming-when { font-size: .58rem; } .main-hero-number { font-size: clamp(2.6rem, 16vw, 4.2rem); } }
 .main-ticker { position: relative; overflow: hidden; height: 38px; display: flex; align-items: center; margin: 0 0 1rem; border-radius: 12px; border: 1px solid rgba(169,162,154,.2); background: linear-gradient(90deg, var(--kith-charcoal), var(--kith-charcoal-soft)); }
 .main-ticker::before, .main-ticker::after { content: ""; position: absolute; top: 0; bottom: 0; width: 26px; z-index: 1; pointer-events: none; }
 .main-ticker::before { left: 0; background: linear-gradient(90deg, var(--kith-charcoal), transparent); }
@@ -2218,7 +2210,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
     ) if upcoming_rows else '<div class="main-hero-upcoming-empty">None scheduled</div>'
 
     hero = (
-        '<div class="main-hero"><div class="main-hero-glow"></div><div class="main-hero-glow-2"></div>'
+        '<div class="main-hero">'
         '<div class="main-hero-inner">'
         '<input type="radio" name="mainMetric" id="mainEvents" class="main-hero-radio" checked>'
         '<input type="radio" name="mainMetric" id="mainRevenue" class="main-hero-radio">'
@@ -5556,6 +5548,9 @@ def render_test_tube_page() -> None:
     st.markdown("### Test Tube \U0001F9EA — KITH month colors")
     st.caption("Temporary reference page. Not linked in nav, safe to delete later.")
     swatches = [
+        ("January", "--kith-month-jan"),
+        ("February", "--kith-month-feb"),
+        ("March", "--kith-month-mar"),
         ("April", "--kith-month-apr"),
         ("May", "--kith-month-may"),
         ("June", "--kith-month-jun"),
@@ -5612,6 +5607,22 @@ def render_test_tube_page() -> None:
             ("Plume", "#7D9480", "125, 148, 128"),
             ("Dusty Sage", "#B3C2B5", "179, 194, 181"),
             ("Alabaster", "#E6ECE7", "230, 236, 231"),
+        ]),
+        ("6. The Golds & Yellows", [
+            ("Melancholy", "#F5E2A3", "245, 226, 163"),
+            ("Solar Power", "#E5B83B", "229, 184, 59"),
+            ("Super Yellow", "#FFEF00", "255, 239, 0"),
+            ("Saffron / Ochre", "#C2923B", "194, 146, 59"),
+            ("Honey Gold", "#DCAE5B", "220, 174, 91"),
+            ("Canary", "#F4D054", "244, 208, 84"),
+        ]),
+        ("7. The Wines & Deep Reds", [
+            ("Mulberry / Dark Wine", "#533342", "83, 51, 66"),
+            ("Magma", "#8B3E2F", "139, 62, 47"),
+            ("Dark Beetroot", "#6E2036", "110, 32, 54"),
+            ("Roccoco Red", "#B22234", "178, 34, 52"),
+            ("Oxblood", "#4A1525", "74, 21, 37"),
+            ("Campus Maroon", "#7A1C2C", "122, 28, 44"),
         ]),
     ]
     for pillar_name, colors in pillars:

@@ -174,7 +174,7 @@ def configure_page() -> None:
     st.markdown(
         compact("""
 <style>
-        .stApp { background: var(--kith-battleship); }
+        .stApp { background: linear-gradient(180deg, var(--kith-genesis) 0px, var(--kith-battleship) 400px, var(--kith-battleship) 100%); }
         [data-testid="stHeader"],
         [data-testid="stToolbar"],
         [data-testid="stDecoration"],
@@ -1070,6 +1070,9 @@ def configure_page() -> None:
     --kith-genesis: #22252A;
     --kith-chalk: #E6E9ED;
     --kith-mantle: #656D78;
+    --kith-current: #736075;
+    --kith-aster-mauve: #8E7C85;
+    --kith-elevated-navy: #1C2430;
     --kith-voyage: #A3B8C4;
     --kith-voyage-rgb: 163,184,196;
     --kith-sakura: #D4B2BA;
@@ -1081,8 +1084,8 @@ def configure_page() -> None:
     --kith-leaf-green: #4D6451;
     --kith-leaf-green-rgb: 77,100,81;
     --kith-month-jan: var(--kith-voyage);
-    --kith-month-feb: var(--kith-mauve);
-    --kith-month-mar: var(--kith-sakura);
+    --kith-month-feb: var(--kith-current);
+    --kith-month-mar: var(--kith-aster-mauve);
     --kith-month-apr: var(--kith-wave);
     --kith-month-may: var(--kith-sage);
     --kith-month-jun: var(--kith-blue);
@@ -1093,8 +1096,8 @@ def configure_page() -> None:
     --kith-month-nov: var(--kith-mauve-deep);
     --kith-month-dec: var(--kith-leaf-green);
     --kith-month-jan-rgb: 163,184,196;
-    --kith-month-feb-rgb: 168,147,171;
-    --kith-month-mar-rgb: 212,178,186;
+    --kith-month-feb-rgb: 115,96,117;
+    --kith-month-mar-rgb: 142,124,133;
     --kith-month-apr-rgb: 74,101,114;
     --kith-month-may-rgb: 148,153,125;
     --kith-month-jun-rgb: 124,147,179;
@@ -1125,7 +1128,7 @@ def configure_page() -> None:
 #mainClients:checked ~ .main-hero-row #mainFigClients { display: flex; }
 #mainRevenue:checked ~ .main-hero-row #mainFigEvents, #mainClients:checked ~ .main-hero-row #mainFigEvents { display: none; }
 .main-hero-number { display: block; font-family: "Inter", "SF Pro Display", "Segoe UI", Arial, sans-serif; font-size: clamp(4.4rem, 25vw, 8rem); font-weight: 900; line-height: .82; letter-spacing: -.045em; color: var(--kith-saddle); text-shadow: 0 18px 34px rgba(0,0,0,.4); }
-.main-hero-unit { font-size: .84rem; font-weight: 700; color: var(--kith-mantle); }
+.main-hero-unit { font-size: .84rem; font-weight: 700; color: var(--kith-genesis); }
 .main-hero-seg { display: flex; gap: .35rem; margin-top: .6rem; }
 .main-hero-seg-btn { padding: .38rem .7rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; font-size: .55rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--kith-warm-gray); border: 1px solid rgba(169,162,154,.25); transition: background .22s ease, color .22s ease, border-color .22s ease; white-space: nowrap; }
 #mainEvents:checked ~ .main-hero-row label[for="mainEvents"], #mainRevenue:checked ~ .main-hero-row label[for="mainRevenue"], #mainClients:checked ~ .main-hero-row label[for="mainClients"] { background: linear-gradient(135deg, rgba(211,163,168,.35), rgba(124,147,179,.25)); color: var(--kith-saddle); border-color: rgba(211,163,168,.5); }
@@ -1166,7 +1169,7 @@ def configure_page() -> None:
 .main-suit-hint { position: static; width: 15px; height: 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .55rem; line-height: 1; color: var(--kith-sand); background: rgba(169,162,154,.14); border: 1px solid rgba(169,162,154,.2); flex: 0 0 auto; }
 .main-flip.is-month-oct .main-flip-front { border-color: rgba(var(--kith-month-oct-rgb),.4); background: linear-gradient(150deg, rgba(var(--kith-month-oct-rgb),.22), var(--kith-charcoal)); }
 .main-section.is-month-jun { border-color: rgba(var(--kith-month-jun-rgb),.4); background: linear-gradient(150deg, rgba(var(--kith-month-jun-rgb),.16), var(--kith-charcoal)); }
-.main-section { position: relative; overflow: hidden; border-radius: 18px; border: 1px solid rgba(169,162,154,.2); background: var(--kith-anchor); margin-bottom: .65rem; animation: mainRiseIn .5s var(--ease-emphasized) both; }
+.main-section { position: relative; overflow: hidden; border-radius: 18px; border: 1px solid rgba(169,162,154,.2); background: var(--kith-elevated-navy); margin-bottom: .65rem; animation: mainRiseIn .5s var(--ease-emphasized) both; }
 .main-section-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
 .main-section-head-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: .8rem .95rem; }
 .main-section-head { display: flex; align-items: center; gap: .6rem; cursor: pointer; -webkit-tap-highlight-color: transparent; min-width: 0; }

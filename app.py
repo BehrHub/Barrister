@@ -220,7 +220,7 @@ def configure_page() -> None:
             }
         }
 
-        .hero-title { color: var(--kith-rococo-red); font-family: "Inter", "SF Pro Display", "Aptos Display", "Segoe UI", Arial, sans-serif; font-size: clamp(2.45rem, 5vw, 3.95rem); font-weight: 850; margin: .08rem 0 .78rem; line-height: .94; letter-spacing: -.058em; text-shadow: 0 0 9px rgba(178,34,52,.16), 0 0 17px rgba(178,34,52,.09), 0 14px 28px rgba(0,0,0,.3); }
+        .hero-title { color: var(--kith-chalk); font-family: "Inter", "SF Pro Display", "Aptos Display", "Segoe UI", Arial, sans-serif; font-size: clamp(2.45rem, 5vw, 3.95rem); font-weight: 850; margin: .08rem 0 .78rem; line-height: .94; letter-spacing: -.058em; text-shadow: 0 0 9px rgba(178,34,52,.16), 0 0 17px rgba(178,34,52,.09), 0 14px 28px rgba(0,0,0,.3); }
         .hero-title-link, .hero-title-link:visited, .hero-title-link:hover, .hero-title-link:active { color: inherit !important; text-decoration: none !important; cursor: pointer; }
         .executive-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .65rem; margin: .2rem 0 .8rem; }
         .metric-card { min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .38rem; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(255,255,255,.055), transparent 46%), linear-gradient(145deg, rgba(21,36,58,.9), rgba(8,18,32,.94)); border: 1px solid rgba(148,163,184,.18); border-radius: 12px; padding: .78rem .82rem; min-height: 94px; box-shadow: 0 14px 34px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.055); backdrop-filter: blur(10px); }
@@ -1068,6 +1068,8 @@ def configure_page() -> None:
     --kith-anchor-rgb: 43,62,80;
     --kith-saddle: #D7CCC8;
     --kith-genesis: #22252A;
+    --kith-chalk: #E6E9ED;
+    --kith-mantle: #656D78;
     --kith-voyage: #A3B8C4;
     --kith-voyage-rgb: 163,184,196;
     --kith-sakura: #D4B2BA;
@@ -1109,12 +1111,12 @@ def configure_page() -> None:
 @keyframes mainRiseIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes mainGlowPulse { 0%, 100% { opacity: .55; } 50% { opacity: .95; } }
 @keyframes mainTickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.main-hero { position: relative; overflow: hidden; border-radius: 24px; margin: 0 0 .9rem; padding: 1.6rem 1.3rem 1.5rem; background: var(--kith-dusty-quartz); box-shadow: 0 30px 64px rgba(0,0,0,.5); animation: mainRiseIn .55s var(--ease-emphasized) both; }
+.main-hero { position: relative; overflow: hidden; border-radius: 24px; margin: 0 0 .9rem; padding: 1.4rem 1.2rem 1.3rem; background: var(--kith-dusty-quartz); box-shadow: 0 30px 64px rgba(0,0,0,.5); animation: mainRiseIn .55s var(--ease-emphasized) both; }
 .main-hero-inner { position: relative; z-index: 2; }
 .main-hero-radio { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
 .main-hero-row { display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem; }
 .main-hero-primary { flex: 1 1 auto; min-width: 0; }
-.main-hero-eyebrow { display: inline-flex; align-items: center; gap: .4rem; font-size: .58rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--kith-warm-gray); margin-bottom: .3rem; }
+.main-hero-eyebrow { display: inline-flex; align-items: center; gap: .4rem; font-size: .58rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--kith-genesis); margin-bottom: .3rem; }
 .main-hero-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--kith-blush); box-shadow: 0 0 10px rgba(211,163,168,.8); }
 .main-hero-figure { display: none; align-items: baseline; gap: .55rem; flex-wrap: wrap; }
 #mainFigEvents { display: flex; }
@@ -1123,7 +1125,7 @@ def configure_page() -> None:
 #mainClients:checked ~ .main-hero-row #mainFigClients { display: flex; }
 #mainRevenue:checked ~ .main-hero-row #mainFigEvents, #mainClients:checked ~ .main-hero-row #mainFigEvents { display: none; }
 .main-hero-number { display: block; font-family: "Inter", "SF Pro Display", "Segoe UI", Arial, sans-serif; font-size: clamp(4.4rem, 25vw, 8rem); font-weight: 900; line-height: .82; letter-spacing: -.045em; color: var(--kith-saddle); text-shadow: 0 18px 34px rgba(0,0,0,.4); }
-.main-hero-unit { font-size: .84rem; font-weight: 700; color: var(--kith-sand); }
+.main-hero-unit { font-size: .84rem; font-weight: 700; color: var(--kith-mantle); }
 .main-hero-seg { display: flex; gap: .35rem; margin-top: .6rem; }
 .main-hero-seg-btn { padding: .38rem .7rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; font-size: .55rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--kith-warm-gray); border: 1px solid rgba(169,162,154,.25); transition: background .22s ease, color .22s ease, border-color .22s ease; white-space: nowrap; }
 #mainEvents:checked ~ .main-hero-row label[for="mainEvents"], #mainRevenue:checked ~ .main-hero-row label[for="mainRevenue"], #mainClients:checked ~ .main-hero-row label[for="mainClients"] { background: linear-gradient(135deg, rgba(211,163,168,.35), rgba(124,147,179,.25)); color: var(--kith-saddle); border-color: rgba(211,163,168,.5); }
@@ -1236,7 +1238,7 @@ def configure_page() -> None:
 .main-progress-fill.is-done { background: linear-gradient(90deg, var(--kith-sage), var(--kith-sage-deep)); }
 .hero-header-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: nowrap; width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
 .hero-title-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-26px) translateY(-4px); }
+.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-18px) translateY(-4px); }
 .hero-header-links .journey-fuel-button { width: 45px; height: 45px; font-size: 1.28rem; border-radius: 12px; animation: none; }
 </style>
         """),
@@ -1301,7 +1303,7 @@ def render_splash_screen() -> None:
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            background: #05070b;
+            background: var(--kith-sand);
         }}
         .splash-enter-link {{
             position: absolute;
@@ -5545,7 +5547,7 @@ def main() -> None:
         render_test_tube_page()
 
 def render_test_tube_page() -> None:
-    st.markdown("### Test Tube \U0001F9EA \u2014 My Month Colors")
+    st.markdown("### My Month Colors")
     swatches = [
         ("January", "--kith-month-jan"),
         ("February", "--kith-month-feb"),
@@ -5568,8 +5570,7 @@ def render_test_tube_page() -> None:
     ) + '</div>'
     st.markdown(grid, unsafe_allow_html=True)
 
-    st.markdown("### 5 Tonal Pillars \U0001F3DB\uFE0F — candidates for Jan / Feb / Mar")
-    st.caption("Pick freely from any pillar for the missing months, or swap any existing month token too.")
+    st.markdown("### More Color Options")
     pillars = [
         ("1. The Monochromatic Grays", [
             ("Genesis", "#22252A", "34, 37, 42"),
@@ -5621,6 +5622,24 @@ def render_test_tube_page() -> None:
             ("Roccoco Red", "#B22234", "178, 34, 52"),
             ("Oxblood", "#4A1525", "74, 21, 37"),
             ("Campus Maroon", "#7A1C2C", "122, 28, 44"),
+        ]),
+        ("8. The Dusty & Petrol Blues", [
+            ("Aura / Dusty Blue", "#9BB2C1", "155, 178, 193"),
+            ("Anchor / Petrol", "#2E4A56", "46, 74, 86"),
+            ("French Clay / Slate", "#5A6E7F", "90, 110, 127"),
+            ("Crystalline / Ice Blue", "#D2E2EC", "210, 226, 236"),
+            ("Elevated Navy", "#1C2430", "28, 36, 48"),
+            ("Cerulean / Sport Blue", "#2A6496", "42, 100, 150"),
+            ("Smokey Quartz", "#788B99", "120, 139, 153"),
+            ("Stratos / Steel Blue", "#4B6173", "75, 97, 115"),
+        ]),
+        ("9. The Wisteria & Mulberry", [
+            ("Wisteria", "#B7AAB7", "183, 170, 183"),
+            ("Aster / Dusty Mauve", "#8E7C85", "142, 124, 133"),
+            ("Baroque / Wild Berry", "#53283E", "83, 40, 62"),
+            ("Plum / Mulberry", "#4C2B36", "76, 43, 54"),
+            ("Current", "#736075", "115, 96, 117"),
+            ("Elevation / Midnight Violet", "#2B1E27", "43, 30, 39"),
         ]),
     ]
     for pillar_name, colors in pillars:

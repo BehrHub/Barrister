@@ -1127,12 +1127,12 @@ def configure_page() -> None:
 .main-hero-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--kith-blush); box-shadow: 0 0 10px rgba(211,163,168,.8); }
 .main-hero-toprow { display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem; margin-bottom: .9rem; }
 .main-hero-seg { display: flex; gap: .35rem; flex: 1 1 auto; }
-.main-hero-seg-btn { padding: .38rem .7rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; font-size: .55rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--kith-warm-gray); border: 1px solid rgba(169,162,154,.25); transition: background .22s ease, color .22s ease, border-color .22s ease; white-space: nowrap; }
+.main-hero-seg-btn { padding: .38rem .7rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; font-size: .65rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--kith-warm-gray); border: 1px solid rgba(169,162,154,.25); transition: background .22s ease, color .22s ease, border-color .22s ease; white-space: nowrap; }
 #mainEvents:checked ~ .main-hero-toprow label[for="mainEvents"], #mainRevenue:checked ~ .main-hero-toprow label[for="mainRevenue"], #mainClients:checked ~ .main-hero-toprow label[for="mainClients"] { background: linear-gradient(135deg, rgba(211,163,168,.32), rgba(124,147,179,.2)); color: var(--kith-chalk); border-color: rgba(211,163,168,.5); }
 .main-hero-next { flex: 0 0 auto; max-width: 46%; text-align: right; }
-.main-hero-next-label { font-size: .5rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--kith-warm-gray); }
-.main-hero-next-name { font-size: .74rem; font-weight: 800; color: var(--kith-chalk); margin-top: .3rem; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.main-hero-next-when { font-size: .6rem; font-weight: 700; letter-spacing: 0; text-transform: none; color: var(--kith-blush); margin-top: .15rem; }
+.main-hero-next-label { font-size: .6rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--kith-warm-gray); }
+.main-hero-next-name { font-size: .8rem; font-weight: 800; color: var(--kith-chalk); margin-top: .3rem; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.main-hero-next-when { font-size: .7rem; font-weight: 700; letter-spacing: 0; text-transform: none; color: var(--kith-blush); margin-top: .15rem; }
 .main-hero-body { position: relative; }
 .main-hero-figure { display: none; align-items: baseline; gap: .55rem; flex-wrap: wrap; }
 #mainFigEvents { display: flex; }
@@ -1140,14 +1140,15 @@ def configure_page() -> None:
 #mainRevenue:checked ~ .main-hero-body #mainFigRevenue { display: flex; }
 #mainClients:checked ~ .main-hero-body #mainFigClients { display: flex; }
 #mainRevenue:checked ~ .main-hero-body #mainFigEvents, #mainClients:checked ~ .main-hero-body #mainFigEvents { display: none; }
-.main-hero-number { display: block; font-family: "Inter", "SF Pro Display", "Segoe UI", Arial, sans-serif; font-size: clamp(4.4rem, 25vw, 8rem); font-weight: 900; line-height: .82; letter-spacing: -.045em; color: var(--kith-chalk); text-shadow: 0 18px 34px rgba(0,0,0,.4); }
-.main-hero-tag { font-size: 1.2rem; font-weight: 800; letter-spacing: .01em; text-transform: uppercase; color: var(--kith-blush); }
+.main-hero-number { display: block; font-family: "Inter", "SF Pro Display", "Segoe UI", Arial, sans-serif; font-size: clamp(7rem, 25vw, 9rem); font-weight: 900; line-height: .82; letter-spacing: -.045em; color: var(--kith-chalk); text-shadow: 0 18px 34px rgba(0,0,0,.4); }
+.main-hero-tag { font-size: 1.5rem; font-weight: 800; letter-spacing: .01em; text-transform: uppercase; color: var(--kith-blush); }
 .main-hero-mini-row { display: flex; justify-content: space-between; margin-top: 1rem; padding-top: .8rem; border-top: 1px solid rgba(255,255,255,.12); }
 .main-hero-mini { text-align: center; }
-.main-hero-mini-val { font-size: 1.18rem; font-weight: 900; color: var(--kith-chalk); }
-.main-hero-mini-lab { font-size: .58rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kith-warm-gray); margin-top: .12rem; }
+.main-hero-mini-val { font-size: 1.5rem; font-weight: 900; color: var(--kith-chalk); }
+.main-hero-mini-val.is-month { font-size: 1.25rem; }
+.main-hero-mini-lab { font-size: .6rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kith-warm-gray); margin-top: .12rem; }
 .main-hero-upcoming-empty { font-size: .68rem; color: var(--kith-warm-gray); }
-@media (max-width: 480px) { .main-hero-next-name, .main-hero-next-when { font-size: .6rem; } .main-hero-number { font-size: clamp(2.6rem, 16vw, 4.2rem); } .main-hero-tag { font-size: .85rem; } }
+@media (max-width: 480px) { .main-hero-next-name { font-size: .74rem; } .main-hero-next-when { font-size: .64rem; } .main-hero-tag { font-size: 1.15rem; } }
 .main-ticker { position: relative; overflow: hidden; height: 38px; display: flex; align-items: center; margin: 0 0 1rem; border-radius: 12px; border: 1px solid rgba(169,162,154,.2); background: linear-gradient(90deg, var(--kith-charcoal), var(--kith-charcoal-soft)); }
 .main-ticker::before, .main-ticker::after { content: ""; position: absolute; top: 0; bottom: 0; width: 26px; z-index: 1; pointer-events: none; }
 .main-ticker::before { left: 0; background: linear-gradient(90deg, var(--kith-charcoal), transparent); }
@@ -1166,7 +1167,7 @@ def configure_page() -> None:
 .main-flip-front { border: 1px solid rgba(169,162,154,.22); background: var(--kith-anchor); }
 .main-flip-face.suit-spade .main-flip-front, .main-flip-front.suit-spade { border-color: rgba(124,147,179,.4); }
 .main-flip-back { transform: rotateY(180deg); border: 1px solid rgba(211,163,168,.35); background: linear-gradient(150deg, #2a2230, var(--kith-charcoal)); }
-.main-kpi-label { font-size: .43rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kith-warm-gray); line-height: 1.1; }
+.main-kpi-label { font-size: .6rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kith-warm-gray); line-height: 1.1; }
 .main-kpi-value { font-size: .92rem; font-weight: 900; line-height: 1; color: var(--kith-saddle); }
 .main-kpi-value.is-text { font-size: .62rem; }
 .main-kpi-back-title { font-size: .4rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kith-blush); }
@@ -1188,7 +1189,7 @@ def configure_page() -> None:
 .main-section-toggle:checked ~ .main-section-body-wrap { grid-template-rows: 1fr; max-height: 3000px; }
 .main-section-body { min-height: 0; overflow: hidden; padding: 0 .95rem .95rem; }
 .main-trend-header-toggle { display: flex; gap: .3rem; flex: 0 0 auto; }
-.main-trend-header-toggle .main-lever-label { padding: .26rem .55rem; font-size: .5rem; }
+.main-trend-header-toggle .main-lever-label { padding: .26rem .55rem; font-size: .65rem; }
 .main-lever-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
 .main-lever-row { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .4rem; }
 .main-lever-row.is-metric { margin-bottom: .85rem; }
@@ -2250,7 +2251,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         f'<div class="main-hero-mini"><div class="main-hero-mini-val">{best_streak}</div><div class="main-hero-mini-lab">Streak</div></div>'
         f'<div class="main-hero-mini"><div class="main-hero-mini-val">{jurisdictions}</div><div class="main-hero-mini-lab">Jurisd.</div></div>'
         f'<div class="main-hero-mini"><div class="main-hero-mini-val">{upcoming_count}</div><div class="main-hero-mini-lab">Upcoming</div></div>'
-        f'<div class="main-hero-mini"><div class="main-hero-mini-val">{esc(best_month["label"])}</div><div class="main-hero-mini-lab">Best Mo.</div></div>'
+        f'<div class="main-hero-mini"><div class="main-hero-mini-val is-month">{esc(best_month["label"])}</div><div class="main-hero-mini-lab">Best Mo.</div></div>'
         '</div>'
         "</div></div>"
     )
@@ -5838,7 +5839,7 @@ def render_test_tube_page() -> None:
             rows = "".join(
                 f'<div style="border:1px solid rgba(169,162,154,.22);border-radius:10px;padding:.6rem .7rem;margin-bottom:.5rem;background:rgba(23,22,26,.5);">'
                 f'<div style="color:#a9a29a;font-family:monospace;font-size:.55rem;margin-bottom:.25rem;">{escape(fname)}</div>'
-                f'<div style="color:#f7f2ea;font-family:\'{escape(fname)}\',sans-serif;font-weight:800;font-size:1.15rem;line-height:1.15;">Barrister Dashboard</div>'
+                f'<div style="color:#f7f2ea;font-family:\'{escape(fname)}\',sans-serif;font-weight:800;font-size:1.15rem;line-height:1.15;">Events 88 Clients 31 Weekly</div>'
                 f'</div>'
                 for fname in group
             )

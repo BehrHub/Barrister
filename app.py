@@ -180,7 +180,8 @@ def configure_page() -> None:
     st.markdown(
         compact("""
 <style>
-        .stApp { background: linear-gradient(180deg, var(--kith-genesis) 0px, var(--kith-battleship) 400px, var(--kith-battleship) 100%); }
+        @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Inter:wght@700;800;900&display=swap');
+        .stApp { background: linear-gradient(180deg, var(--kith-genesis) 0px, var(--kith-battleship) 400px, var(--kith-battleship) 100%); font-family: "Lora", Georgia, serif; }
         [data-testid="stHeader"],
         [data-testid="stToolbar"],
         [data-testid="stDecoration"],
@@ -1123,9 +1124,10 @@ def configure_page() -> None:
 .main-hero { position: relative; overflow: hidden; border-radius: 24px; margin: 0 0 .9rem; padding: 1.4rem 1.2rem 1.3rem; background: var(--kith-anchor); box-shadow: 0 30px 64px rgba(0,0,0,.5); animation: mainRiseIn .55s var(--ease-emphasized) both; }
 .main-hero-inner { position: relative; z-index: 2; }
 .main-hero-radio { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
-.main-hero-eyebrow { display: inline-flex; align-items: center; gap: .4rem; font-size: .58rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--kith-warm-gray); margin-bottom: .55rem; }
+.main-hero-label-row { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: .35rem; }
+.main-hero-eyebrow { display: inline-flex; align-items: center; gap: .4rem; font-size: .58rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--kith-warm-gray); }
 .main-hero-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--kith-blush); box-shadow: 0 0 10px rgba(211,163,168,.8); }
-.main-hero-toprow { display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem; margin-bottom: .9rem; }
+.main-hero-toprow { display: flex; align-items: flex-end; justify-content: space-between; gap: .8rem; margin-bottom: .9rem; }
 .main-hero-seg { display: flex; gap: .35rem; flex: 1 1 auto; }
 .main-hero-seg-btn { padding: .38rem .7rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; font-size: .65rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--kith-warm-gray); border: 1px solid rgba(169,162,154,.25); transition: background .22s ease, color .22s ease, border-color .22s ease; white-space: nowrap; }
 #mainEvents:checked ~ .main-hero-toprow label[for="mainEvents"], #mainRevenue:checked ~ .main-hero-toprow label[for="mainRevenue"], #mainClients:checked ~ .main-hero-toprow label[for="mainClients"] { background: linear-gradient(135deg, rgba(211,163,168,.32), rgba(124,147,179,.2)); color: var(--kith-chalk); border-color: rgba(211,163,168,.5); }
@@ -1140,12 +1142,14 @@ def configure_page() -> None:
 #mainRevenue:checked ~ .main-hero-body #mainFigRevenue { display: flex; }
 #mainClients:checked ~ .main-hero-body #mainFigClients { display: flex; }
 #mainRevenue:checked ~ .main-hero-body #mainFigEvents, #mainClients:checked ~ .main-hero-body #mainFigEvents { display: none; }
-.main-hero-number { display: block; font-family: "Inter", "SF Pro Display", "Segoe UI", Arial, sans-serif; font-size: clamp(7rem, 25vw, 9rem); font-weight: 900; line-height: .82; letter-spacing: -.045em; color: var(--kith-chalk); text-shadow: 0 18px 34px rgba(0,0,0,.4); }
+.main-hero-number { display: block; font-family: "Inter", "SF Pro Display", "Segoe UI", Arial, sans-serif; font-size: clamp(7rem, 25vw, 8rem); font-weight: 900; line-height: .82; letter-spacing: -.045em; color: var(--kith-chalk); text-shadow: 0 18px 34px rgba(0,0,0,.4); }
 .main-hero-tag { font-size: 1.5rem; font-weight: 800; letter-spacing: .01em; text-transform: uppercase; color: var(--kith-blush); }
-.main-hero-mini-row { display: flex; justify-content: space-between; margin-top: 1rem; padding-top: .8rem; border-top: 1px solid rgba(255,255,255,.12); }
-.main-hero-mini { text-align: center; }
-.main-hero-mini-val { font-size: 1.5rem; font-weight: 900; color: var(--kith-chalk); }
-.main-hero-mini-val.is-month { font-size: 1.25rem; }
+.main-hero-mini-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 1rem; padding-top: .8rem; border-top: 1px solid rgba(255,255,255,.12); }
+.main-hero-mini { text-align: center; display: flex; flex-direction: column; }
+.main-hero-mini-val { order: 1; }
+.main-hero-mini-lab { order: 2; }
+.main-hero-mini-val { font-size: 1.5rem; font-weight: 900; color: var(--kith-chalk); font-family: "Inter", "SF Pro Display", Arial, sans-serif; }
+.main-hero-mini-val.is-month { font-size: 1.25rem; font-family: "Lora", Georgia, serif; }
 .main-hero-mini-lab { font-size: .6rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kith-warm-gray); margin-top: .12rem; }
 .main-hero-upcoming-empty { font-size: .68rem; color: var(--kith-warm-gray); }
 @media (max-width: 480px) { .main-hero-next-name { font-size: .74rem; } .main-hero-next-when { font-size: .64rem; } .main-hero-tag { font-size: 1.15rem; } }
@@ -1155,6 +1159,8 @@ def configure_page() -> None:
 .main-ticker::after { right: 0; background: linear-gradient(270deg, var(--kith-charcoal), transparent); }
 .main-ticker-track { display: flex; align-items: center; gap: 1.9rem; width: max-content; padding: 0 1.1rem; animation: mainTickerScroll 24s linear infinite; }
 .main-ticker-item { flex: 0 0 auto; display: flex; align-items: center; gap: .32rem; white-space: nowrap; font-size: .62rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kith-warm-gray); }
+.main-ticker-item strong { font-family: "Inter", "SF Pro Display", Arial, sans-serif; }
+.main-ticker-item strong.is-word { font-family: "Lora", Georgia, serif; }
 .main-ticker-item strong { color: var(--kith-saddle); font-weight: 900; }
 .main-kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .4rem; margin: 0 0 .7rem; }
 @media (max-width: 700px) { .main-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -1168,8 +1174,8 @@ def configure_page() -> None:
 .main-flip-face.suit-spade .main-flip-front, .main-flip-front.suit-spade { border-color: rgba(124,147,179,.4); }
 .main-flip-back { transform: rotateY(180deg); border: 1px solid rgba(211,163,168,.35); background: linear-gradient(150deg, #2a2230, var(--kith-charcoal)); }
 .main-kpi-label { font-size: .6rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kith-warm-gray); line-height: 1.1; }
-.main-kpi-value { font-size: .92rem; font-weight: 900; line-height: 1; color: var(--kith-saddle); }
-.main-kpi-value.is-text { font-size: .62rem; }
+.main-kpi-value { font-size: .92rem; font-weight: 900; line-height: 1; color: var(--kith-saddle); font-family: "Inter", "SF Pro Display", Arial, sans-serif; }
+.main-kpi-value.is-text { font-size: .62rem; font-family: "Lora", Georgia, serif; }
 .main-kpi-back-title { font-size: .4rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kith-blush); }
 .main-kpi-back-row { font-size: .58rem; font-weight: 800; color: var(--kith-saddle); }
 .main-kpi-back-row span { display: block; font-size: .4rem; font-weight: 600; color: var(--kith-warm-gray); }
@@ -1203,10 +1209,10 @@ def configure_page() -> None:
 .main-plot { position: relative; height: 128px; padding-left: 32px; }
 .main-grid-line { position: absolute; left: 32px; right: 0; height: 1px; background: rgba(169,162,154,.14); }
 .main-grid-line.is-base { background: rgba(169,162,154,.32); }
-.main-grid-tag { position: absolute; left: 0; width: 28px; text-align: right; transform: translateY(-50%); font-size: .45rem; font-weight: 800; color: var(--kith-warm-gray); }
+.main-grid-tag { position: absolute; left: 0; width: 28px; text-align: right; transform: translateY(-50%); font-size: .45rem; font-weight: 800; color: var(--kith-warm-gray); font-family: "Inter", "SF Pro Display", Arial, sans-serif; }
 .main-bar-row { position: absolute; left: 32px; right: 0; top: 0; bottom: 0; display: flex; align-items: flex-end; gap: .38rem; }
 .main-bar-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: .2rem; }
-.main-bar-value { font-size: .5rem; font-weight: 900; white-space: nowrap; color: var(--kith-warm-gray); }
+.main-bar-value { font-size: .5rem; font-weight: 900; white-space: nowrap; color: var(--kith-warm-gray); font-family: "Inter", "SF Pro Display", Arial, sans-serif; }
 .main-bar-col.is-record .main-bar-value { color: var(--kith-blush); }
 .main-bar-shape { width: 100%; max-width: 28px; border-radius: 6px 6px 2px 2px; background: linear-gradient(180deg, var(--kith-blue), rgba(124,147,179,.35)); }
 .main-bar-shape.is-record { background: linear-gradient(180deg, var(--kith-blush), rgba(211,163,168,.35)); box-shadow: 0 0 14px rgba(211,163,168,.35); }
@@ -2218,7 +2224,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         f'&#128176; career <strong>{money(career_revenue)}</strong>',
         f'&#129309; <strong>{unique_clients}</strong> clients &middot; {repeat_rate}% repeat',
         f'&#128293; <strong>{current_streak}</strong>-day streak',
-        f'&#127942; best month <strong>{esc(best_month["label"])}</strong> &middot; {best_month["events"]} events',
+        f'&#127942; best month <strong class="is-word">{esc(best_month["label"])}</strong> &middot; {best_month["events"]} events',
     ]
     ticker = "".join(f'<span class="main-ticker-item">{item}</span>' for item in ticker_items * 2)
 
@@ -2231,14 +2237,16 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         '<input type="radio" name="mainMetric" id="mainEvents" class="main-hero-radio" checked>'
         '<input type="radio" name="mainMetric" id="mainRevenue" class="main-hero-radio">'
         '<input type="radio" name="mainMetric" id="mainClients" class="main-hero-radio">'
+        '<div class="main-hero-label-row">'
         '<div class="main-hero-eyebrow"><span class="main-hero-dot"></span>Career to date</div>'
+        '<div class="main-hero-next-label">Next up</div>'
+        '</div>'
         '<div class="main-hero-toprow">'
         '<div class="main-hero-seg">'
         '<label for="mainEvents" class="main-hero-seg-btn">Events</label>'
         '<label for="mainClients" class="main-hero-seg-btn">Clients</label>'
         '<label for="mainRevenue" class="main-hero-seg-btn">Revenue</label></div>'
         '<div class="main-hero-next">'
-        '<div class="main-hero-next-label">Next up</div>'
         f'<div class="main-hero-next-name">{next_up_name}</div>'
         f'<div class="main-hero-next-when">{next_up_when}</div>'
         '</div></div>'

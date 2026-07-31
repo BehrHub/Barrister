@@ -97,8 +97,8 @@ DASHBOARD_PAGES = {
     "Client": "client",
     "Finance": "finance",
     "Ledger": "ledger",
-    "Test Tube Two": "test-tube-two",
     "Designer": "designer",
+    "Test Tube Two": "test-tube-two",
 }
 NAV_DISPLAY = {
     "Main": {"label": "Main", "icon": "🏁", "accent": "#f472b6"},
@@ -107,8 +107,8 @@ NAV_DISPLAY = {
     "Client": {"label": "Client", "icon": "👥", "accent": "#2dd4bf"},
     "Finance": {"label": "Finance", "icon": "💰", "accent": "#22c55e"},
     "Ledger": {"label": "Ledger", "icon": "📓", "accent": "#38bdf8"},
-    "Test Tube Two": {"label": "Test Tube 2", "icon": "🧫", "accent": "#a78bfa"},
     "Designer": {"label": "Designer", "icon": "🎨", "accent": "#f4d054"},
+    "Test Tube Two": {"label": "Test Tube 2", "icon": "🧫", "accent": "#a78bfa"},
 }
 HIDDEN_PAGES = {
     "Coordinate Match Report": "coordinate-match-report",
@@ -186,7 +186,7 @@ def configure_page() -> None:
     st.markdown(
         compact("""
 <style>
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@500;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@500;700;900&family=Merriweather:wght@700;900&display=swap');
         .stApp { background: linear-gradient(180deg, var(--kith-genesis) 0px, var(--kith-battleship) 400px, var(--kith-battleship) 100%); font-family: "Bebas Neue", "Arial Narrow", sans-serif; }
         [data-testid="stHeader"],
         [data-testid="stToolbar"],
@@ -233,7 +233,7 @@ def configure_page() -> None:
             }
         }
 
-        .hero-title { color: var(--kith-chalk); font-family: "Space Grotesk", "SF Pro Display", "Aptos Display", "Segoe UI", Arial, sans-serif; font-size: clamp(2.45rem, 5vw, 3.95rem); font-weight: 850; margin: .08rem 0 .78rem; line-height: .94; letter-spacing: -.058em; text-shadow: 0 0 9px rgba(178,34,52,.16), 0 0 17px rgba(178,34,52,.09), 0 14px 28px rgba(0,0,0,.3); }
+        .hero-title { color: var(--kith-chalk); font-family: "Merriweather", Georgia, serif; font-size: clamp(2.45rem, 5vw, 3.95rem); font-weight: 850; margin: .08rem 0 .78rem; line-height: .94; letter-spacing: -.028em; text-shadow: 0 0 9px rgba(244,114,182,.2), 0 0 17px rgba(244,114,182,.12), 0 14px 28px rgba(0,0,0,.3); }
         .hero-title-link, .hero-title-link:visited, .hero-title-link:hover, .hero-title-link:active { color: inherit !important; text-decoration: none !important; cursor: pointer; }
         .executive-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .65rem; margin: .2rem 0 .8rem; }
         .metric-card { min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .38rem; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(255,255,255,.055), transparent 46%), linear-gradient(145deg, rgba(21,36,58,.9), rgba(8,18,32,.94)); border: 1px solid rgba(148,163,184,.18); border-radius: 12px; padding: .78rem .82rem; min-height: 94px; box-shadow: 0 14px 34px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.055); backdrop-filter: blur(10px); }
@@ -1090,6 +1090,12 @@ def configure_page() -> None:
     --kith-voyage-rgb: 163,184,196;
     --kith-sakura: #D4B2BA;
     --kith-sakura-rgb: 212,178,186;
+    --kith-plume: #7D9480;
+    --kith-plume-rgb: 125,148,128;
+    --kith-campus-maroon: #7A1C2C;
+    --kith-campus-maroon-rgb: 122,28,44;
+    --kith-pink-accent: #f472b6;
+    --kith-pink-accent-rgb: 244,114,182;
     --kith-wave: #4A6572;
     --kith-wave-rgb: 74,101,114;
     --kith-rococo-red: #B22234;
@@ -1097,25 +1103,25 @@ def configure_page() -> None:
     --kith-leaf-green: #4D6451;
     --kith-leaf-green-rgb: 77,100,81;
     --kith-month-jan: var(--kith-voyage);
-    --kith-month-feb: var(--kith-current);
-    --kith-month-mar: var(--kith-aster-mauve);
+    --kith-month-feb: var(--kith-campus-maroon);
+    --kith-month-mar: var(--kith-sakura);
     --kith-month-apr: var(--kith-wave);
-    --kith-month-may: var(--kith-sage);
+    --kith-month-may: var(--kith-plume);
     --kith-month-jun: var(--kith-blue);
-    --kith-month-jul: var(--kith-rococo-red);
-    --kith-month-aug: var(--kith-blush);
+    --kith-month-jul: var(--kith-pink-accent);
+    --kith-month-aug: var(--kith-dusty-quartz);
     --kith-month-sep: var(--kith-sand-deep);
     --kith-month-oct: var(--kith-blue-deep);
     --kith-month-nov: var(--kith-mauve-deep);
     --kith-month-dec: var(--kith-leaf-green);
     --kith-month-jan-rgb: 163,184,196;
-    --kith-month-feb-rgb: 115,96,117;
-    --kith-month-mar-rgb: 142,124,133;
+    --kith-month-feb-rgb: 122,28,44;
+    --kith-month-mar-rgb: 212,178,186;
     --kith-month-apr-rgb: 74,101,114;
-    --kith-month-may-rgb: 148,153,125;
+    --kith-month-may-rgb: 125,148,128;
     --kith-month-jun-rgb: 124,147,179;
-    --kith-month-jul-rgb: 178,34,52;
-    --kith-month-aug-rgb: 211,163,168;
+    --kith-month-jul-rgb: 244,114,182;
+    --kith-month-aug-rgb: 163,123,133;
     --kith-month-sep-rgb: 184,159,121;
     --kith-month-oct-rgb: 83,98,128;
     --kith-month-nov-rgb: 126,104,132;
@@ -1131,7 +1137,7 @@ def configure_page() -> None:
 .main-hero { position: relative; overflow: hidden; border-radius: 24px; margin: 0 0 .9rem; padding: 1.5rem 1.3rem 1.4rem; background: linear-gradient(155deg, #0c1118 0%, #080b11 85%); border: 1px solid rgba(var(--hero-accent-rgb),.35); box-shadow: 0 30px 64px rgba(0,0,0,.55), 0 0 42px rgba(var(--hero-accent-rgb),.12); animation: mainRiseIn .55s var(--ease-emphasized) both; }
 .main-hero-inner { position: relative; z-index: 2; }
 .main-hero-radio { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
-.main-hero-label-row { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: .4rem; }
+.main-hero-label-row { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: .15rem; }
 .main-hero-eyebrow { display: inline-flex; align-items: center; gap: .45rem; font-size: .64rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #8fa3b8; font-family: "Bebas Neue", "Arial Narrow", sans-serif; }
 .main-hero-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--hero-accent); box-shadow: 0 0 12px 2px rgba(var(--hero-accent-rgb),.9); animation: mainAccentPulse 1.8s ease-in-out infinite; }
 .main-hero-toprow { display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem; margin-bottom: 1rem; }
@@ -1139,9 +1145,9 @@ def configure_page() -> None:
 .main-hero-seg-btn { padding: .42rem .78rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; font-size: .7rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: #8fa3b8; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.03); transition: background .22s ease, color .22s ease, border-color .22s ease, box-shadow .22s ease; white-space: nowrap; }
 #mainEvents:checked ~ .main-hero-toprow label[for="mainEvents"], #mainRevenue:checked ~ .main-hero-toprow label[for="mainRevenue"], #mainClients:checked ~ .main-hero-toprow label[for="mainClients"] { background: rgba(var(--hero-accent-rgb),.22); color: #fff; border-color: rgba(var(--hero-accent-rgb),.75); box-shadow: 0 0 16px rgba(var(--hero-accent-rgb),.35); }
 .main-hero-next { flex: 0 0 auto; max-width: 58%; text-align: right; }
-.main-hero-next-label { font-size: .62rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #8fa3b8; font-family: "Bebas Neue", "Arial Narrow", sans-serif; }
-.main-hero-next-name { font-size: 1.24rem; font-weight: 800; color: #f4f7fb; line-height: 1.2; overflow-wrap: break-word; font-family: "Bebas Neue", "Arial Narrow", sans-serif; }
-.main-hero-next-when { font-size: .62rem; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; color: var(--hero-accent); margin-top: .18rem; text-shadow: 0 0 12px rgba(var(--hero-accent-rgb),.5); font-family: "Bebas Neue", "Arial Narrow", sans-serif; }
+.main-hero-next-label { font-size: .775rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #8fa3b8; font-family: "Bebas Neue", "Arial Narrow", sans-serif; margin-top: 3px; }
+.main-hero-next-name { font-size: 1.55rem; font-weight: 800; color: #f4f7fb; line-height: 1.2; overflow-wrap: break-word; font-family: "Bebas Neue", "Arial Narrow", sans-serif; margin-top: 3px; }
+.main-hero-next-when { font-size: .775rem; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; color: var(--hero-accent); margin-top: calc(.18rem + 3px); text-shadow: 0 0 12px rgba(var(--hero-accent-rgb),.5); font-family: "Bebas Neue", "Arial Narrow", sans-serif; }
 .main-hero-body { position: relative; }
 .main-hero-figure { display: none; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
 #mainFigEvents { display: flex; }
@@ -1159,7 +1165,7 @@ def configure_page() -> None:
 .main-hero-mini-val.is-month { font-size: 1.3rem; font-family: "Bebas Neue", "Arial Narrow", sans-serif; color: var(--hero-accent); }
 .main-hero-mini-lab { font-size: .66rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: #8fa3b8; margin-top: .14rem; font-family: "Bebas Neue", "Arial Narrow", sans-serif; }
 .main-hero-upcoming-empty { font-size: .68rem; color: var(--kith-warm-gray); }
-@media (max-width: 480px) { .main-hero-next-name { font-size: 1.05rem; } .main-hero-next-when { font-size: .56rem; } .main-hero-tag { font-size: 1.3rem; } }
+@media (max-width: 480px) { .main-hero-next-name { font-size: 1.3rem; } .main-hero-next-when { font-size: .7rem; } .main-hero-tag { font-size: 1.3rem; } }
 .main-ticker { position: relative; overflow: hidden; height: 38px; display: flex; align-items: center; margin: 0 0 1rem; border-radius: 12px; border: 1px solid rgba(169,162,154,.2); background: linear-gradient(90deg, var(--kith-charcoal), var(--kith-charcoal-soft)); }
 .main-ticker::before, .main-ticker::after { content: ""; position: absolute; top: 0; bottom: 0; width: 26px; z-index: 1; pointer-events: none; }
 .main-ticker::before { left: 0; background: linear-gradient(90deg, var(--kith-charcoal), transparent); }
@@ -1261,7 +1267,7 @@ def configure_page() -> None:
 .main-progress-fill.is-done { background: linear-gradient(90deg, var(--kith-sage), var(--kith-sage-deep)); }
 .hero-header-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: nowrap; width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
 .hero-title-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-18px) translateY(-4px); }
+.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-13px) translateY(-4px); }
 .hero-header-links .journey-fuel-button { width: 45px; height: 45px; font-size: 1.28rem; border-radius: 12px; animation: none; }
 </style>
         """),
@@ -2393,7 +2399,6 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         compact(
             f'<div class="main-ticker"><div class="main-ticker-track">{ticker}</div></div>'
             + hero
-            + f'<div class="main-kpi-grid">{kpi_html}</div>'
         ),
         unsafe_allow_html=True,
     )
@@ -5841,6 +5846,9 @@ def render_test_tube_page() -> None:
     st.markdown("### Font Preview")
     st.caption("Same sample text, 20 font choices. Tell me which ones to keep.")
     fonts = [
+        "Raleway", "Fjalla One", "Abril Fatface", "Libre Baskerville", "Crimson Text",
+        "Josefin Sans", "Teko", "Bungee", "Righteous", "Outfit",
+        "Sora", "Manrope", "IBM Plex Mono", "Staatliches", "Fraunces",
         "Inter", "Poppins", "Montserrat", "Work Sans", "Space Grotesk",
         "Oswald", "Bebas Neue", "Anton", "Barlow Condensed", "Archivo Black",
         "Playfair Display", "Merriweather", "Georgia", "Lora", "DM Serif Display",

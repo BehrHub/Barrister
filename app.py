@@ -1135,35 +1135,36 @@ def configure_page() -> None:
 @keyframes mainTickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @keyframes mainAccentPulse { 0%, 100% { opacity: .55; transform: scale(1); } 50% { opacity: 1; transform: scale(1.25); } }
 .main-hero { position: relative; overflow: hidden; border-radius: 24px; margin: 0 0 .9rem; padding: 24px; background-color: #12151f; background-image: radial-gradient(circle at 102% -15%, rgba(244,114,182,.16), transparent 42%), linear-gradient(135deg, rgba(255,255,255,.055) 0%, rgba(255,255,255,.012) 100%); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,.12); box-shadow: 0 20px 44px rgba(0,0,0,.52), inset 0 1px 0 rgba(255,255,255,.15); animation: mainRiseIn .55s var(--ease-emphasized) both; }
+.main-hero * { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important; }
 .main-hero-inner { position: relative; z-index: 2; }
 .main-hero-radio { position: absolute !important; opacity: 0 !important; width: 1px !important; height: 1px !important; pointer-events: none; -webkit-appearance: none !important; appearance: none !important; }
-.main-hero-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-.main-hero-svg path { stroke-dasharray: 460; stroke-dashoffset: 460; animation: mainHeroDraw 1.4s .2s ease forwards; }
+.main-hero-svg { position: absolute; top: 18px; right: -10px; width: 70%; height: 100px; pointer-events: none; z-index: 1; }
+.main-hero-svg path { stroke-dasharray: 420; stroke-dashoffset: 420; animation: mainHeroDraw 1.4s .2s ease forwards; }
 @keyframes mainHeroDraw { to { stroke-dashoffset: 0; } }
 .main-hero-toprow { display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem; position: relative; z-index: 2; }
-.main-hero-eyebrow { display: flex; align-items: center; gap: 6px; color: #ec4899; font-size: 10px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; font-family: "Bebas Neue", "Arial Narrow", sans-serif; margin-bottom: 10px; }
+.main-hero-eyebrow { display: flex; align-items: center; gap: 6px; color: #ec4899; font-size: 10px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; margin-bottom: 10px; }
 .main-hero-dot { width: 6px; height: 6px; border-radius: 50%; background: #ec4899; box-shadow: 0 0 8px #ec4899; animation: mainAccentPulse 1.8s ease-in-out infinite; }
 .main-hero-seg { display: flex; gap: 6px; }
-.main-hero-seg-btn { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 20px; padding: 5px 14px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #64748b; cursor: pointer; -webkit-tap-highlight-color: transparent; white-space: nowrap; transition: all .22s ease; font-family: "Bebas Neue", "Arial Narrow", sans-serif; }
+.main-hero-seg-btn { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 20px; padding: 5px 14px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #64748b; cursor: pointer; -webkit-tap-highlight-color: transparent; white-space: nowrap; transition: all .22s ease; }
 #mainEvents:checked ~ .main-hero-toprow label[for="mainEvents"], #mainClients:checked ~ .main-hero-toprow label[for="mainClients"], #mainRevenue:checked ~ .main-hero-toprow label[for="mainRevenue"] { background: rgba(244,114,182,.12); border-color: #f472b6; color: #f472b6; box-shadow: 0 0 12px rgba(244,114,182,.25); }
 .main-hero-next { flex: 0 0 auto; max-width: 60%; background: rgba(15,20,32,.65); border: 1px solid rgba(244,114,182,.3); border-radius: 14px; padding: 8px 16px; text-align: right; backdrop-filter: blur(8px); box-shadow: 0 4px 15px rgba(0,0,0,.3); }
-.main-hero-next-label { color: #64748b; font-size: 9px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; font-family: "Bebas Neue", "Arial Narrow", sans-serif; }
-.main-hero-next-name { font-size: 16px; font-weight: 900; color: #fff; letter-spacing: .02em; line-height: 1.25; overflow-wrap: break-word; font-family: "Bebas Neue", "Arial Narrow", sans-serif; margin-top: 2px; }
-.main-hero-next-when { color: #ec4899; font-size: 11px; font-weight: 700; text-shadow: 0 0 10px rgba(236,72,153,.5); margin-top: 2px; font-family: "Bebas Neue", "Arial Narrow", sans-serif; }
+.main-hero-next-label { color: #64748b; font-size: 9px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+.main-hero-next-name { font-size: 16px; font-weight: 900; color: #fff; letter-spacing: .02em; line-height: 1.25; overflow-wrap: break-word; margin-top: 2px; }
+.main-hero-next-when { color: #ec4899; font-size: 11px; font-weight: 700; text-shadow: 0 0 10px rgba(236,72,153,.5); margin-top: 2px; }
 .main-hero-body { position: relative; z-index: 2; }
 .main-hero-figure { display: none; align-items: baseline; gap: .6rem; margin-top: 25px; flex-wrap: wrap; }
 #mainEvents:checked ~ .main-hero-body #mainFigEvents { display: flex; }
 #mainRevenue:checked ~ .main-hero-body #mainFigRevenue { display: flex; }
 #mainClients:checked ~ .main-hero-body #mainFigClients { display: flex; }
 #mainRevenue:checked ~ .main-hero-body #mainFigEvents, #mainClients:checked ~ .main-hero-body #mainFigEvents { display: none; }
-.main-hero-number { font-family: "Space Grotesk", "SF Pro Display", "Segoe UI", Arial, sans-serif; font-size: clamp(3.6rem, 15vw, 5rem); font-weight: 900; line-height: 1; letter-spacing: -.03em; background: linear-gradient(135deg, #ffffff 0%, #f472b6 60%, #38bdf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 20px rgba(244,114,182,.4)); padding-right: .1em; }
+.main-hero-number { font-size: clamp(3.6rem, 15vw, 5rem); font-weight: 900; line-height: 1; letter-spacing: -.03em; background: linear-gradient(135deg, #ffffff 0%, #f472b6 60%, #38bdf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 20px rgba(244,114,182,.4)); padding-right: .1em; }
 @supports not (-webkit-background-clip: text) { .main-hero-number { color: #f472b6; -webkit-text-fill-color: initial; } }
-.main-hero-tag { font-size: 14px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: #ec4899; margin-left: 12px; text-shadow: 0 0 10px rgba(236,72,153,.5); font-family: "Bebas Neue", "Arial Narrow", sans-serif; }
+.main-hero-tag { font-size: 14px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: #ec4899; margin-left: 12px; text-shadow: 0 0 10px rgba(236,72,153,.5); }
 .main-hero-mini-row { display: flex; align-items: stretch; gap: 8px; margin-top: 1.1rem; padding-top: .9rem; border-top: 1px solid rgba(255,255,255,.1); position: relative; z-index: 2; }
 .main-hero-mini { flex: 1 1 0; min-width: 0; text-align: center; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 14px; padding: 10px 4px; }
-.main-hero-mini-val { font-size: 1.3rem; font-weight: 900; color: #fff; font-family: "Space Grotesk", "SF Pro Display", Arial, sans-serif; }
-.main-hero-mini-val.is-month { font-size: 1.1rem; font-family: "Bebas Neue", "Arial Narrow", sans-serif; color: #f472b6; }
-.main-hero-mini-lab { font-size: .62rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: #64748b; margin-top: .2rem; font-family: "Bebas Neue", "Arial Narrow", sans-serif; }
+.main-hero-mini-val { font-size: 1.3rem; font-weight: 900; color: #fff; }
+.main-hero-mini-val.is-month { font-size: 1.1rem; color: #f472b6; }
+.main-hero-mini-lab { font-size: .62rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: #64748b; margin-top: .2rem; }
 @media (max-width: 480px) { .main-hero-next-name { font-size: 14px; } .main-hero-tag { font-size: 12px; } }
 .main-ticker { position: relative; overflow: hidden; height: 38px; display: flex; align-items: center; margin: 0 0 1rem; border-radius: 12px; border: 1px solid rgba(169,162,154,.2); background: linear-gradient(90deg, var(--kith-charcoal), var(--kith-charcoal-soft)); }
 .main-ticker::before, .main-ticker::after { content: ""; position: absolute; top: 0; bottom: 0; width: 26px; z-index: 1; pointer-events: none; }
@@ -2251,12 +2252,12 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
 
     hero = (
         '<div class="main-hero">'
-        '<svg class="main-hero-svg" viewBox="0 0 400 200" preserveAspectRatio="none" fill="none" aria-hidden="true">'
-        '<path d="M 160 150 C 230 150, 260 45, 360 45" stroke="url(#mainHeroPink)" stroke-width="3" filter="drop-shadow(0px 0px 6px rgba(236,72,153,.8))" />'
-        '<path d="M 160 160 C 240 160, 270 55, 360 55" stroke="url(#mainHeroCyan)" stroke-width="2" opacity="0.8" filter="drop-shadow(0px 0px 5px rgba(56,189,248,.8))" />'
+        '<svg class="main-hero-svg" viewBox="0 0 300 100" fill="none" aria-hidden="true">'
+        '<path d="M 0 80 C 100 80, 120 10, 300 10" stroke="url(#mainHeroPink)" stroke-width="3" opacity="0.6" />'
+        '<path d="M 0 90 C 110 90, 130 20, 300 20" stroke="url(#mainHeroCyan)" stroke-width="2" opacity="0.4" />'
         '<defs>'
-        '<linearGradient id="mainHeroPink" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ec4899" /><stop offset="100%" stop-color="#a855f7" /></linearGradient>'
-        '<linearGradient id="mainHeroCyan" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#06b6d4" /><stop offset="100%" stop-color="#3b82f6" /></linearGradient>'
+        '<linearGradient id="mainHeroPink" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ec4899" /><stop offset="100%" stop-color="#a855f7" /></linearGradient>'
+        '<linearGradient id="mainHeroCyan" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3b82f6" /><stop offset="100%" stop-color="#06b6d4" /></linearGradient>'
         '</defs></svg>'
         '<div class="main-hero-inner">'
         '<input type="radio" name="mainMetric" id="mainEvents" class="main-hero-radio" checked>'

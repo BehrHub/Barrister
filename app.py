@@ -2252,7 +2252,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
 
     hero = (
         '<div class="main-hero">'
-        '<svg class="main-hero-svg" viewBox="0 0 300 100" fill="none" aria-hidden="true">'
+        '<svg class="main-hero-svg" viewBox="0 0 300 100" preserveAspectRatio="none" fill="none" aria-hidden="true">'
         '<path d="M 0 80 C 100 80, 120 10, 300 10" stroke="url(#mainHeroPink)" stroke-width="3" opacity="0.6" />'
         '<path d="M 0 90 C 110 90, 130 20, 300 20" stroke="url(#mainHeroCyan)" stroke-width="2" opacity="0.4" />'
         '<defs>'
@@ -5644,7 +5644,7 @@ def render_test_tube_two_page() -> None:
 
     design_d = (
         '<div class="tt2d-card">'
-        '<svg class="tt2d-svg-bg" viewBox="0 0 300 100" fill="none" aria-hidden="true">'
+        '<svg class="tt2d-svg-bg" viewBox="0 0 300 100" preserveAspectRatio="none" fill="none" aria-hidden="true">'
         '<path d="M 0 80 C 100 80, 120 10, 300 10" stroke="url(#tt2dPink)" stroke-width="3" opacity="0.6" />'
         '<path d="M 0 90 C 110 90, 130 20, 300 20" stroke="url(#tt2dBlue)" stroke-width="2" opacity="0.4" />'
         '<defs>'

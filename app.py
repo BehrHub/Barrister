@@ -1160,8 +1160,8 @@ def configure_page() -> None:
 .main-hero-number { font-size: clamp(3.6rem, 15vw, 5rem); font-weight: 900; line-height: 1; letter-spacing: -.03em; background: linear-gradient(135deg, #ffffff 0%, #f472b6 60%, #38bdf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 20px rgba(244,114,182,.4)); padding-right: .1em; }
 @supports not (-webkit-background-clip: text) { .main-hero-number { color: #f472b6; -webkit-text-fill-color: initial; } }
 .main-hero-tag { font-size: 14px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: #ec4899; margin-left: 12px; text-shadow: 0 0 10px rgba(236,72,153,.5); }
-.main-hero-mini-row { display: flex; align-items: stretch; gap: 8px; margin-top: 1.1rem; padding-top: .9rem; border-top: 1px solid rgba(255,255,255,.1); position: relative; z-index: 2; }
-.main-hero-mini { flex: 1 1 0; min-width: 0; text-align: center; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 14px; padding: 10px 4px; }
+.main-hero-mini-row { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 8px; margin-top: 1.1rem; padding-top: .9rem; border-top: 1px solid rgba(255,255,255,.1); position: relative; z-index: 2; }
+.main-hero-mini { min-width: 0; text-align: center; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 14px; padding: 10px 4px; }
 .main-hero-mini-val { font-size: 1.3rem; font-weight: 900; color: #fff; }
 .main-hero-mini-val.is-month { font-size: 1.1rem; color: #f472b6; }
 .main-hero-mini-lab { font-size: .62rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: #64748b; margin-top: .2rem; }

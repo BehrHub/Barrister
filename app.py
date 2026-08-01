@@ -5599,7 +5599,7 @@ def render_test_tube_two_page() -> None:
 .tt2-label { font-size: .58rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--kith-warm-gray); margin-bottom: .5rem; }
 
 /* === Glass Gradient (converted from user mockup) === */
-.tt2d-card { background: radial-gradient(circle at 102% -15%, rgba(244,114,182,.16), transparent 42%), linear-gradient(135deg, rgba(255,255,255,.055) 0%, rgba(255,255,255,.012) 100%); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,.12); border-radius: 24px; padding: 1.35rem; position: relative; overflow: hidden; box-shadow: 0 20px 44px rgba(0,0,0,.52), inset 0 1px 0 rgba(255,255,255,.15); }
+.tt2d-card { background-color: #05070d; background-image: radial-gradient(circle at 102% -15%, rgba(244,114,182,.16), transparent 42%), linear-gradient(135deg, rgba(255,255,255,.055) 0%, rgba(255,255,255,.012) 100%); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,.12); border-radius: 24px; padding: 1.35rem; position: relative; overflow: hidden; box-shadow: 0 20px 44px rgba(0,0,0,.52), inset 0 1px 0 rgba(255,255,255,.15); }
 .tt2d-svg-bg { position: absolute; top: 18px; right: -10px; width: 70%; height: 100px; pointer-events: none; z-index: 0; }
 .tt2d-svg-bg path { stroke-dasharray: 420; stroke-dashoffset: 420; animation: tt2dDraw 1.4s .2s ease forwards; }
 @keyframes tt2dDraw { to { stroke-dashoffset: 0; } }

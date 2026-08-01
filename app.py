@@ -5591,7 +5591,7 @@ def main() -> None:
 
 def render_test_tube_two_page() -> None:
     st.markdown("### Test Tube 2 \U0001F52C \u2014 Hero Card Directions")
-    st.caption("Three different directions, dummy data, real toggles. Pick one, mix two, or none of them.")
+    st.caption("Four different directions, dummy data, real toggles. Pick one, mix two, or none of them.")
 
     css = """
 <style>
@@ -5658,6 +5658,40 @@ def render_test_tube_two_page() -> None:
 .tt2c-mini { text-align: center; }
 .tt2c-mini-val { font-size: .82rem; font-weight: 900; color: var(--kith-genesis); }
 .tt2c-mini-lab { font-size: .46rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--kith-genesis); opacity: .65; }
+
+/* === Design 4: Glass Gradient (converted from user mockup) === */
+.tt2d-card { background: radial-gradient(circle at 102% -15%, rgba(244,114,182,.16), transparent 42%), linear-gradient(135deg, rgba(255,255,255,.055) 0%, rgba(255,255,255,.012) 100%); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,.12); border-radius: 24px; padding: 1.35rem; position: relative; overflow: hidden; box-shadow: 0 20px 44px rgba(0,0,0,.52), inset 0 1px 0 rgba(255,255,255,.15); }
+.tt2d-svg-bg { position: absolute; top: 18px; right: -10px; width: 70%; height: 100px; pointer-events: none; z-index: 0; }
+.tt2d-svg-bg path { stroke-dasharray: 420; stroke-dashoffset: 420; animation: tt2dDraw 1.4s .2s ease forwards; }
+@keyframes tt2dDraw { to { stroke-dashoffset: 0; } }
+.tt2d-toprow { display: flex; justify-content: space-between; align-items: flex-start; gap: .75rem; margin-bottom: 1rem; position: relative; z-index: 2; }
+.tt2d-section-tag { color: #ec4899; font-size: .56rem; font-weight: 800; letter-spacing: .09em; margin-bottom: .56rem; display: flex; align-items: center; gap: .4rem; white-space: nowrap; }
+.tt2d-section-tag::before { content: ""; width: 6px; height: 6px; background: #ec4899; border-radius: 50%; box-shadow: 0 0 8px #ec4899; }
+.tt2d-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.tt2d-pill-group { display: flex; gap: .38rem; }
+.tt2d-pill { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: .38rem .8rem; font-size: .6rem; font-weight: 700; color: #64748b; letter-spacing: .03em; white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: all .25s ease; }
+#tt2dEvents:checked ~ .tt2d-toprow label[for="tt2dEvents"], #tt2dClients:checked ~ .tt2d-toprow label[for="tt2dClients"], #tt2dRevenue:checked ~ .tt2d-toprow label[for="tt2dRevenue"] { background: rgba(244,114,182,.1); border-color: #f472b6; color: #f472b6; box-shadow: 0 0 12px rgba(244,114,182,.3); }
+.tt2d-next-box { background: rgba(15,20,32,.68); border: 1px solid rgba(244,114,182,.25); border-radius: 14px; padding: .55rem .85rem; text-align: right; box-shadow: 0 4px 20px rgba(0,0,0,.4); min-width: 128px; max-width: 48%; flex: 0 0 auto; }
+.tt2d-next-title { color: #64748b; font-size: .48rem; font-weight: 800; letter-spacing: .06em; }
+.tt2d-next-val { overflow: hidden; font-size: .9rem; font-weight: 900; letter-spacing: .01em; color: #fff; text-overflow: ellipsis; white-space: nowrap; margin: .12rem 0; }
+.tt2d-next-sub { color: #ec4899; font-size: .6rem; font-weight: 700; }
+.tt2d-metric-section { position: relative; z-index: 2; margin: .5rem 0 1.2rem; display: flex; align-items: baseline; min-height: 4.2rem; }
+.tt2d-fig { display: none; align-items: baseline; }
+#tt2dFigEvents { display: flex; }
+#tt2dEvents:checked ~ .tt2d-metric-section #tt2dFigEvents { display: flex; }
+#tt2dClients:checked ~ .tt2d-metric-section #tt2dFigClients { display: flex; }
+#tt2dRevenue:checked ~ .tt2d-metric-section #tt2dFigRevenue { display: flex; }
+#tt2dClients:checked ~ .tt2d-metric-section #tt2dFigEvents, #tt2dRevenue:checked ~ .tt2d-metric-section #tt2dFigEvents { display: none; }
+.tt2d-num { font-size: 4.2rem; font-weight: 900; line-height: 1; background: linear-gradient(135deg, #fff 0%, #f472b6 50%, #38bdf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 25px rgba(244,114,182,.45)); letter-spacing: -.06em; }
+@supports not (-webkit-background-clip: text) { .tt2d-num { color: #f472b6; -webkit-text-fill-color: initial; } }
+.tt2d-label { font-size: .7rem; font-weight: 800; letter-spacing: .12em; color: #ec4899; margin-left: .7rem; text-shadow: 0 0 10px rgba(236,72,153,.5); }
+.tt2d-gauges { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: .5rem; position: relative; z-index: 2; }
+.tt2d-gauge { background: linear-gradient(180deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.01) 100%); border: 1px solid rgba(255,255,255,.08); border-radius: 16px; padding: .68rem .25rem; text-align: center; box-shadow: inset 0 1px 0 rgba(255,255,255,.1); }
+.tt2d-gauge.highlight { border-color: rgba(244,114,182,.4); box-shadow: 0 0 15px rgba(244,114,182,.15), inset 0 1px 0 rgba(255,255,255,.2); }
+.tt2d-gauge-val { overflow: hidden; font-size: 1.05rem; font-weight: 800; color: #fff; text-overflow: ellipsis; white-space: nowrap; }
+.tt2d-gauge-val.pink { color: #f472b6; text-shadow: 0 0 8px rgba(244,114,182,.6); }
+.tt2d-gauge-lbl { font-size: .48rem; font-weight: 800; color: #64748b; letter-spacing: .05em; margin-top: .18rem; }
+.tt2d-source-line { display: flex; justify-content: space-between; gap: .75rem; margin-top: .75rem; color: #566176; font-size: .48rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
 </style>
 """
     st.markdown(compact(css), unsafe_allow_html=True)
@@ -5733,6 +5767,46 @@ def render_test_tube_two_page() -> None:
         '</div></div>'
     )
     st.markdown(compact(design_c), unsafe_allow_html=True)
+
+    design_d = (
+        '<div class="tt2-label">Design 4 &mdash; Glass Gradient</div>'
+        '<div class="tt2d-card">'
+        '<svg class="tt2d-svg-bg" viewBox="0 0 300 100" fill="none" aria-hidden="true">'
+        '<path d="M 0 80 C 100 80, 120 10, 300 10" stroke="url(#tt2dPink)" stroke-width="3" opacity="0.6" />'
+        '<path d="M 0 90 C 110 90, 130 20, 300 20" stroke="url(#tt2dBlue)" stroke-width="2" opacity="0.4" />'
+        '<defs>'
+        '<linearGradient id="tt2dPink" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ec4899" /><stop offset="100%" stop-color="#a855f7" /></linearGradient>'
+        '<linearGradient id="tt2dBlue" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3b82f6" /><stop offset="100%" stop-color="#06b6d4" /></linearGradient>'
+        '</defs></svg>'
+        '<input type="radio" name="tt2dMetric" id="tt2dEvents" class="tt2d-toggle" checked>'
+        '<input type="radio" name="tt2dMetric" id="tt2dClients" class="tt2d-toggle">'
+        '<input type="radio" name="tt2dMetric" id="tt2dRevenue" class="tt2d-toggle">'
+        '<div class="tt2d-toprow">'
+        '<div><div class="tt2d-section-tag">CAREER TO DATE</div>'
+        '<div class="tt2d-pill-group">'
+        '<label for="tt2dEvents" class="tt2d-pill">EVENTS</label>'
+        '<label for="tt2dClients" class="tt2d-pill">CLIENTS</label>'
+        '<label for="tt2dRevenue" class="tt2d-pill">REVENUE</label></div></div>'
+        '<div class="tt2d-next-box">'
+        '<div class="tt2d-next-title">NEXT UP</div>'
+        '<div class="tt2d-next-val">Eastern Shore Warehouse</div>'
+        '<div class="tt2d-next-sub">TODAY</div>'
+        '</div></div>'
+        '<div class="tt2d-metric-section">'
+        '<div class="tt2d-fig" id="tt2dFigEvents"><span class="tt2d-num">88</span><span class="tt2d-label">EVENTS</span></div>'
+        '<div class="tt2d-fig" id="tt2dFigClients"><span class="tt2d-num">31</span><span class="tt2d-label">CLIENTS</span></div>'
+        '<div class="tt2d-fig" id="tt2dFigRevenue"><span class="tt2d-num">＄9.6K</span><span class="tt2d-label">REVENUE</span></div>'
+        '</div>'
+        '<div class="tt2d-gauges">'
+        '<div class="tt2d-gauge"><div class="tt2d-gauge-val">5</div><div class="tt2d-gauge-lbl">STREAK</div></div>'
+        '<div class="tt2d-gauge"><div class="tt2d-gauge-val">5</div><div class="tt2d-gauge-lbl">JURISD.</div></div>'
+        '<div class="tt2d-gauge"><div class="tt2d-gauge-val">5</div><div class="tt2d-gauge-lbl">UPCOMING</div></div>'
+        '<div class="tt2d-gauge highlight"><div class="tt2d-gauge-val pink">Jul</div><div class="tt2d-gauge-lbl">BEST MO.</div></div>'
+        '</div>'
+        '<div class="tt2d-source-line"><span>Timeline &middot; State Coverage &middot; Pipeline</span><span>Live workbook</span></div>'
+        '</div>'
+    )
+    st.markdown(compact(design_d), unsafe_allow_html=True)
 
 
 

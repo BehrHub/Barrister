@@ -5590,76 +5590,15 @@ def main() -> None:
         render_test_tube_two_page()
 
 def render_test_tube_two_page() -> None:
-    st.markdown("### Test Tube 2 \U0001F52C \u2014 Hero Card Directions")
-    st.caption("Four different directions, dummy data, real toggles. Pick one, mix two, or none of them.")
+    st.markdown("### Test Tube 2 \U0001F52C \u2014 Hero Card")
+    st.caption("Glass Gradient direction, dummy data, real toggles.")
 
     css = """
 <style>
 .tt2-wrap { display: flex; flex-direction: column; gap: 1.8rem; margin-top: .5rem; }
 .tt2-label { font-size: .58rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--kith-warm-gray); margin-bottom: .5rem; }
 
-/* === Design 1: Kinetic Minimal === */
-.tt2a-card { border-radius: 20px; border: 1px solid rgba(169,162,154,.2); background: var(--kith-anchor); padding: 1.1rem 1.2rem 1rem; }
-.tt2a-seg { display: flex; gap: .3rem; margin-bottom: .7rem; }
-.tt2a-seg-btn { padding: .28rem .65rem; border-radius: 999px; font-size: .5rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--kith-warm-gray); border: 1px solid rgba(169,162,154,.25); cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.tt2a-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
-.tt2a-fig { display: none; align-items: baseline; gap: .5rem; }
-#tt2aFigEvents { display: flex; }
-#tt2aEvents:checked ~ .tt2a-body #tt2aFigEvents { display: flex; }
-#tt2aClients:checked ~ .tt2a-body #tt2aFigClients { display: flex; }
-#tt2aRevenue:checked ~ .tt2a-body #tt2aFigRevenue { display: flex; }
-#tt2aClients:checked ~ .tt2a-body #tt2aFigEvents, #tt2aRevenue:checked ~ .tt2a-body #tt2aFigEvents { display: none; }
-#tt2aEvents:checked ~ .tt2a-seg label[for="tt2aEvents"], #tt2aClients:checked ~ .tt2a-seg label[for="tt2aClients"], #tt2aRevenue:checked ~ .tt2a-seg label[for="tt2aRevenue"] { background: linear-gradient(135deg, rgba(211,163,168,.32), rgba(124,147,179,.2)); color: var(--kith-chalk); border-color: rgba(211,163,168,.5); }
-.tt2a-num { font-size: 3.6rem; font-weight: 900; line-height: .85; letter-spacing: -.04em; color: var(--kith-chalk); }
-.tt2a-tag { font-size: 1.1rem; font-weight: 800; letter-spacing: .02em; text-transform: uppercase; color: var(--kith-blush); }
-.tt2a-strip { display: flex; gap: 1.1rem; margin-top: .9rem; padding-top: .7rem; border-top: 1px solid rgba(169,162,154,.16); }
-.tt2a-strip-item { font-size: .62rem; font-weight: 700; color: var(--kith-warm-gray); }
-.tt2a-strip-item strong { color: var(--kith-chalk); font-weight: 900; }
-
-/* === Design 2: Dual Focus === */
-.tt2b-card { border-radius: 20px; border: 1px solid rgba(169,162,154,.2); background: var(--kith-elevated-navy); padding: 1.1rem 1.2rem; display: flex; gap: 1rem; align-items: flex-start; justify-content: space-between; }
-.tt2b-left { min-width: 0; flex: 1 1 auto; }
-.tt2b-tabs { display: flex; gap: 1rem; margin-bottom: .6rem; border-bottom: 1px solid rgba(169,162,154,.18); }
-.tt2b-tab { font-size: .56rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--kith-warm-gray); padding-bottom: .4rem; border-bottom: 2px solid transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.tt2b-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
-.tt2b-fig { display: none; }
-#tt2bFigEvents { display: block; }
-#tt2bEvents:checked ~ .tt2b-left #tt2bFigEvents { display: block; }
-#tt2bClients:checked ~ .tt2b-left #tt2bFigClients { display: block; }
-#tt2bRevenue:checked ~ .tt2b-left #tt2bFigRevenue { display: block; }
-#tt2bClients:checked ~ .tt2b-left #tt2bFigEvents, #tt2bRevenue:checked ~ .tt2b-left #tt2bFigEvents { display: none; }
-#tt2bEvents:checked ~ .tt2b-tabs label[for="tt2bEvents"], #tt2bClients:checked ~ .tt2b-tabs label[for="tt2bClients"], #tt2bRevenue:checked ~ .tt2b-tabs label[for="tt2bRevenue"] { color: var(--kith-chalk); border-bottom-color: var(--kith-blush); }
-.tt2b-num { font-size: 2.6rem; font-weight: 900; line-height: .9; color: var(--kith-chalk); }
-.tt2b-unit { font-size: .68rem; font-weight: 700; color: var(--kith-sand); margin-top: .15rem; }
-.tt2b-right { flex: 0 0 auto; width: 118px; text-align: right; }
-.tt2b-next-label { font-size: .5rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--kith-warm-gray); }
-.tt2b-next-name { font-size: .74rem; font-weight: 800; color: var(--kith-chalk); margin-top: .3rem; line-height: 1.2; }
-.tt2b-next-when { font-size: .6rem; font-weight: 700; color: var(--kith-blush); margin-top: .15rem; }
-.tt2b-streak { margin-top: .7rem; font-size: .58rem; font-weight: 700; color: var(--kith-warm-gray); }
-.tt2b-streak strong { color: var(--kith-chalk); }
-
-/* === Design 3: Editorial Stack === */
-.tt2c-card { border-radius: 20px; border: 1px solid rgba(169,162,154,.2); background: linear-gradient(160deg, var(--kith-dusty-quartz), var(--kith-anchor) 130%); padding: 1.1rem 1.2rem 1rem; }
-.tt2c-eyebrow { font-size: .55rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--kith-genesis); margin-bottom: .6rem; }
-.tt2c-badge { display: inline-flex; align-items: baseline; gap: .5rem; background: rgba(23,22,26,.35); border-radius: 14px; padding: .6rem 1rem; }
-.tt2c-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
-.tt2c-fig { display: none; align-items: baseline; gap: .5rem; }
-#tt2cFigEvents { display: flex; }
-#tt2cEvents:checked ~ .tt2c-badge #tt2cFigEvents { display: flex; }
-#tt2cClients:checked ~ .tt2c-badge #tt2cFigClients { display: flex; }
-#tt2cRevenue:checked ~ .tt2c-badge #tt2cFigRevenue { display: flex; }
-#tt2cClients:checked ~ .tt2c-badge #tt2cFigEvents, #tt2cRevenue:checked ~ .tt2c-badge #tt2cFigEvents { display: none; }
-.tt2c-num { font-size: 2.4rem; font-weight: 900; line-height: .85; color: var(--kith-genesis); }
-.tt2c-tag { font-size: .7rem; font-weight: 800; text-transform: uppercase; color: var(--kith-genesis); opacity: .7; }
-.tt2c-pills { display: flex; gap: .3rem; margin-top: .7rem; }
-.tt2c-pill { font-size: .5rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; padding: .26rem .55rem; border-radius: 999px; color: var(--kith-genesis); background: rgba(23,22,26,.18); cursor: pointer; -webkit-tap-highlight-color: transparent; }
-#tt2cEvents:checked ~ .tt2c-pills label[for="tt2cEvents"], #tt2cClients:checked ~ .tt2c-pills label[for="tt2cClients"], #tt2cRevenue:checked ~ .tt2c-pills label[for="tt2cRevenue"] { background: var(--kith-genesis); color: var(--kith-chalk); }
-.tt2c-mini-row { display: flex; justify-content: space-between; margin-top: .9rem; padding-top: .7rem; border-top: 1px solid rgba(23,22,26,.2); }
-.tt2c-mini { text-align: center; }
-.tt2c-mini-val { font-size: .82rem; font-weight: 900; color: var(--kith-genesis); }
-.tt2c-mini-lab { font-size: .46rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--kith-genesis); opacity: .65; }
-
-/* === Design 4: Glass Gradient (converted from user mockup) === */
+/* === Glass Gradient (converted from user mockup) === */
 .tt2d-card { background: radial-gradient(circle at 102% -15%, rgba(244,114,182,.16), transparent 42%), linear-gradient(135deg, rgba(255,255,255,.055) 0%, rgba(255,255,255,.012) 100%); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,.12); border-radius: 24px; padding: 1.35rem; position: relative; overflow: hidden; box-shadow: 0 20px 44px rgba(0,0,0,.52), inset 0 1px 0 rgba(255,255,255,.15); }
 .tt2d-svg-bg { position: absolute; top: 18px; right: -10px; width: 70%; height: 100px; pointer-events: none; z-index: 0; }
 .tt2d-svg-bg path { stroke-dasharray: 420; stroke-dashoffset: 420; animation: tt2dDraw 1.4s .2s ease forwards; }
@@ -5667,7 +5606,7 @@ def render_test_tube_two_page() -> None:
 .tt2d-toprow { display: flex; justify-content: space-between; align-items: flex-start; gap: .75rem; margin-bottom: 1rem; position: relative; z-index: 2; }
 .tt2d-section-tag { color: #ec4899; font-size: .56rem; font-weight: 800; letter-spacing: .09em; margin-bottom: .56rem; display: flex; align-items: center; gap: .4rem; white-space: nowrap; }
 .tt2d-section-tag::before { content: ""; width: 6px; height: 6px; background: #ec4899; border-radius: 50%; box-shadow: 0 0 8px #ec4899; }
-.tt2d-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.tt2d-card input.tt2d-toggle[type="radio"] { -webkit-appearance: none !important; appearance: none !important; position: absolute !important; opacity: 0 !important; width: 1px !important; height: 1px !important; margin: 0 !important; padding: 0 !important; border: 0 !important; pointer-events: none !important; }
 .tt2d-pill-group { display: flex; gap: .38rem; }
 .tt2d-pill { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: .38rem .8rem; font-size: .6rem; font-weight: 700; color: #64748b; letter-spacing: .03em; white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: all .25s ease; }
 #tt2dEvents:checked ~ .tt2d-toprow label[for="tt2dEvents"], #tt2dClients:checked ~ .tt2d-toprow label[for="tt2dClients"], #tt2dRevenue:checked ~ .tt2d-toprow label[for="tt2dRevenue"] { background: rgba(244,114,182,.1); border-color: #f472b6; color: #f472b6; box-shadow: 0 0 12px rgba(244,114,182,.3); }
@@ -5696,80 +5635,7 @@ def render_test_tube_two_page() -> None:
 """
     st.markdown(compact(css), unsafe_allow_html=True)
 
-    design_a = (
-        '<div class="tt2-label">Design 1 &mdash; Kinetic Minimal</div>'
-        '<div class="tt2a-card">'
-        '<input type="radio" name="tt2aMetric" id="tt2aEvents" class="tt2a-toggle" checked>'
-        '<input type="radio" name="tt2aMetric" id="tt2aClients" class="tt2a-toggle">'
-        '<input type="radio" name="tt2aMetric" id="tt2aRevenue" class="tt2a-toggle">'
-        '<div class="tt2a-seg">'
-        '<label for="tt2aEvents" class="tt2a-seg-btn">Events</label>'
-        '<label for="tt2aClients" class="tt2a-seg-btn">Clients</label>'
-        '<label for="tt2aRevenue" class="tt2a-seg-btn">Revenue</label></div>'
-        '<div class="tt2a-body">'
-        '<div class="tt2a-fig" id="tt2aFigEvents"><span class="tt2a-num">88</span><span class="tt2a-tag">Events</span></div>'
-        '<div class="tt2a-fig" id="tt2aFigClients"><span class="tt2a-num">31</span><span class="tt2a-tag">Clients</span></div>'
-        '<div class="tt2a-fig" id="tt2aFigRevenue"><span class="tt2a-num">＄9.6k</span><span class="tt2a-tag">Revenue</span></div>'
-        '</div>'
-        '<div class="tt2a-strip">'
-        '<span class="tt2a-strip-item"><strong>5</strong>&nbsp;day streak</span>'
-        '<span class="tt2a-strip-item">Best month <strong>Jul</strong></span>'
-        '<span class="tt2a-strip-item"><strong>5</strong>&nbsp;upcoming</span>'
-        '</div></div>'
-    )
-    st.markdown(compact(design_a), unsafe_allow_html=True)
-
-    design_b = (
-        '<div class="tt2-label">Design 2 &mdash; Dual Focus</div>'
-        '<div class="tt2b-card">'
-        '<input type="radio" name="tt2bMetric" id="tt2bEvents" class="tt2b-toggle" checked>'
-        '<input type="radio" name="tt2bMetric" id="tt2bClients" class="tt2b-toggle">'
-        '<input type="radio" name="tt2bMetric" id="tt2bRevenue" class="tt2b-toggle">'
-        '<div class="tt2b-left">'
-        '<div class="tt2b-tabs">'
-        '<label for="tt2bEvents" class="tt2b-tab">Events</label>'
-        '<label for="tt2bClients" class="tt2b-tab">Clients</label>'
-        '<label for="tt2bRevenue" class="tt2b-tab">Revenue</label></div>'
-        '<div class="tt2b-fig" id="tt2bFigEvents"><div class="tt2b-num">88</div><div class="tt2b-unit">Events worked</div></div>'
-        '<div class="tt2b-fig" id="tt2bFigClients"><div class="tt2b-num">31</div><div class="tt2b-unit">Client roster</div></div>'
-        '<div class="tt2b-fig" id="tt2bFigRevenue"><div class="tt2b-num">＄9.6k</div><div class="tt2b-unit">Revenue booked</div></div>'
-        '<div class="tt2b-streak"><strong>5</strong>-day streak</div>'
-        '</div>'
-        '<div class="tt2b-right">'
-        '<div class="tt2b-next-label">Next up</div>'
-        '<div class="tt2b-next-name">Eastern Shore Warehouse</div>'
-        '<div class="tt2b-next-when">TODAY</div>'
-        '</div></div>'
-    )
-    st.markdown(compact(design_b), unsafe_allow_html=True)
-
-    design_c = (
-        '<div class="tt2-label">Design 3 &mdash; Editorial Stack</div>'
-        '<div class="tt2c-card">'
-        '<input type="radio" name="tt2cMetric" id="tt2cEvents" class="tt2c-toggle" checked>'
-        '<input type="radio" name="tt2cMetric" id="tt2cClients" class="tt2c-toggle">'
-        '<input type="radio" name="tt2cMetric" id="tt2cRevenue" class="tt2c-toggle">'
-        '<div class="tt2c-eyebrow">Career to date</div>'
-        '<div class="tt2c-badge">'
-        '<div class="tt2c-fig" id="tt2cFigEvents"><span class="tt2c-num">88</span><span class="tt2c-tag">Events</span></div>'
-        '<div class="tt2c-fig" id="tt2cFigClients"><span class="tt2c-num">31</span><span class="tt2c-tag">Clients</span></div>'
-        '<div class="tt2c-fig" id="tt2cFigRevenue"><span class="tt2c-num">＄9.6k</span><span class="tt2c-tag">Revenue</span></div>'
-        '</div>'
-        '<div class="tt2c-pills">'
-        '<label for="tt2cEvents" class="tt2c-pill">Events</label>'
-        '<label for="tt2cClients" class="tt2c-pill">Clients</label>'
-        '<label for="tt2cRevenue" class="tt2c-pill">Revenue</label></div>'
-        '<div class="tt2c-mini-row">'
-        '<div class="tt2c-mini"><div class="tt2c-mini-val">5</div><div class="tt2c-mini-lab">Streak</div></div>'
-        '<div class="tt2c-mini"><div class="tt2c-mini-val">5</div><div class="tt2c-mini-lab">Jurisd.</div></div>'
-        '<div class="tt2c-mini"><div class="tt2c-mini-val">Jul</div><div class="tt2c-mini-lab">Best Mo.</div></div>'
-        '<div class="tt2c-mini"><div class="tt2c-mini-val">5</div><div class="tt2c-mini-lab">Upcoming</div></div>'
-        '</div></div>'
-    )
-    st.markdown(compact(design_c), unsafe_allow_html=True)
-
     design_d = (
-        '<div class="tt2-label">Design 4 &mdash; Glass Gradient</div>'
         '<div class="tt2d-card">'
         '<svg class="tt2d-svg-bg" viewBox="0 0 300 100" fill="none" aria-hidden="true">'
         '<path d="M 0 80 C 100 80, 120 10, 300 10" stroke="url(#tt2dPink)" stroke-width="3" opacity="0.6" />'

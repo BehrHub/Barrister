@@ -1241,19 +1241,21 @@ def configure_page() -> None:
 .main-podium-name { font-size: .6rem; font-weight: 800; color: var(--kith-saddle); text-align: center; line-height: 1.2; }
 .main-podium-stat { font-size: .55rem; color: var(--kith-warm-gray); }
 .main-rank-row { display: grid; grid-template-columns: 1.15rem 1fr auto; align-items: center; gap: .55rem; padding: .48rem 0; border-top: 1px solid rgba(169,162,154,.14); }
+.main-rank-main { display: flex; align-items: center; gap: .6rem; min-width: 0; }
+.main-rank-track { flex: 1 1 auto; min-width: 40px; }
 .main-rank-num { font-size: .66rem; font-weight: 800; color: var(--kith-warm-gray); }
-.main-rank-name { font-size: .7rem; font-weight: 700; color: var(--kith-saddle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.main-rank-track { height: 4px; margin-top: .3rem; border-radius: 999px; overflow: hidden; background: rgba(169,162,154,.16); }
+.main-rank-name { font-size: .7rem; font-weight: 700; color: var(--kith-saddle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: "Bebas Neue", "Arial Narrow", sans-serif; }
+.main-rank-track { height: 4px; border-radius: 999px; overflow: hidden; background: rgba(169,162,154,.16); }
 .main-rank-fill { height: 4px; border-radius: 999px; background: linear-gradient(90deg, var(--kith-blue), var(--kith-mauve)); }
-.main-rank-stat { font-size: .64rem; font-weight: 800; color: var(--kith-blush); white-space: nowrap; }
+.main-rank-stat { font-size: .64rem; font-weight: 800; color: var(--kith-blush); white-space: nowrap; font-family: "Space Grotesk", "SF Pro Display", Arial, sans-serif; }
 .main-donut-wrap { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .main-donut { position: relative; width: 128px; height: 128px; border-radius: 50%; flex: 0 0 auto; }
 .main-donut::after { content: ""; position: absolute; inset: 20px; border-radius: 50%; background: var(--kith-charcoal); }
-.main-donut-core { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.main-donut-core { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: row; align-items: baseline; justify-content: center; gap: .3rem; }
 .main-donut-core-val { font-size: 1.1rem; font-weight: 900; color: var(--kith-saddle); }
 .main-donut-core-lab { font-size: .45rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--kith-warm-gray); }
 .main-legend { display: flex; flex-direction: column; gap: .34rem; flex: 1 1 150px; min-width: 150px; }
-.main-legend-row { display: flex; align-items: center; gap: .45rem; font-size: .66rem; color: var(--kith-warm-gray); }
+.main-legend-row { display: flex; align-items: center; gap: .45rem; font-size: .66rem; color: var(--kith-warm-gray); font-family: "Bebas Neue", "Arial Narrow", sans-serif; }
 .main-legend-dot { width: 8px; height: 8px; border-radius: 2px; flex: 0 0 auto; }
 .main-legend-row strong { margin-left: auto; color: var(--kith-saddle); font-weight: 800; }
 .main-milestone { margin-bottom: .8rem; }
@@ -1267,7 +1269,7 @@ def configure_page() -> None:
 .main-progress-fill.is-done { background: linear-gradient(90deg, var(--kith-sage), var(--kith-sage-deep)); }
 .hero-header-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: nowrap; width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
 .hero-title-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-14px) translateY(-4px); }
+.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-17px) translateY(-4px); }
 .hero-header-links .journey-fuel-button { width: 45px; height: 45px; font-size: 1.28rem; border-radius: 12px; animation: none; background: var(--kith-battleship); }
 </style>
         """),
@@ -2120,14 +2122,15 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         )
     clients: list[dict] = []
     if not directory.empty and "Client" in directory:
-        top_directory = directory.sort_values("# of Visits", ascending=False).head(10)
-        for _, row in top_directory.iterrows():
-            name = str(row["Client"])
-            clients.append({
-                "name": name,
+        all_clients = [
+            {
+                "name": str(row["Client"]),
                 "events": int(row["# of Visits"]),
-                "revenue": round(float(client_revenue.get(name, 0.0))),
-            })
+                "revenue": round(float(client_revenue.get(str(row["Client"]), 0.0))),
+            }
+            for _, row in directory.iterrows()
+        ]
+        clients = sorted(all_clients, key=lambda c: (-c["events"], -c["revenue"]))[:10]
 
     jur_palette = ["var(--kith-blush)", "var(--kith-blue)", "var(--kith-sand)", "var(--kith-mauve)", "var(--kith-sage)"]
     territory: list[dict] = []
@@ -2342,7 +2345,7 @@ def render_main_page(data: WorkbookData, filtered_timeline: pd.DataFrame) -> Non
         f'<div class="main-rank-row"><span class="main-rank-num">{index + 1}</span>'
         f'<div class="main-rank-main"><div class="main-rank-name">{esc(row["name"])}</div>'
         f'<div class="main-rank-track"><div class="main-rank-fill" style="width:{max(4, round(row["events"] / peak_client_events * 100))}%"></div></div></div>'
-        f'<span class="main-rank-stat">{row["events"]} &middot; {money(row["revenue"])}</span></div>'
+        f'<span class="main-rank-stat">{row["events"]}</span></div>'
         for index, row in enumerate(clients)
     )
     leaderboard = (

@@ -1145,9 +1145,9 @@ def configure_page() -> None:
 .main-hero-seg-btn { padding: .42rem .78rem; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; font-size: .7rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: #8fa3b8; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.03); transition: background .22s ease, color .22s ease, border-color .22s ease, box-shadow .22s ease; white-space: nowrap; }
 #mainEvents:checked ~ .main-hero-toprow label[for="mainEvents"], #mainRevenue:checked ~ .main-hero-toprow label[for="mainRevenue"], #mainClients:checked ~ .main-hero-toprow label[for="mainClients"] { background: rgba(var(--hero-accent-rgb),.22); color: #fff; border-color: rgba(var(--hero-accent-rgb),.75); box-shadow: 0 0 16px rgba(var(--hero-accent-rgb),.35); }
 .main-hero-next { flex: 0 0 auto; max-width: 58%; text-align: right; }
-.main-hero-next-label { font-size: .775rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #8fa3b8; font-family: "Bebas Neue", "Arial Narrow", sans-serif; margin-top: 3px; }
+.main-hero-next-label { font-size: .775rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #8fa3b8; font-family: "Bebas Neue", "Arial Narrow", sans-serif; transform: translateY(4px); }
 .main-hero-next-name { font-size: 1.55rem; font-weight: 800; color: #f4f7fb; line-height: 1.2; overflow-wrap: break-word; font-family: "Bebas Neue", "Arial Narrow", sans-serif; margin-top: 3px; }
-.main-hero-next-when { font-size: .775rem; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; color: var(--hero-accent); margin-top: calc(.18rem + 3px); text-shadow: 0 0 12px rgba(var(--hero-accent-rgb),.5); font-family: "Bebas Neue", "Arial Narrow", sans-serif; }
+.main-hero-next-when { font-size: .775rem; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; color: var(--hero-accent); margin-top: calc(.18rem + 3px); text-shadow: 0 0 12px rgba(var(--hero-accent-rgb),.5); font-family: "Bebas Neue", "Arial Narrow", sans-serif; transform: translateY(-1px); }
 .main-hero-body { position: relative; }
 .main-hero-figure { display: none; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
 #mainFigEvents { display: flex; }
@@ -1227,8 +1227,8 @@ def configure_page() -> None:
 .main-bar-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: .2rem; }
 .main-bar-value { font-size: .5rem; font-weight: 900; white-space: nowrap; color: var(--kith-warm-gray); font-family: "Space Grotesk", "SF Pro Display", Arial, sans-serif; }
 .main-bar-col.is-record .main-bar-value { color: var(--kith-blush); }
-.main-bar-shape { width: 100%; max-width: 28px; border-radius: 6px 6px 2px 2px; background: linear-gradient(180deg, var(--kith-blue), rgba(124,147,179,.35)); }
-.main-bar-shape.is-record { background: linear-gradient(180deg, var(--kith-blush), rgba(211,163,168,.35)); box-shadow: 0 0 14px rgba(211,163,168,.35); }
+.main-bar-shape { width: 100%; max-width: 28px; border-radius: 6px 6px 2px 2px; background: linear-gradient(180deg, var(--kith-blue), var(--kith-blue-deep)); }
+.main-bar-shape.is-record { background: linear-gradient(180deg, var(--kith-blush), var(--kith-blush-deep)); box-shadow: 0 0 14px rgba(211,163,168,.35); }
 .main-axis { display: flex; gap: .38rem; margin-top: .4rem; padding-left: 32px; }
 .main-axis span { flex: 1 1 0; min-width: 0; text-align: center; font-size: .52rem; font-weight: 800; color: var(--kith-warm-gray); }
 .main-trend-foot { display: flex; flex-wrap: wrap; gap: .3rem .9rem; margin-top: .7rem; padding-top: .6rem; border-top: 1px solid rgba(169,162,154,.16); font-size: .57rem; color: var(--kith-warm-gray); }
@@ -1267,8 +1267,8 @@ def configure_page() -> None:
 .main-progress-fill.is-done { background: linear-gradient(90deg, var(--kith-sage), var(--kith-sage-deep)); }
 .hero-header-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: nowrap; width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
 .hero-title-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-13px) translateY(-4px); }
-.hero-header-links .journey-fuel-button { width: 45px; height: 45px; font-size: 1.28rem; border-radius: 12px; animation: none; }
+.hero-header-links { display: flex; align-items: center; gap: .3rem; flex: 0 0 auto; transform: translateX(-14px) translateY(-4px); }
+.hero-header-links .journey-fuel-button { width: 45px; height: 45px; font-size: 1.28rem; border-radius: 12px; animation: none; background: var(--kith-battleship); }
 </style>
         """),
 
@@ -1278,7 +1278,7 @@ def configure_page() -> None:
 
 def render_header() -> None:
     st.markdown(
-        f'<div class="hero-header-row"><a class="hero-title-link" href="./" target="_self"><div class="hero-title hero-title-ascii">{escape(APP_NAME)}</div></a>'
+        f'<div class="hero-header-row"><a class="hero-title-link" href="./" target="_self"><div class="hero-title hero-title-ascii">BARRISTER</div></a>'
         '<div class="hero-header-links">'
         '<a href="http://100.70.235.51:8000/" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Bronx Bombers Daily">\u26be\ufe0f</a>'
         '<a href="http://100.70.235.51:8011" target="_self" class="journey-fuel-button journey-teddy-button" aria-label="Open Heroes and Muses">\U0001F4DA</a>'

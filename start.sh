@@ -16,7 +16,8 @@ fi
 
 "$PYTHON" -m py_compile \
   app.py \
-  pages/2_Performance_Trends.py
+  pages/2_Performance_Trends.py \
+  pages/3_Neon_Flow.py
 
 PID="$(lsof -tiTCP:$PORT -sTCP:LISTEN 2>/dev/null | head -n 1 || true)"
 

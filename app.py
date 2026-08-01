@@ -291,6 +291,13 @@ st.page_link(
     use_container_width=True,
 )
 
+st.page_link(
+    "pages/3_Neon_Flow.py",
+    label="Open Neon Flow →",
+    icon="🌊",
+    use_container_width=True,
+)
+
 status_html = (
     '<div class="status-bar">'
     '<div class="status-pill"><span class="emoji">🔥</span> 13-DAY STREAK</div>'

@@ -10,12 +10,16 @@ cd "$ROOT"
 if [ ! -x "$PYTHON" ]; then
   python3 -m venv "$ROOT/.venv"
   "$ROOT/.venv/bin/python3" -m pip install --upgrade pip
-  "$ROOT/.venv/bin/python3" -m pip install -r requirements.txt
 fi
 
-"$PYTHON" -m py_compile app.py
+"$PYTHON" -m pip install -r requirements.txt
+
+"$PYTHON" -m py_compile \
+  app.py \
+  pages/2_Performance_Trends.py
 
 PID="$(lsof -tiTCP:$PORT -sTCP:LISTEN 2>/dev/null | head -n 1 || true)"
+
 if [ -n "$PID" ]; then
   kill "$PID" 2>/dev/null || true
   sleep 2
@@ -31,8 +35,9 @@ sleep 8
 
 curl -fsS "http://127.0.0.1:$PORT/" >/dev/null || {
   echo "ERROR: local preview failed"
-  tail -n 120 "$ROOT/test-8993.log"
+  tail -n 140 "$ROOT/test-8993.log"
   exit 1
 }
 
+echo "SUCCESS"
 echo "LOCAL PREVIEW: http://100.70.235.51:8993"

@@ -1,16 +1,29 @@
 import streamlit as st
 
-st.set_page_config(page_title="Barrister Dash", layout="centered", initial_sidebar_state="collapsed")
+st.set_page_config(
+    page_title="Barrister Dash",
+    layout="centered",
+    initial_sidebar_state="collapsed",
+)
 
-st.markdown("""
+st.markdown(
+    """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
 }
-#MainMenu, footer, header {visibility: hidden;}
-.block-container {padding-top: 1rem; padding-bottom: 1rem; max-width: 480px;}
+
+#MainMenu, footer, header {
+    visibility: hidden;
+}
+
+.block-container {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    max-width: 480px;
+}
 
 .status-bar {
     display: flex;
@@ -18,7 +31,13 @@ html, body, [class*="css"] {
     overflow-x: auto;
     padding-bottom: 12px;
     margin-bottom: 8px;
+    scrollbar-width: none;
 }
+
+.status-bar::-webkit-scrollbar {
+    display: none;
+}
+
 .status-pill {
     background: #1e1e24;
     border: 1px solid #2e2e38;
@@ -32,10 +51,15 @@ html, body, [class*="css"] {
     align-items: center;
     gap: 6px;
 }
-.status-pill .emoji {font-size: 13px;}
+
+.status-pill .emoji {
+    font-size: 13px;
+}
 
 .hero-card {
-    background: linear-gradient(160deg, #1a1a22 0%, #121218 100%);
+    background:
+        radial-gradient(circle at 110% -10%, rgba(236,72,153,0.15), transparent 48%),
+        linear-gradient(160deg, #1a1a22 0%, #121218 100%);
     border: 1px solid #2a2a35;
     border-radius: 24px;
     padding: 20px 20px 18px;
@@ -43,22 +67,14 @@ html, body, [class*="css"] {
     overflow: hidden;
     box-shadow: 0 12px 40px rgba(0,0,0,0.45);
 }
-.hero-card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -30%;
-    width: 280px;
-    height: 280px;
-    background: radial-gradient(circle, rgba(236,72,153,0.12) 0%, transparent 70%);
-    pointer-events: none;
-}
+
 .hero-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 18px;
 }
+
 .career-label {
     display: flex;
     align-items: center;
@@ -68,6 +84,7 @@ html, body, [class*="css"] {
     letter-spacing: 0.6px;
     color: #a0a0b0;
 }
+
 .pink-dot {
     width: 8px;
     height: 8px;
@@ -75,7 +92,12 @@ html, body, [class*="css"] {
     border-radius: 50%;
     box-shadow: 0 0 8px #ec4899;
 }
-.tabs {display: flex; gap: 6px;}
+
+.tabs {
+    display: flex;
+    gap: 6px;
+}
+
 .tab {
     padding: 6px 14px;
     border-radius: 999px;
@@ -85,24 +107,28 @@ html, body, [class*="css"] {
     background: transparent;
     border: 1px solid transparent;
 }
+
 .tab.active {
     color: #fff;
     background: rgba(236,72,153,0.15);
     border-color: #ec4899;
     box-shadow: 0 0 12px rgba(236,72,153,0.25);
 }
+
 .hero-body {
     display: flex;
     gap: 16px;
     align-items: center;
     margin-bottom: 22px;
 }
+
 .number-wrap {
     position: relative;
     width: 140px;
     height: 140px;
     flex-shrink: 0;
 }
+
 .progress-ring {
     position: absolute;
     inset: 0;
@@ -111,6 +137,7 @@ html, body, [class*="css"] {
     mask: radial-gradient(farthest-side, transparent 62%, #000 63%);
     -webkit-mask: radial-gradient(farthest-side, transparent 62%, #000 63%);
 }
+
 .number-center {
     position: absolute;
     inset: 14px;
@@ -121,6 +148,7 @@ html, body, [class*="css"] {
     align-items: center;
     justify-content: center;
 }
+
 .big-number {
     font-size: 48px;
     font-weight: 800;
@@ -128,6 +156,7 @@ html, body, [class*="css"] {
     line-height: 1;
     letter-spacing: -1px;
 }
+
 .big-label {
     font-size: 13px;
     font-weight: 600;
@@ -135,6 +164,7 @@ html, body, [class*="css"] {
     margin-top: 2px;
     letter-spacing: 0.5px;
 }
+
 .next-up {
     flex: 1;
     background: rgba(255,255,255,0.04);
@@ -143,6 +173,7 @@ html, body, [class*="css"] {
     padding: 14px 16px;
     backdrop-filter: blur(8px);
 }
+
 .next-label {
     font-size: 11px;
     font-weight: 600;
@@ -150,22 +181,26 @@ html, body, [class*="css"] {
     letter-spacing: 0.5px;
     margin-bottom: 6px;
 }
+
 .next-name {
     font-size: 20px;
     font-weight: 700;
     color: #fff;
     margin-bottom: 2px;
 }
+
 .next-date {
     font-size: 15px;
     font-weight: 600;
     color: #ec4899;
 }
+
 .metrics {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
 }
+
 .metric {
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.07);
@@ -173,12 +208,14 @@ html, body, [class*="css"] {
     padding: 12px 6px;
     text-align: center;
 }
+
 .metric-value {
     font-size: 20px;
     font-weight: 700;
     color: #fff;
     line-height: 1.1;
 }
+
 .metric-label {
     font-size: 11px;
     font-weight: 500;
@@ -186,65 +223,130 @@ html, body, [class*="css"] {
     margin-top: 3px;
     letter-spacing: 0.3px;
 }
-.metric.highlight .metric-value {color: #ec4899;}
+
+.metric.highlight .metric-value {
+    color: #ec4899;
+}
+
+@media (max-width: 430px) {
+    .block-container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .hero-card {
+        padding: 16px;
+    }
+
+    .hero-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .hero-body {
+        align-items: stretch;
+    }
+
+    .number-wrap {
+        width: 122px;
+        height: 122px;
+    }
+
+    .big-number {
+        font-size: 42px;
+    }
+
+    .next-up {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .metrics {
+        gap: 7px;
+    }
+
+    .metric {
+        padding: 10px 3px;
+    }
+
+    .metric-value {
+        font-size: 18px;
+    }
+
+    .metric-label {
+        font-size: 9px;
+    }
+}
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
-st.markdown("""
-<div class="status-bar">
-    <div class="status-pill"><span class="emoji">🔥</span> 13-DAY STREAK</div>
-    <div class="status-pill"><span class="emoji">🏆</span> BEST MONTH JUL · 34 EVENTS</div>
-    <div class="status-pill"><span class="emoji">🎯</span> 90 CAREER EVENTS</div>
-</div>
-""", unsafe_allow_html=True)
+st.page_link(
+    "pages/2_Performance_Trends.py",
+    label="Open Performance Trends →",
+    icon="📈",
+    use_container_width=True,
+)
 
-st.markdown("""
-<div class="hero-card">
-    <div class="hero-header">
-        <div class="career-label">
-            <div class="pink-dot"></div>
-            CAREER TO DATE
-        </div>
-        <div class="tabs">
-            <div class="tab active">EVENTS</div>
-            <div class="tab">CLIENTS</div>
-            <div class="tab">REVENUE</div>
-        </div>
-    </div>
+status_html = (
+    '<div class="status-bar">'
+    '<div class="status-pill"><span class="emoji">🔥</span> 13-DAY STREAK</div>'
+    '<div class="status-pill"><span class="emoji">🏆</span> BEST MONTH JUL · 34 EVENTS</div>'
+    '<div class="status-pill"><span class="emoji">🎯</span> 90 CAREER EVENTS</div>'
+    '</div>'
+)
 
-    <div class="hero-body">
-        <div class="number-wrap">
-            <div class="progress-ring"></div>
-            <div class="number-center">
-                <div class="big-number">90</div>
-                <div class="big-label">EVENTS</div>
-            </div>
-        </div>
+st.markdown(status_html, unsafe_allow_html=True)
 
-        <div class="next-up">
-            <div class="next-label">NEXT UP</div>
-            <div class="next-name">MARSHALLS</div>
-            <div class="next-date">8/3</div>
-        </div>
-    </div>
+hero_html = (
+    '<div class="hero-card">'
+        '<div class="hero-header">'
+            '<div class="career-label">'
+                '<div class="pink-dot"></div>'
+                'CAREER TO DATE'
+            '</div>'
+            '<div class="tabs">'
+                '<div class="tab active">EVENTS</div>'
+                '<div class="tab">CLIENTS</div>'
+                '<div class="tab">REVENUE</div>'
+            '</div>'
+        '</div>'
+        '<div class="hero-body">'
+            '<div class="number-wrap">'
+                '<div class="progress-ring"></div>'
+                '<div class="number-center">'
+                    '<div class="big-number">90</div>'
+                    '<div class="big-label">EVENTS</div>'
+                '</div>'
+            '</div>'
+            '<div class="next-up">'
+                '<div class="next-label">NEXT UP</div>'
+                '<div class="next-name">MARSHALLS</div>'
+                '<div class="next-date">8/3</div>'
+            '</div>'
+        '</div>'
+        '<div class="metrics">'
+            '<div class="metric">'
+                '<div class="metric-value">13</div>'
+                '<div class="metric-label">STREAK</div>'
+            '</div>'
+            '<div class="metric">'
+                '<div class="metric-value">5</div>'
+                '<div class="metric-label">JURISD.</div>'
+            '</div>'
+            '<div class="metric">'
+                '<div class="metric-value">6</div>'
+                '<div class="metric-label">UPCOMING</div>'
+            '</div>'
+            '<div class="metric highlight">'
+                '<div class="metric-value">JUL</div>'
+                '<div class="metric-label">BEST MO.</div>'
+            '</div>'
+        '</div>'
+    '</div>'
+)
 
-    <div class="metrics">
-        <div class="metric">
-            <div class="metric-value">13</div>
-            <div class="metric-label">STREAK</div>
-        </div>
-        <div class="metric">
-            <div class="metric-value">5</div>
-            <div class="metric-label">JURISD.</div>
-        </div>
-        <div class="metric">
-            <div class="metric-value">6</div>
-            <div class="metric-label">UPCOMING</div>
-        </div>
-        <div class="metric highlight">
-            <div class="metric-value">JUL</div>
-            <div class="metric-label">BEST MO.</div>
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+st.markdown(hero_html, unsafe_allow_html=True)

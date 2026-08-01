@@ -1,8 +1,1 @@
-streamlit==1.50.0
-pandas
-plotly
-openpyxl
-folium
-streamlit==1.50.0
-pydeck
-pillow
+streamlit>=1.36,<2

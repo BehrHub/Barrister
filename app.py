@@ -1135,7 +1135,7 @@ def configure_page() -> None:
 .main-hero * { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important; }
 .main-hero-inner { position: relative; z-index: 2; }
 .main-hero-radio { position: absolute !important; opacity: 0 !important; width: 1px !important; height: 1px !important; pointer-events: none; -webkit-appearance: none !important; appearance: none !important; }
-.main-hero-svg { position: absolute; top: 18px; left: 50%; right: -10px; height: 100px; pointer-events: none; z-index: 1; }
+.main-hero-svg { position: absolute; top: 62px; left: 28px; right: -10px; height: 46px; pointer-events: none; z-index: 1; }
 .main-hero-svg path { stroke-dasharray: 420; stroke-dashoffset: 420; animation: mainHeroDraw 1.4s .2s ease forwards; }
 @keyframes mainHeroDraw { to { stroke-dashoffset: 0; } }
 .main-hero-toprow { display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem; position: relative; z-index: 2; }
@@ -1149,7 +1149,7 @@ def configure_page() -> None:
 .main-hero-next-name { font-size: 16px; font-weight: 900; color: #fff; letter-spacing: .02em; line-height: 1.25; overflow-wrap: break-word; margin-top: 2px; }
 .main-hero-next-when { color: #ec4899; font-size: 11px; font-weight: 700; text-shadow: 0 0 10px rgba(236,72,153,.5); margin-top: 2px; }
 .main-hero-body { position: relative; z-index: 2; }
-.main-hero-figure { display: none; align-items: baseline; gap: .6rem; margin-top: 25px; flex-wrap: wrap; }
+.main-hero-figure { display: none; align-items: baseline; gap: .6rem; margin-top: 76px; flex-wrap: wrap; }
 #mainEvents:checked ~ .main-hero-body #mainFigEvents { display: flex; }
 #mainRevenue:checked ~ .main-hero-body #mainFigRevenue { display: flex; }
 #mainClients:checked ~ .main-hero-body #mainFigClients { display: flex; }
